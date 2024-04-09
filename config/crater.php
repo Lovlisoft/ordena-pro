@@ -331,16 +331,16 @@ return [
             'ability' => 'view-invoice',
             'model' => Invoice::class
         ],
-        [
-            'title' => 'navigation.recurring-invoices',
-            'group' => 2,
-            'link' => '/admin/recurring-invoices',
-            'icon' => 'DocumentTextIcon',
-            'name' => 'Recurring Invoices',
-            'owner_only' => false,
-            'ability' => 'view-recurring-invoice',
-            'model' => RecurringInvoice::class
-        ],
+        // [
+        //     'title' => 'navigation.recurring-invoices',
+        //     'group' => 2,
+        //     'link' => '/admin/recurring-invoices',
+        //     'icon' => 'DocumentTextIcon',
+        //     'name' => 'Recurring Invoices',
+        //     'owner_only' => false,
+        //     'ability' => 'view-recurring-invoice',
+        //     'model' => RecurringInvoice::class
+        // ],
         [
             'title' => 'navigation.payments',
             'group' => 2,
@@ -351,26 +351,26 @@ return [
             'ability' => 'view-payment',
             'model' => Payment::class
         ],
-        [
-            'title' => 'navigation.expenses',
-            'group' => 2,
-            'link' => '/admin/expenses',
-            'icon' => 'CalculatorIcon',
-            'name' => 'Expenses',
-            'owner_only' => false,
-            'ability' => 'view-expense',
-            'model' => Expense::class
-        ],
-        [
-            'title' => 'navigation.modules',
-            'group' => 3,
-            'link' => '/admin/modules',
-            'icon' => 'PuzzleIcon',
-            'name' => 'Modules',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
-        ],
+        // [
+        //     'title' => 'navigation.expenses',
+        //     'group' => 2,
+        //     'link' => '/admin/expenses',
+        //     'icon' => 'CalculatorIcon',
+        //     'name' => 'Expenses',
+        //     'owner_only' => false,
+        //     'ability' => 'view-expense',
+        //     'model' => Expense::class
+        // ],
+        // [
+        //     'title' => 'navigation.modules',
+        //     'group' => 3,
+        //     'link' => '/admin/modules',
+        //     'icon' => 'PuzzleIcon',
+        //     'name' => 'Modules',
+        //     'owner_only' => true,
+        //     'ability' => '',
+        //     'model' => ''
+        // ],
         [
             'title' => 'navigation.users',
             'group' => 3,
@@ -381,16 +381,16 @@ return [
             'ability' => '',
             'model' => ''
         ],
-        [
-            'title' => 'navigation.reports',
-            'group' => 3,
-            'link' => '/admin/reports',
-            'icon' => 'ChartBarIcon',
-            'name' => 'Reports',
-            'owner_only' => false,
-            'ability' => 'view-financial-reports',
-            'model' => ''
-        ],
+        // [
+        //     'title' => 'navigation.reports',
+        //     'group' => 3,
+        //     'link' => '/admin/reports',
+        //     'icon' => 'ChartBarIcon',
+        //     'name' => 'Reports',
+        //     'owner_only' => false,
+        //     'ability' => 'view-financial-reports',
+        //     'model' => ''
+        // ],
         [
             'title' => 'navigation.settings',
             'group' => 3,
