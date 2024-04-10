@@ -27,6 +27,8 @@ function get_company_setting($key, $company_id)
  */
 function get_app_setting($key)
 {
+    return "";
+    
     if (\Storage::disk('local')->has('database_created')) {
         return Setting::getSetting($key);
     }

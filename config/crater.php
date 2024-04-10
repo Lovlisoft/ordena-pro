@@ -286,7 +286,7 @@ return [
             'group' => 1,
             'link' => '/admin/dashboard',
             'icon' => 'HomeIcon',
-            'name' => 'Dashboard',
+            'name' => 'Tablero',
             'owner_only' => false,
             'ability' => 'dashboard',
             'model' => ''
