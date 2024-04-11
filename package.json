@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch",
     "build": "vite build",
     "serve": "vite preview",
     "test": "eslint ./resources/scripts --ext .js,.vue"
@@ -41,6 +41,7 @@
     "@vuelidate/validators": "^2.0.0-alpha.25",
     "@vueuse/core": "^6.0.0",
     "axios": "^0.19",
+    "caniuse-lite": "^1.0.30001608",
     "chart.js": "^2.7.3",
     "guid": "0.0.12",
     "lodash": "^4.17.13",
