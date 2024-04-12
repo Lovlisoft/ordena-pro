@@ -33,8 +33,8 @@
         md:block
       "
     >
-      <img v-if="adminLogo" :src="adminLogo" class="h-6" />
-      <MainLogo v-else class="h-6" light-color="white" dark-color="white" />
+      <MainLogo class="h-6" />
+      
     </router-link>
 
     <!-- toggle button-->
@@ -124,14 +124,14 @@
         </BaseDropdown>
       </li>
 
-      <li class="ml-2">
+      <!-- <li class="ml-2">
         <GlobalSearchBar
           v-if="
             userStore.currentUser.is_owner ||
             userStore.hasAbilities(abilities.VIEW_CUSTOMER)
           "
         />
-      </li>
+      </li> -->
 
       <li>
         <CompanySwitcher />

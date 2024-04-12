@@ -20,16 +20,7 @@
       "
     >
       <div class="w-full">
-        <MainLogo
-          v-if="!loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
-        />
-
-        <img
-          v-else
-          :src="loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
-        />
+        <MainLogo :inverted="true"/>
 
         <router-view />
 
@@ -141,7 +132,7 @@ const pageHeading = computed(() => {
     return window.login_page_heading
   }
 
-  return 'Simple Invoicing for Individuals Small Businesses'
+  return 'Más simple que nunca!'
 })
 
 const pageDescription = computed(() => {
@@ -149,14 +140,11 @@ const pageDescription = computed(() => {
     return window.login_page_description
   }
 
-  return 'Crater helps you track expenses, record payments & generate beautiful invoices & estimates.'
+  return 'Ordena tu proceso de ventas y facturación por medio de una herramienta simple e intuitiva. Basta de complejos formularios.'
 })
 
 const copyrightText = computed(() => {
-  if (window.copyright_text) {
-    return window.copyright_text
-  }
-  return 'Copyright @ Crater Invoice, Inc.'
+  return 'Copyright Ordena PRO.'
 })
 
 const loginPageLogo = computed(() => {
