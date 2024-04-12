@@ -2,11 +2,11 @@
   "navigation": {
     "dashboard": "Tablero",
     "customers": "Clientes",
-    "items": "Artículos",
+    "items": "Productos",
     "invoices": "Facturas",
     "recurring-invoices": "Facturas recurrentes",
     "expenses": "Gastos",
-    "estimates": "Presupuestos",
+    "estimates": "Cotizaciones",
     "payments": "Pagos",
     "reports": "Informes",
     "settings": "Ajustes",

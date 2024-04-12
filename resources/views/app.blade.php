@@ -58,11 +58,6 @@
         window.login_page_description = "{{$login_page_description}}"
 
         @endif     
-        @if(isset($copyright_text))
-
-        window.copyright_text = "{{$copyright_text}}"
-
-        @endif    
 
         window.Crater.start()
     </script>
