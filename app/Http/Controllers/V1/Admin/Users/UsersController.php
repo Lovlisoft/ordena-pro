@@ -74,7 +74,7 @@ class UsersController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $this->authorize('update', $user);
-
+        
         $user->updateFromRequest($request);
 
         return new UserResource($user);

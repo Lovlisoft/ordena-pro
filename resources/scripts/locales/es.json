@@ -233,7 +233,8 @@
     "updated_message": "Cliente actualizado con éxito",
     "address_updated_message": "Información del domicilio actualizado correctamente",
     "deleted_message": "Cliente eliminado correctamente | Clientes eliminados exitosamente",
-    "edit_currency_not_allowed": "No se puede cambiar la divisa una vez creadas las transacciones."
+    "edit_currency_not_allowed": "No se puede cambiar la divisa una vez creadas las transacciones.",
+    "manager": "Asesor"
   },
   "items": {
     "title": "Artículos",
