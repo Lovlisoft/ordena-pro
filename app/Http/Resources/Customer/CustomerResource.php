@@ -25,6 +25,7 @@ class CustomerResource extends JsonResource
             'enable_portal' => $this->enable_portal,
             'currency_id' => $this->currency_id,
             'company_id' => $this->company_id,
+            'manager_id' => $this->manager_id,
             'facebook_id' => $this->facebook_id,
             'google_id' => $this->google_id,
             'github_id' => $this->github_id,

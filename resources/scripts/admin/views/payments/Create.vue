@@ -98,22 +98,25 @@
             :content-loading="isLoadingContent"
             :label="$t('payments.invoice')"
             :help-text="
-              selectedInvoice
-                ? `Due Amount: ${
+              paymentStore.currentPayment.selectedInvoices
+                ? `Monto a pagar: ${
                     paymentStore.currentPayment.maxPayableAmount / 100
                   }`
                 : ''
             "
           >
             <BaseMultiselect
-              v-model="paymentStore.currentPayment.invoice_id"
+              v-model="paymentStore.currentPayment.selectedInvoices"
+              mode="tags"
+              :object="true"
+              label="invoice_number"
+              :options="invoiceList"
               :content-loading="isLoadingContent"
               value-prop="id"
               track-by="invoice_number"
-              label="invoice_number"
-              :options="invoiceList"
               :loading="isLoadingInvoices"
               :placeholder="$t('invoices.select_invoice')"
+              :can-deselect="true"
               @select="onSelectInvoice"
             >
               <template #singlelabel="{ value }">
@@ -189,44 +192,6 @@
           />
         </BaseInputGrid>
 
-        <!-- Payment Custom Fields -->
-        <PaymentCustomFields
-          type="Payment"
-          :is-edit="isEdit"
-          :is-loading="isLoadingContent"
-          :store="paymentStore"
-          store-prop="currentPayment"
-          :custom-field-scope="paymentValidationScope"
-          class="mt-6"
-        />
-
-        <!-- Payment Note field -->
-        <div class="relative mt-6">
-          <div
-            class="
-              z-20
-              float-right
-              text-sm
-              font-semibold
-              leading-5
-              text-primary-400
-            "
-          >
-            <SelectNotePopup type="Payment" @select="onSelectNote" />
-          </div>
-
-          <label class="mb-4 text-sm font-medium text-gray-800">
-            {{ $t('estimates.notes') }}
-          </label>
-
-          <BaseCustomInput
-            v-model="paymentStore.currentPayment.notes"
-            :content-loading="isLoadingContent"
-            :fields="PaymentFields"
-            class="mt-1"
-          />
-        </div>
-
         <BaseButton
           :loading="isSaving"
           :content-loading="isLoadingContent"
@@ -282,8 +247,6 @@ import { useModalStore } from '@/scripts/stores/modal'
 import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
 import { useGlobalStore } from '@/scripts/admin/stores/global'
 
-import SelectNotePopup from '@/scripts/admin/components/SelectNotePopup.vue'
-import PaymentCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
 import PaymentModeModal from '@/scripts/admin/components/modal-components/PaymentModeModal.vue'
 
 const route = useRoute()
@@ -304,7 +267,7 @@ const { t } = useI18n()
 let isSaving = ref(false)
 let isLoadingInvoices = ref(false)
 let invoiceList = ref([])
-const selectedInvoice = ref(null)
+const selectedInvoices = ref([])
 
 const paymentValidationScope = 'newEstimate'
 
@@ -398,10 +361,6 @@ async function addPaymentMode() {
   })
 }
 
-function onSelectNote(data) {
-  paymentStore.currentPayment.notes = '' + data.notes
-}
-
 async function setInvoiceFromUrl() {
   let res = await invoiceStore.fetchInvoice(route?.params?.id)
 
@@ -409,14 +368,18 @@ async function setInvoiceFromUrl() {
   paymentStore.currentPayment.invoice_id = res.data.data.id
 }
 
-async function onSelectInvoice(id) {
-  if (id) {
-    selectedInvoice.value = invoiceList.value.find((inv) => inv.id === id)
+async function onSelectInvoice(invoice) {
+  if (invoice) {
+    let payableAmount = 0
 
-    amount.value = selectedInvoice.value.due_amount / 100
-    paymentStore.currentPayment.maxPayableAmount =
-      selectedInvoice.value.due_amount
+    paymentStore.currentPayment.selectedInvoices.forEach(function (invoice) {
+      payableAmount = payableAmount + invoice.due_amount
+    })
+
+    paymentStore.currentPayment.maxPayableAmount = payableAmount
   }
+
+  console.log(paymentStore.currentPayment.maxPayableAmount)
 }
 
 function onCustomerChange(customer_id) {
@@ -452,16 +415,16 @@ function onCustomerChange(customer_id) {
         }
 
         if (paymentStore.currentPayment.invoice_id) {
-          selectedInvoice.value = invoiceList.value.find(
+          selectedInvoices.value = invoiceList.value.find(
             (inv) => inv.id === paymentStore.currentPayment.invoice_id
           )
 
           paymentStore.currentPayment.maxPayableAmount =
-            selectedInvoice.value.due_amount +
+            selectedInvoices.value.due_amount +
             paymentStore.currentPayment.amount
 
           if (amount.value === 0) {
-            amount.value = selectedInvoice.value.due_amount / 100
+            amount.value = selectedInvoices.value.due_amount / 100
           }
         }
 
@@ -523,7 +486,7 @@ function selectNewCustomer(id) {
 
   if (route.params.id) params.model_id = route.params.id
 
-  paymentStore.currentPayment.invoice_id = selectedInvoice.value = null
+  paymentStore.currentPayment.invoice_id = selectedInvoices.value = null
   paymentStore.currentPayment.amount = 0
   invoiceList.value = []
   paymentStore.getNextNumber(params, true)

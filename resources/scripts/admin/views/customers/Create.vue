@@ -124,47 +124,31 @@
             </BaseInputGroup>
 
             <BaseInputGroup
-              :error="
-                v$.currentCustomer.website.$error &&
-                v$.currentCustomer.website.$errors[0].$message
-              "
-              :label="$t('customers.website')"
+              label="Asesor"
               :content-loading="isFetchingInitialData"
+              required
             >
-              <BaseInput
-                v-model="customerStore.currentCustomer.website"
+              <BaseMultiselect
+                v-model="customerStore.currentCustomer.manager_id"
+                value-prop="id"
+                label="name"
+                track-by="name"
                 :content-loading="isFetchingInitialData"
-                type="url"
-                @input="v$.currentCustomer.website.$touch()"
-              />
+                :options="usersStore.users"
+                searchable
+                :can-deselect="false"
+                :placeholder="$t('customers.manager')"
+                class="w-full"
+              >
+              </BaseMultiselect>
             </BaseInputGroup>
 
-            <BaseInputGroup
-              :label="$t('customers.prefix')"
-              :error="
-                v$.currentCustomer.prefix.$error &&
-                v$.currentCustomer.prefix.$errors[0].$message
-              "
-              :content-loading="isFetchingInitialData"
-            >
-              <BaseInput
-                v-model="customerStore.currentCustomer.prefix"
-                :content-loading="isFetchingInitialData"
-                type="text"
-                name="name"
-                class=""
-                :invalid="v$.currentCustomer.prefix.$error"
-                @input="v$.currentCustomer.prefix.$touch()"
-              />
-            </BaseInputGroup>
           </BaseInputGrid>
-        </div>
-
-        <BaseDivider class="mb-5 md:mb-8" />
+        </div>  
 
         <!-- Portal Access-->
 
-        <div class="grid grid-cols-5 gap-4 mb-8">
+        <!-- <div class="grid grid-cols-5 gap-4 mb-8">
           <h6 class="col-span-5 text-lg font-semibold text-left lg:col-span-1">
             {{ $t('customers.portal_access') }}
           </h6>
@@ -257,12 +241,12 @@
               ></BaseInput>
             </BaseInputGroup>
           </BaseInputGrid>
-        </div>
+        </div> -->
 
-        <BaseDivider class="mb-5 md:mb-8" />
+        <!-- <BaseDivider class="mb-5 md:mb-8" /> -->
 
         <!-- Billing Address   -->
-        <div class="grid grid-cols-5 gap-4 mb-8">
+        <!-- <div class="grid grid-cols-5 gap-4 mb-8">
           <h6 class="col-span-5 text-lg font-semibold text-left lg:col-span-1">
             {{ $t('customers.billing_address') }}
           </h6>
@@ -392,12 +376,12 @@
               </BaseInputGroup>
             </div>
           </BaseInputGrid>
-        </div>
+        </div> -->
 
-        <BaseDivider class="mb-5 md:mb-8" />
+        <!-- <BaseDivider class="mb-5 md:mb-8" /> -->
 
         <!-- Billing Address Copy Button  -->
-        <div
+        <!-- <div
           class="flex items-center justify-start mb-6 md:justify-end md:mb-0"
         >
           <div class="p-1">
@@ -417,10 +401,10 @@
               {{ $t('customers.copy_billing_address') }}
             </BaseButton>
           </div>
-        </div>
+        </div> -->
 
         <!-- Shipping Address  -->
-        <div
+        <!-- <div
           v-if="customerStore.currentCustomer.shipping"
           class="grid grid-cols-5 gap-4 mb-8"
         >
@@ -548,7 +532,7 @@
               </BaseInputGroup>
             </div>
           </BaseInputGrid>
-        </div>
+        </div> -->
 
         <BaseDivider
           v-if="customFieldStore.customFields.length > 0"
@@ -596,6 +580,7 @@ import {
 } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { useCustomerStore } from '@/scripts/admin/stores/customer'
+import { useUsersStore } from '@/scripts/admin/stores/users'
 import { useCustomFieldStore } from '@/scripts/admin/stores/custom-field'
 import CustomerCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
 import { useGlobalStore } from '@/scripts/admin/stores/global'
@@ -606,6 +591,7 @@ const customerStore = useCustomerStore()
 const customFieldStore = useCustomFieldStore()
 const globalStore = useGlobalStore()
 const companyStore = useCompanyStore()
+const usersStore = useUsersStore()
 
 const customFieldValidationScope = 'customFields'
 
@@ -725,6 +711,8 @@ const v$ = useVuelidate(rules, customerStore, {
 customerStore.resetCurrentCustomer()
 
 customerStore.fetchCustomerInitialSettings(isEdit.value)
+
+usersStore.fetchUsers()
 
 async function submitCustomerData() {
   v$.value.$touch()

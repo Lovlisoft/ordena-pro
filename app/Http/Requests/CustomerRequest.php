@@ -60,6 +60,9 @@ class CustomerRequest extends FormRequest
             'currency_id' => [
                 'nullable',
             ],
+            'manager_id' => [
+                'nullable',
+            ],
             'billing.name' => [
                 'nullable',
             ],
@@ -144,6 +147,7 @@ class CustomerRequest extends FormRequest
                 'estimate_prefix',
                 'payment_prefix',
                 'invoice_prefix',
+                'manager_id',
             ])
             ->merge([
                 'creator_id' => $this->user()->id,

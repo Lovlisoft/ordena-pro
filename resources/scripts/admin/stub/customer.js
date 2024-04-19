@@ -9,6 +9,7 @@ export default function () {
     password: '',
     confirm_password:'',
     currency_id: null,
+    manager_id: null,
     website: null,
     billing: { ...addressStub },
     shipping: { ...addressStub },
