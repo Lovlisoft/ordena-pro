@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Arr;
 
 class Payment extends Model implements HasMedia
 {
@@ -105,6 +106,11 @@ class Payment extends Model implements HasMedia
         return $this->belongsTo(Invoice::class);
     }
 
+    public function invoices()
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_payments');
+    }
+
     public function creator()
     {
         return $this->belongsTo('Crater\Models\User', 'creator_id');
@@ -146,11 +152,6 @@ class Payment extends Model implements HasMedia
     {
         $data = $request->getPaymentPayload();
 
-        if ($request->invoice_id) {
-            $invoice = Invoice::find($request->invoice_id);
-            $invoice->subtractInvoicePayment($request->amount);
-        }
-
         $payment = Payment::create($data);
         $payment->unique_hash = Hashids::connection(Payment::class)->encode($payment->id);
 
@@ -163,6 +164,8 @@ class Payment extends Model implements HasMedia
         $payment->sequence_number = $serial->nextSequenceNumber;
         $payment->customer_sequence_number = $serial->nextCustomerSequenceNumber;
         $payment->save();
+
+        $payment->invoices()->sync(Arr::pluck(Arr::get($data, 'invoices'), 'id'), true);
 
         $company_currency = CompanySetting::getSetting('currency', $request->header('company'));
 
@@ -190,22 +193,6 @@ class Payment extends Model implements HasMedia
     {
         $data = $request->getPaymentPayload();
 
-        if ($request->invoice_id && (! $this->invoice_id || $this->invoice_id !== $request->invoice_id)) {
-            $invoice = Invoice::find($request->invoice_id);
-            $invoice->subtractInvoicePayment($request->amount);
-        }
-
-        if ($this->invoice_id && (! $request->invoice_id || $this->invoice_id !== $request->invoice_id)) {
-            $invoice = Invoice::find($this->invoice_id);
-            $invoice->addInvoicePayment($this->amount);
-        }
-
-        if ($this->invoice_id && $this->invoice_id === $request->invoice_id && $request->amount !== $this->amount) {
-            $invoice = Invoice::find($this->invoice_id);
-            $invoice->addInvoicePayment($this->amount);
-            $invoice->subtractInvoicePayment($request->amount);
-        }
-
         $serial = (new SerialNumberFormatter())
             ->setModel($this)
             ->setCompany($this->company_id)
@@ -214,7 +201,10 @@ class Payment extends Model implements HasMedia
             ->setNextNumbers();
 
         $data['customer_sequence_number'] = $serial->nextCustomerSequenceNumber;
+
         $this->update($data);
+
+        $this->invoices()->sync(Arr::pluck(Arr::get($data, 'invoices'), 'id'), true);
 
         $company_currency = CompanySetting::getSetting('currency', $request->header('company'));
 
@@ -230,7 +220,7 @@ class Payment extends Model implements HasMedia
 
         $payment = Payment::with([
             'customer',
-            'invoice',
+            'invoices',
             'paymentMethod',
         ])
             ->find($this->id);

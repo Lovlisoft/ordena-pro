@@ -21,7 +21,6 @@ class PaymentResource extends JsonResource
             'notes' => $this->getNotes(),
             'amount' => $this->amount,
             'unique_hash' => $this->unique_hash,
-            'invoice_id' => $this->invoice_id,
             'company_id' => $this->company_id,
             'payment_method_id' => $this->payment_method_id,
             'creator_id' => $this->creator_id,
@@ -37,8 +36,8 @@ class PaymentResource extends JsonResource
             'customer' => $this->when($this->customer()->exists(), function () {
                 return new CustomerResource($this->customer);
             }),
-            'invoice' => $this->when($this->invoice()->exists(), function () {
-                return new InvoiceResource($this->invoice);
+            'invoices' => $this->when($this->invoices()->exists(), function () {
+                return InvoiceResource::collection($this->invoices);
             }),
             'payment_method' => $this->when($this->paymentMethod()->exists(), function () {
                 return new PaymentMethodResource($this->paymentMethod);

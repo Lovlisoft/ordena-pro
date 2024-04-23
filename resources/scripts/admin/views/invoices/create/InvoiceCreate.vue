@@ -94,15 +94,12 @@
           "
         >
           <div class="relative w-full lg:w-1/2 lg:mr-4">
-            <!-- Invoice Custom Notes -->
-            <NoteFields
+            <!-- <NoteFields
               :store="invoiceStore"
               store-prop="newInvoice"
               :fields="invoiceNoteFieldList"
               type="Invoice"
             />
-
-            <!-- Invoice Custom Fields -->
             <InvoiceCustomFields
               type="Invoice"
               :is-edit="isEdit"
@@ -112,14 +109,12 @@
               :custom-field-scope="invoiceValidationScope"
               class="mb-6"
             />
-
-            <!-- Invoice Template Button-->
             <SelectTemplate
               :store="invoiceStore"
               store-prop="newInvoice"
               component-name="InvoiceTemplate"
               :is-mark-as-default="isMarkAsDefault"
-            />
+            /> -->
           </div>
 
           <InvoiceTotal
