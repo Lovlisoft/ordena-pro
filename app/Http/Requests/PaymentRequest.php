@@ -80,10 +80,13 @@ class PaymentRequest extends FormRequest
 
     public function getPaymentPayload()
     {
+        $customer = Customer::find($this->customer_id);
         $company_currency = CompanySetting::getSetting('currency', $this->header('company'));
         $current_currency = $this->currency_id;
         $exchange_rate = $company_currency != $current_currency ? $this->exchange_rate : 1;
-        $currency = Customer::find($this->customer_id)->currency_id;
+        $currency = $customer->currency_id;
+
+        $invoices = $customer->invoices()->whereIn('id', collect($this->selectedInvoices)->pluck('id')->toArray())->get();
 
         return collect($this->validated())
             ->merge([
@@ -91,7 +94,8 @@ class PaymentRequest extends FormRequest
                 'company_id' => $this->header('company'),
                 'exchange_rate' => $exchange_rate,
                 'base_amount' => $this->amount * $exchange_rate,
-                'currency_id' => $currency
+                'currency_id' => $currency,
+                'invoices' => $invoices,
             ])
             ->toArray();
     }

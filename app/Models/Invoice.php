@@ -84,7 +84,7 @@ class Invoice extends Model implements HasMedia
 
     public function payments()
     {
-        return $this->hasMany(Payment::class);
+        return $this->belongsToMany(Payment::class, 'invoice_payments');
     }
 
     public function currency()
