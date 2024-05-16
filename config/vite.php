@@ -64,4 +64,9 @@ return [
     | This is used to generate the script tags when developing.
     */
     'dev_url' => 'http://ordena-pro.test:3000',
+
+    /**
+     * TODO: We need to improve this behavior to a more definitive one
+     */
+    'ping_url' => env('APP_ENV') == 'local' ? 'http://google.com' : null,
 ];
