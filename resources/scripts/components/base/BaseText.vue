@@ -25,7 +25,6 @@ const props = defineProps({
 })
 
 const displayText = computed(() => {
-
   return props.text.length < props.length ?  props.text : `${props.text.substring(0 , props.length)}...`
 })
 </script>
