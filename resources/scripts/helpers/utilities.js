@@ -31,7 +31,7 @@ export default {
       }
     }
 
-    amount = amount / 100
+    amount = amount / 10000
 
     let {
       precision,

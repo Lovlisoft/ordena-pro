@@ -156,9 +156,9 @@ const modalActive = computed(
 )
 
 const price = computed({
-  get: () => itemStore.currentItem.price / 100,
+  get: () => itemStore.currentItem.price / 10000,
   set: (value) => {
-    itemStore.currentItem.price = Math.round(value * 100)
+    itemStore.currentItem.price = Math.round(value * 10000) 
   },
 })
 
@@ -229,7 +229,7 @@ async function submitItemData() {
     taxes: itemStore.currentItem.taxes.map((tax) => {
       return {
         tax_type_id: tax.id,
-        amount: (price.value * tax.percent) / 100,
+        amount: (price.value * tax.percent),
         percent: tax.percent,
         name: tax.name,
         collective_tax: 0,
@@ -238,6 +238,10 @@ async function submitItemData() {
   }
 
   isLoading.value = true
+
+  console.log({
+    data
+  });
 
   const action = itemStore.isEdit ? itemStore.updateItem : itemStore.addItem
 

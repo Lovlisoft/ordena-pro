@@ -34,15 +34,15 @@
     </svg>
 
     <slot v-if="showCalendarIcon && hasIconSlot" name="icon" />
-
-    <FlatPickr
+<!-- TODO:CHECAR ERROR -->
+    <!-- <FlatPickr
       ref="dp"
       v-model="date"
       v-bind="$attrs"
       :disabled="disabled"
       :config="config"
       :class="[defaultInputClass, inputInvalidClass, inputDisabledClass]"
-    />
+    /> -->
   </div>
 </template>
 

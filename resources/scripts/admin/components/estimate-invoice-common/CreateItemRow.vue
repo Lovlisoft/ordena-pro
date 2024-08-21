@@ -257,7 +257,7 @@ const price = computed({
     const price = props.itemData.price
 
     if (parseFloat(price) > 0) {
-      return price / 100
+      return price / 10000
     }
 
     return price
@@ -265,7 +265,7 @@ const price = computed({
 
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let price = Math.round(newValue * 100)
+      let price = Math.round(newValue * 10000)
 
       updateItemAttribute('price', price)
     } else {

@@ -61,6 +61,9 @@ let hasInitialValueSet = false
 const money = computed({
   get: () => props.modelValue,
   set: (value) => {
+    console.log({
+      value
+    });
     if (!hasInitialValueSet) {
       hasInitialValueSet = true
       return
