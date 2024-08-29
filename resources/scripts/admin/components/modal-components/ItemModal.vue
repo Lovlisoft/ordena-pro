@@ -30,7 +30,7 @@
             <BaseInputGroup :label="$t('items.price')">
               <BaseItemMoney
                 :key="companyStore.selectedCompanyCurrency"
-                v-model="price"
+                v-model="precisionPrice"
                 :currency="companyStore.selectedCompanyCurrency"
                 :item-precision="4"
                 class="
@@ -156,10 +156,56 @@ const modalActive = computed(
   () => modalStore.active && modalStore.componentName === 'ItemModal'
 )
 
+const updateItemAttribute = (key, value) => {
+  itemStore.$patch((state) => {
+    state.currentItem[key] = value
+  })
+}
+
 const price = computed({
-  get: () => itemStore.currentItem.price / 10000,
-  set: (value) => {
-    itemStore.currentItem.price = Math.round(value * 10000) 
+  get: () => {
+
+    const price = itemStore.currentItem.price
+
+    if (parseFloat(price) > 0) {
+      return price / 100
+    }
+
+    return price
+  },
+
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let price = Math.round(newValue * 100)
+
+      updateItemAttribute('price', price)
+    } else {
+      updateItemAttribute('price', newValue)
+    }
+  },
+})
+
+const precisionPrice = computed({
+  get: () => {
+    const precisionPrice = itemStore.currentItem.precision_price
+
+    if (parseFloat(precisionPrice) > 0) {
+      return precisionPrice / 10000
+    }
+
+    return precisionPrice
+  },
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let precisionPrice = Math.round(newValue * 10000)
+      let price = Math.round(newValue * 100) // Calculate the corresponding price
+
+      updateItemAttribute('precision_price', precisionPrice)
+      updateItemAttribute('price', price) // Update the price attribute
+    } else {
+      updateItemAttribute('precision_price', newValue)
+      updateItemAttribute('price', newValue) // Update the price attribute
+    }
   },
 })
 
