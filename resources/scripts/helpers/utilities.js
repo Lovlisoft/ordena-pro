@@ -21,17 +21,19 @@ export default {
     return hasClass
   },
 
-  formatMoney(amount, currency = 0) {
+  formatMoney(amount, currency = 0 , options = {}) {
     if (!currency) {
       currency = {
-        precision: 2,
+        precision: options.itemPrecision || 2,
         thousand_separator: ',',
         decimal_separator: '.',
         symbol: '$',
       }
     }
 
-    amount = amount / 10000
+    const divideBy = !isNaN(options.itemPrecision) ? Number(`1${'0'.repeat(options.itemPrecision)}`) : 100
+
+    amount = amount / divideBy
 
     let {
       precision,

@@ -6,6 +6,8 @@ export default {
   description: null,
   quantity: 1,
   price: 0,
+  precision_price: 0,
+  precision:4,
   discount_type: 'fixed',
   discount_val: 0,
   discount: 0,

@@ -52,12 +52,13 @@
               <div class="flex flex-col">
                 <div class="flex-auto flex-fill bd-highlight">
                   <div class="relative w-full">
-                    <BaseMoney
+                    <BaseItemMoney
                       :key="selectedCurrency"
-                      v-model="price"
+                      v-model="precisionPrice"
                       :invalid="v$.price.$error"
                       :content-loading="loading"
                       :currency="selectedCurrency"
+                      :item-precision="4"
                     />
                   </div>
                 </div>
@@ -121,10 +122,11 @@
                     <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
                   </BaseContentPlaceholders>
 
-                  <BaseFormatMoney
+                  <BaseFormatItemMoney
                     v-else
-                    :amount="total"
+                    :amount="totalPrecision"
                     :currency="selectedCurrency"
+                    :item-precision="4"
                   />
                 </span>
                 <div class="flex items-center justify-center w-6 h-10 mx-2">
@@ -257,7 +259,7 @@ const price = computed({
     const price = props.itemData.price
 
     if (parseFloat(price) > 0) {
-      return price / 10000
+      return price / 100
     }
 
     return price
@@ -265,7 +267,7 @@ const price = computed({
 
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let price = Math.round(newValue * 10000)
+      let price = Math.round(newValue * 100)
 
       updateItemAttribute('price', price)
     } else {
@@ -274,7 +276,33 @@ const price = computed({
   },
 })
 
+const precisionPrice = computed({
+  get: () => {
+    const precisionPrice = props.itemData.precision_price
+
+    if (parseFloat(precisionPrice) > 0) {
+      return precisionPrice / 10000
+    }
+
+    return precisionPrice
+  },
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let precisionPrice = Math.round(newValue * 10000)
+      let price = Math.round(newValue * 100) // Calculate the corresponding price
+
+      updateItemAttribute('precision_price', precisionPrice)
+      updateItemAttribute('price', price) // Update the price attribute
+    } else {
+      updateItemAttribute('precision_price', newValue)
+      updateItemAttribute('price', newValue) // Update the price attribute
+    }
+  },
+})
+
 const subtotal = computed(() => props.itemData.price * props.itemData.quantity)
+
+const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity)
 
 const discount = computed({
   get: () => {
@@ -293,6 +321,10 @@ const discount = computed({
 
 const total = computed(() => {
   return subtotal.value - props.itemData.discount_val
+})
+
+const totalPrecision = computed(() => {
+  return subtotalPrecision.value - props.itemData.discount_val
 })
 
 const selectedCurrency = computed(() => {
@@ -383,20 +415,6 @@ const v$ = useVuelidate(
   { $scope: props.itemValidationScope }
 )
 
-//
-// if (
-//   route.params.id &&
-//   (props.store[props.storeProp].tax_per_item === 'YES' || 'NO')
-// ) {
-//   if (props.store[props.storeProp].items[props.index].taxes === undefined) {
-//     props.store.$patch((state) => {
-//       state[props.storeProp].items[props.index].taxes = [
-//         { ...TaxStub, id: Guid.raw() },
-//       ]
-//     })
-//   }
-// }
-
 function updateTax(data) {
   props.store.$patch((state) => {
     state[props.storeProp].items[props.index]['taxes'][data.index] = data.item
@@ -426,6 +444,9 @@ function onSelectItem(itm) {
     state[props.storeProp].items[props.index].price = itm.price
     state[props.storeProp].items[props.index].item_id = itm.id
     state[props.storeProp].items[props.index].description = itm.description
+    state[props.storeProp].items[props.index].precision = itm.precision
+    state[props.storeProp].items[props.index].precision_price = itm.precision_price
+
 
     if (itm.unit) {
       state[props.storeProp].items[props.index].unit_name = itm.unit.name

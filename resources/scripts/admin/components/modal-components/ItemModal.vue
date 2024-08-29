@@ -28,10 +28,11 @@
             </BaseInputGroup>
 
             <BaseInputGroup :label="$t('items.price')">
-              <BaseMoney
+              <BaseItemMoney
                 :key="companyStore.selectedCompanyCurrency"
                 v-model="price"
                 :currency="companyStore.selectedCompanyCurrency"
+                :item-precision="4"
                 class="
                   relative
                   w-full
@@ -238,10 +239,6 @@ async function submitItemData() {
   }
 
   isLoading.value = true
-
-  console.log({
-    data
-  });
 
   const action = itemStore.isEdit ? itemStore.updateItem : itemStore.addItem
 

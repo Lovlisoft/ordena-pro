@@ -48,7 +48,7 @@
                 class="pr-20 text-right item-cell"
                 style="vertical-align: top;"
             >
-                {!! format_money_pdf($item->price, $estimate->customer->currency) !!}
+                {!! format_money_pdf($item->precision_price, $estimate->customer->currency,4) !!}
             </td>
             @if($estimate->discount_per_item === 'YES')
                 <td class="pl-10 text-right item-cell" style="vertical-align: top;">
@@ -61,7 +61,7 @@
                 </td>
             @endif
             <td class="text-right item-cell" style="vertical-align: top;">
-                {!! format_money_pdf($item->total, $estimate->customer->currency) !!}
+                {!! format_money_pdf($item->precision_price * $item->quantity, $estimate->customer->currency, 4) !!}
             </td>
         </tr>
         @php

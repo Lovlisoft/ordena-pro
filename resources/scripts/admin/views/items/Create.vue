@@ -38,9 +38,10 @@
             :label="$t('items.price')"
             :content-loading="isFetchingInitialData"
           >
-            <BaseMoney
-              v-model="price"
+            <BaseItemMoney
+              v-model="precisionPrice"
               :content-loading="isFetchingInitialData"
+              :item-precision="4"
             />
           </BaseInputGroup>
 
@@ -176,6 +177,34 @@ const price = computed({
     itemStore.currentItem.price = Math.round(value * 100)
   },
 })
+
+const precisionPrice = computed({
+  get: () => {
+    const precisionPrice = itemStore.currentItem.precision_price
+
+    if (parseFloat(precisionPrice) > 0) {
+      return precisionPrice / 10000
+    }
+
+    return precisionPrice
+  },
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let precisionPrice = Math.round(newValue * 10000)
+      let price = Math.round(newValue * 100) // Calculate the corresponding price
+
+      updateItemAttribute('precision_price', precisionPrice)
+      updateItemAttribute('price', price) // Update the price attribute
+    } else {
+      updateItemAttribute('precision_price', newValue)
+      updateItemAttribute('price', newValue) // Update the price attribute
+    }
+  },
+})
+
+function updateItemAttribute(attribute, value) {
+  itemStore.currentItem[attribute] = value
+}
 
 const taxes = computed({
   get: () =>

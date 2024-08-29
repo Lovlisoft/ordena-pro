@@ -117,7 +117,7 @@
       handle=".handle"
     >
       <template #item="{ element, index }">
-        <Item
+        <CreateItemRow
           :key="element.id"
           :index="index"
           :item-data="element"
@@ -157,7 +157,7 @@
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { computed } from 'vue'
 import draggable from 'vuedraggable'
-import Item from './CreateItemRow.vue'
+import CreateItemRow from './CreateItemRow.vue'
 
 const props = defineProps({
   store: {
