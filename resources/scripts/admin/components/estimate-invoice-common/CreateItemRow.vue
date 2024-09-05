@@ -58,7 +58,7 @@
                       :invalid="v$.price.$error"
                       :content-loading="loading"
                       :currency="selectedCurrency"
-                      :item-precision="4"
+                      :item-precision="DEFAULT_ITEM_PRECISION"
                     />
                   </div>
                 </div>
@@ -126,7 +126,7 @@
                     v-else
                     :amount="totalPrecision"
                     :currency="selectedCurrency"
-                    :item-precision="4"
+                    :item-precision="DEFAULT_ITEM_PRECISION"
                   />
                 </span>
                 <div class="flex items-center justify-center w-6 h-10 mx-2">
@@ -197,6 +197,11 @@ import useVuelidate from '@vuelidate/core'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useItemStore } from '@/scripts/admin/stores/item'
 import DragIcon from '@/scripts/components/icons/DragIcon.vue'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const props = defineProps({
   store: {
@@ -281,14 +286,14 @@ const precisionPrice = computed({
     const precisionPrice = props.itemData.precision_price
 
     if (parseFloat(precisionPrice) > 0) {
-      return precisionPrice / 10000
+      return precisionPrice / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
     }
 
     return precisionPrice
   },
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let precisionPrice = Math.round(newValue * 10000)
+      let precisionPrice = Math.round(newValue * getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
       let price = Math.round(newValue * 100) // Calculate the corresponding price
 
       updateItemAttribute('precision_price', precisionPrice)
@@ -300,7 +305,11 @@ const precisionPrice = computed({
   },
 })
 
-const subtotal = computed(() => props.itemData.price * props.itemData.quantity)
+const subtotal = computed(() => { 
+  const precisionPrice = props.itemData.precision_price;
+
+  return precisionPrice * props.itemData.quantity;
+})
 
 const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity)
 

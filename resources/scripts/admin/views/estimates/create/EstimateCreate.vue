@@ -77,7 +77,7 @@
 
       <BaseScrollPane>
         <!-- Estimate Items -->
-        <Items
+        <CreateItems
           :currency="estimateStore.newEstimate.selectedCurrency"
           :is-loading="isLoadingContent"
           :item-validation-scope="estimateValidationScope"
@@ -123,7 +123,7 @@
             />
           </div>
 
-          <Total
+          <CreateTotal
             :currency="estimateStore.newEstimate.selectedCurrency"
             :is-loading="isLoadingContent"
             :store="estimateStore"
@@ -153,8 +153,8 @@ import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useCustomFieldStore } from '@/scripts/admin/stores/custom-field'
 
-import Items from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
-import Total from '@/scripts/admin/components/estimate-invoice-common/CreateTotal.vue'
+import CreateItems from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
+import CreateTotal from '@/scripts/admin/components/estimate-invoice-common/CreateTotal.vue'
 import SelectTemplate from '@/scripts/admin/components/estimate-invoice-common/SelectTemplateButton.vue'
 import EstimateCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
 import NoteFields from '@/scripts/admin/components/estimate-invoice-common/CreateNotesField.vue'

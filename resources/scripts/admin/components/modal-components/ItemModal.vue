@@ -32,7 +32,7 @@
                 :key="companyStore.selectedCompanyCurrency"
                 v-model="precisionPrice"
                 :currency="companyStore.selectedCompanyCurrency"
-                :item-precision="4"
+                :item-precision="DEFAULT_ITEM_PRECISION"
                 class="
                   relative
                   w-full
@@ -138,6 +138,11 @@ import { useTaxTypeStore } from '@/scripts/admin/stores/tax-type'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const emit = defineEmits(['newItem'])
 
@@ -190,14 +195,14 @@ const precisionPrice = computed({
     const precisionPrice = itemStore.currentItem.precision_price
 
     if (parseFloat(precisionPrice) > 0) {
-      return precisionPrice / 10000
+      return precisionPrice / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
     }
 
     return precisionPrice
   },
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let precisionPrice = Math.round(newValue * 10000)
+      let precisionPrice = Math.round(newValue * getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
       let price = Math.round(newValue * 100) // Calculate the corresponding price
 
       updateItemAttribute('precision_price', precisionPrice)

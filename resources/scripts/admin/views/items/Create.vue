@@ -41,7 +41,7 @@
             <BaseItemMoney
               v-model="precisionPrice"
               :content-loading="isFetchingInitialData"
-              :item-precision="4"
+              :item-precision="DEFAULT_ITEM_PRECISION"
             />
           </BaseInputGroup>
 
@@ -153,6 +153,11 @@ import { useModalStore } from '@/scripts/stores/modal'
 import ItemUnitModal from '@/scripts/admin/components/modal-components/ItemUnitModal.vue'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import abilities from '@/scripts/admin/stub/abilities'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const itemStore = useItemStore()
 const taxTypeStore = useTaxTypeStore()
@@ -183,14 +188,14 @@ const precisionPrice = computed({
     const precisionPrice = itemStore.currentItem.precision_price
 
     if (parseFloat(precisionPrice) > 0) {
-      return precisionPrice / 10000
+      return precisionPrice / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
     }
 
     return precisionPrice
   },
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let precisionPrice = Math.round(newValue * 10000)
+      let precisionPrice = Math.round(newValue * getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
       let price = Math.round(newValue * 100) // Calculate the corresponding price
 
       updateItemAttribute('precision_price', precisionPrice)

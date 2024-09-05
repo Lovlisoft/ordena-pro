@@ -2,6 +2,7 @@ import i18n from '../plugins/i18n'
 const { global } = i18n
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { isArray } from 'lodash'
+import { DEFAULT_ITEM_PRECISION } from '../admin/config/constants'
 
 export default {
   isImageFile(fileType) {
@@ -279,5 +280,12 @@ export default {
 
     return formData
   },
-
+  /**
+   * Returns the decimal precision multiplier for items.
+   * @returns {number} The decimal precision multiplier based on the default item precision.
+   * @example If the default item precision is 6, the multiplier will be 1000000.
+   */
+  getItemDecimalPrecisionMultiplier() {
+    return Number(`1${'0'.repeat(DEFAULT_ITEM_PRECISION)}`)
+  }
 }

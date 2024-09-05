@@ -48,7 +48,7 @@
                 class="pr-20 text-right item-cell"
                 style="vertical-align: top;"
             >
-                {!! format_money_pdf($item->precision_price, $invoice->customer->currency, 4) !!}
+                {!! format_money_pdf($item->precision_price, $invoice->customer->currency, 6) !!}
             </td>
 
             @if($invoice->discount_per_item === 'YES')
@@ -78,7 +78,7 @@
                 class="text-right item-cell"
                 style="vertical-align: top;"
             >
-                {!! format_money_pdf($item->precision_price * $item->quantity, $invoice->customer->currency , 4) !!}
+                {!! format_money_pdf($item->precision_price * $item->quantity, $invoice->customer->currency , 6) !!}
             </td>
         </tr>
         @php
