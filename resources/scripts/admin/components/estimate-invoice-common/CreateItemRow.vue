@@ -140,7 +140,7 @@
               </div>
             </td>
           </tr>
-          <tr v-if="store[storeProp].tax_per_item === 'YES'">
+          <!-- <tr v-if="store[storeProp].tax_per_item === 'YES'">
             <td class="px-5 py-4 text-left align-top" />
             <td colspan="4" class="px-5 py-4 text-left align-top">
               <BaseContentPlaceholders v-if="loading">
@@ -170,7 +170,7 @@
                 @update="updateTax"
               />
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </td>

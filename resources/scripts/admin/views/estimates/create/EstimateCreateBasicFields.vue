@@ -50,23 +50,23 @@
         </BaseInput>
       </BaseInputGroup>
 
-      <!-- <BaseInputGroup
-        :label="$t('estimates.ref_number')"
+      <BaseInputGroup
+        :label="$t('estimates.show_price_breakdown')"
         :content-loading="isLoading"
         :error="
           v.reference_number.$error && v.reference_number.$errors[0].$message
         "
       >
-        <BaseInput
-          v-model="estimateStore.newEstimate.reference_number"
+        <BaseSwitch
+          v-model="estimateStore.newEstimate.show_price_breakdown"
           :content-loading="isLoading"
           @input="v.reference_number.$touch()"
         >
           <template #left="slotProps">
             <BaseIcon name="HashtagIcon" :class="slotProps.class" />
           </template>
-        </BaseInput>
-      </BaseInputGroup> -->
+        </BaseSwitch>
+      </BaseInputGroup>
       <ExchangeRateConverter
         :store="estimateStore"
         store-prop="newEstimate"
