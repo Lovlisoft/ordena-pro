@@ -69,7 +69,7 @@
       </BasePageHeader>
 
       <!-- Select Customer & Basic Fields  -->
-      <EstimateBasicFields
+      <EstimateCreateBasicFields
         :v="v$"
         :is-loading="isLoadingContent"
         :is-edit="isEdit"
@@ -158,7 +158,7 @@ import CreateTotal from '@/scripts/admin/components/estimate-invoice-common/Crea
 import SelectTemplate from '@/scripts/admin/components/estimate-invoice-common/SelectTemplateButton.vue'
 import EstimateCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
 import NoteFields from '@/scripts/admin/components/estimate-invoice-common/CreateNotesField.vue'
-import EstimateBasicFields from './EstimateCreateBasicFields.vue'
+import EstimateCreateBasicFields from './EstimateCreateBasicFields.vue'
 import SelectTemplateModal from '@/scripts/admin/components/modal-components/SelectTemplateModal.vue'
 import TaxTypeModal from '@/scripts/admin/components/modal-components/TaxTypeModal.vue'
 import ItemModal from '@/scripts/admin/components/modal-components/ItemModal.vue'

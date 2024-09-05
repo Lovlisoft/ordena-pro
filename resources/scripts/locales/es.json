@@ -356,7 +356,8 @@
       "select_an_item": "Escriba o haga clic para seleccionar un elemento",
       "type_item_description": "Descripción del tipo de elemento(opcional)"
     },
-    "mark_as_default_estimate_template_description": "Si se activa, esta plantilla se selccionará automáticamente para nuevos previas. "
+    "mark_as_default_estimate_template_description": "Si se activa, esta plantilla se selccionará automáticamente para nuevos previas. ",
+    "show_price_breakdown": "Mostrar desglose de precios"
   },
   "invoices": {
     "title": "Facturas",
