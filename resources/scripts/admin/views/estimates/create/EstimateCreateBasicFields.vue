@@ -9,7 +9,7 @@
     />
 
     <BaseInputGrid class="col-span-7">
-      <BaseInputGroup
+      <!-- <BaseInputGroup
         :label="$t('reports.estimates.estimate_date')"
         :content-loading="isLoading"
         required
@@ -33,7 +33,7 @@
           :calendar-button="true"
           calendar-button-icon="calendar"
         />
-      </BaseInputGroup>
+      </BaseInputGroup> -->
 
       <BaseInputGroup
         :label="$t('estimates.estimate_number')"

@@ -28,6 +28,7 @@ class EstimateItemResource extends JsonResource
             'tax' => $this->tax,
             'total' => $this->total,
             'item_id' => $this->item_id,
+            'ieps' => 0,
             'estimate_id' => $this->estimate_id,
             'company_id' => $this->company_id,
             'exchange_rate' => $this->exchange_rate,

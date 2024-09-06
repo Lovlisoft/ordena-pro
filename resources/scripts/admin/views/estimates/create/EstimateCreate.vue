@@ -94,42 +94,6 @@
             lg:flex lg:justify-between lg:items-start
           "
         >
-          <div class="relative w-full lg:w-1/2">
-            <!-- Estimate Custom Notes -->
-            <NoteFields
-              :store="estimateStore"
-              store-prop="newEstimate"
-              :fields="estimateNoteFieldList"
-              type="Estimate"
-            />
-
-            <!-- Estimate Custom Fields -->
-            <EstimateCustomFields
-              type="Estimate"
-              :is-edit="isEdit"
-              :is-loading="isLoadingContent"
-              :store="estimateStore"
-              store-prop="newEstimate"
-              :custom-field-scope="estimateValidationScope"
-              class="mb-6"
-            />
-
-            <!-- Estimate Template Button-->
-            <SelectTemplate
-              :store="estimateStore"
-              component-name="EstimateTemplate"
-              store-prop="newEstimate"
-              :is-mark-as-default="isMarkAsDefault"
-            />
-          </div>
-
-          <CreateTotal
-            :currency="estimateStore.newEstimate.selectedCurrency"
-            :is-loading="isLoadingContent"
-            :store="estimateStore"
-            store-prop="newEstimate"
-            tax-popup-type="estimate"
-          />
         </div>
       </BaseScrollPane>
     </form>

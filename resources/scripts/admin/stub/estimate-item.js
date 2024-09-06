@@ -20,4 +20,5 @@ export default {
   totalCompoundTax: 0,
   tax: 0,
   taxes: [],
+  ieps: 0,
 }

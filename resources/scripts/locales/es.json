@@ -357,7 +357,7 @@
       "type_item_description": "Descripción del tipo de elemento(opcional)"
     },
     "mark_as_default_estimate_template_description": "Si se activa, esta plantilla se selccionará automáticamente para nuevos previas. ",
-    "show_price_breakdown": "Mostrar desglose de precios"
+    "show_price_breakdown": "Mostrar desgloce de IEPS"
   },
   "invoices": {
     "title": "Facturas",
@@ -431,13 +431,13 @@
       "title": "Título del artículo",
       "description": "Descripción",
       "quantity": "Cantidad",
-      "price": "Precio",
+      "price": "Precio Unitario",
       "discount": "Descuento",
       "total": "Total",
       "total_discount": "Descuento total",
       "sub_total": "Subtotal",
       "tax": "Impuesto",
-      "amount": "Cantidad",
+      "amount": "Monto",
       "select_an_item": "Escriba o haga clic para seleccionar un elemento",
       "type_item_description": "Descripción del tipo de elemento (opcional)"
     },
@@ -533,7 +533,7 @@
       "title": "Título del artículo",
       "description": "Descripción",
       "quantity": "Cantidad",
-      "price": "Precio",
+      "price": "Precio Unitario",
       "discount": "Descuento",
       "total": "Total",
       "total_discount": "Descuento total",
