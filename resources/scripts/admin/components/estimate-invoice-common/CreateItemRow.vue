@@ -240,7 +240,7 @@ const precisionPrice = computed({
 
 const basePrice = computed({
   get: () => {
-    return subtotalPrecision.value - iepsTax.value;
+    return iepsBreakdown.value ? subtotalPrecision.value : subtotalPrecision.value - iepsTax.value;
   },
 })
 
@@ -307,7 +307,9 @@ const discount = computed({
 })
 
 const total = computed(() => {
-  return subtotalPrecision.value + ivaTax.value 
+  // return subtotalPrecision.value + ivaTax.value
+  return basePrice.value + iepsTax.value + ivaTax.value
+  // return (iepsBreakdown ? iepsTax.value : 0) + subtotalPrecision.value + ivaTax.value 
 })
 
 const totalPrecision = computed(() => {
