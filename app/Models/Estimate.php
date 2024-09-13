@@ -53,7 +53,8 @@ class Estimate extends Model implements HasMedia
         'sub_total' => 'integer',
         'discount' => 'float',
         'discount_val' => 'integer',
-        'exchange_rate' => 'float'
+        'exchange_rate' => 'float',
+        'show_price_breakdown' => 'boolean',
     ];
 
     public function getEstimatePdfUrlAttribute()

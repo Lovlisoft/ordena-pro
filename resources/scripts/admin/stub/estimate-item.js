@@ -1,3 +1,5 @@
+import { DEFAULT_ITEM_PRECISION } from "../config/constants";
+
 export default {
   estimate_id: null,
   item_id: null,
@@ -6,6 +8,8 @@ export default {
   description: null,
   quantity: 1,
   price: 0,
+  precision_price: 0,
+  precision:DEFAULT_ITEM_PRECISION,
   discount_type: 'fixed',
   discount_val: 0,
   discount: 0,
@@ -16,4 +20,5 @@ export default {
   totalCompoundTax: 0,
   tax: 0,
   taxes: [],
+  ieps: 0,
 }

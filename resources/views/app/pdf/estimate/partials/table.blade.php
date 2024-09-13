@@ -48,7 +48,7 @@
                 class="pr-20 text-right item-cell"
                 style="vertical-align: top;"
             >
-                {!! format_money_pdf($item->price, $estimate->customer->currency) !!}
+                {!! format_money_pdf($item->precision_price, $estimate->customer->currency,6) !!}
             </td>
             @if($estimate->discount_per_item === 'YES')
                 <td class="pl-10 text-right item-cell" style="vertical-align: top;">
@@ -61,7 +61,7 @@
                 </td>
             @endif
             <td class="text-right item-cell" style="vertical-align: top;">
-                {!! format_money_pdf($item->total, $estimate->customer->currency) !!}
+                {!! format_money_pdf($item->precision_price * $item->quantity, $estimate->customer->currency, 6) !!}
             </td>
         </tr>
         @php
@@ -126,10 +126,39 @@
             @endforeach
         @endif
         
+        @if ($estimate->show_price_breakdown)
+
         <tr>
+            <td class="border-0 total-table-attribute-label">Precio base:</td>
+            <td class="border-0 item-cell total-table-attribute-value ">
+                @php
+                    // p = price / quantity * (1 + IVA(16%) + IEPS(0.54))
+
+                    $price = 0;
+
+                    $quantity = 0;
+
+                    foreach ($estimate->items as $item) {
+                        $quantity += $item->quantity;
+
+                        $price += $item->price * $item->quantity;
+                    }
+
+                    $price = $price / $quantity * (1 + 0.16 + 0.54);
+
+                    echo format_money_pdf($price, $estimate->customer->currency);
+                @endphp
+            </td>
+        </tr>
+
+        @else 
+
+        <tr>            
             <td class="py-3"></td>
             <td class="py-3"></td>
         </tr>
+        
+        @endif
         <tr>
             <td class="border-0 total-border-left total-table-attribute-label">@lang('pdf_total')</td>
             <td class="py-8 border-0 total-border-right item-cell total-table-attribute-value" style="color: #5851D8">

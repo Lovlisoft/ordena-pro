@@ -1,18 +1,8 @@
 <template>
   <BaseContentPlaceholders v-if="contentLoading">
-    <BaseContentPlaceholdersBox
-      :rounded="true"
-      class="w-full"
-      style="height: 38px"
-    />
+    <BaseContentPlaceholdersBox :rounded="true" class="w-full" style="height: 38px" />
   </BaseContentPlaceholders>
-  <money3
-    v-else
-    v-model="money"
-    v-bind="currencyBindings"
-    :class="[inputClass, invalidClass]"
-    :disabled="disabled"
-  />
+  <money3 v-else v-model="money" v-bind="currencyBindings" :class="[inputClass, invalidClass]" :disabled="disabled" />
 </template>
 
 <script setup>
@@ -53,6 +43,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  itemPrecision: {
+    type: Number,
+    default: 2,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 const companyStore = useCompanyStore()
@@ -74,12 +68,11 @@ const currencyBindings = computed(() => {
   const currency = props.currency
     ? props.currency
     : companyStore.selectedCompanyCurrency
-
   return {
     decimal: currency.decimal_separator,
     thousands: currency.thousand_separator,
     prefix: currency.symbol + ' ',
-    precision: currency.precision,
+    precision: props.itemPrecision,
     masked: false,
   }
 })

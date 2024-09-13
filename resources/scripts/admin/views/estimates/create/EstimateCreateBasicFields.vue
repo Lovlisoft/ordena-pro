@@ -9,7 +9,7 @@
     />
 
     <BaseInputGrid class="col-span-7">
-      <BaseInputGroup
+      <!-- <BaseInputGroup
         :label="$t('reports.estimates.estimate_date')"
         :content-loading="isLoading"
         required
@@ -33,7 +33,7 @@
           :calendar-button="true"
           calendar-button-icon="calendar"
         />
-      </BaseInputGroup>
+      </BaseInputGroup> -->
 
       <BaseInputGroup
         :label="$t('estimates.estimate_number')"
@@ -50,23 +50,23 @@
         </BaseInput>
       </BaseInputGroup>
 
-      <!-- <BaseInputGroup
-        :label="$t('estimates.ref_number')"
+      <BaseInputGroup
+        :label="$t('estimates.show_price_breakdown')"
         :content-loading="isLoading"
         :error="
           v.reference_number.$error && v.reference_number.$errors[0].$message
         "
       >
-        <BaseInput
-          v-model="estimateStore.newEstimate.reference_number"
+        <BaseSwitch
+          v-model="estimateStore.newEstimate.show_price_breakdown"
           :content-loading="isLoading"
           @input="v.reference_number.$touch()"
         >
           <template #left="slotProps">
             <BaseIcon name="HashtagIcon" :class="slotProps.class" />
           </template>
-        </BaseInput>
-      </BaseInputGroup> -->
+        </BaseSwitch>
+      </BaseInputGroup>
       <ExchangeRateConverter
         :store="estimateStore"
         store-prop="newEstimate"

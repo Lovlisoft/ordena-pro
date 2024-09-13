@@ -28,10 +28,11 @@
             </BaseInputGroup>
 
             <BaseInputGroup :label="$t('items.price')">
-              <BaseMoney
+              <BaseItemMoney
                 :key="companyStore.selectedCompanyCurrency"
-                v-model="price"
+                v-model="precisionPrice"
                 :currency="companyStore.selectedCompanyCurrency"
+                :item-precision="DEFAULT_ITEM_PRECISION"
                 class="
                   relative
                   w-full
@@ -137,6 +138,11 @@ import { useTaxTypeStore } from '@/scripts/admin/stores/tax-type'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const emit = defineEmits(['newItem'])
 
@@ -155,10 +161,56 @@ const modalActive = computed(
   () => modalStore.active && modalStore.componentName === 'ItemModal'
 )
 
+const updateItemAttribute = (key, value) => {
+  itemStore.$patch((state) => {
+    state.currentItem[key] = value
+  })
+}
+
 const price = computed({
-  get: () => itemStore.currentItem.price / 10000,
-  set: (value) => {
-    itemStore.currentItem.price = Math.round(value * 10000) 
+  get: () => {
+
+    const price = itemStore.currentItem.price
+
+    if (parseFloat(price) > 0) {
+      return price / 100
+    }
+
+    return price
+  },
+
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let price = Math.round(newValue * 100)
+
+      updateItemAttribute('price', price)
+    } else {
+      updateItemAttribute('price', newValue)
+    }
+  },
+})
+
+const precisionPrice = computed({
+  get: () => {
+    const precisionPrice = itemStore.currentItem.precision_price
+
+    if (parseFloat(precisionPrice) > 0) {
+      return precisionPrice / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
+    }
+
+    return precisionPrice
+  },
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let precisionPrice = Math.round(newValue * getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
+      let price = Math.round(newValue * 100) // Calculate the corresponding price
+
+      updateItemAttribute('precision_price', precisionPrice)
+      updateItemAttribute('price', price) // Update the price attribute
+    } else {
+      updateItemAttribute('precision_price', newValue)
+      updateItemAttribute('price', newValue) // Update the price attribute
+    }
   },
 })
 
@@ -238,10 +290,6 @@ async function submitItemData() {
   }
 
   isLoading.value = true
-
-  console.log({
-    data
-  });
 
   const action = itemStore.isEdit ? itemStore.updateItem : itemStore.addItem
 

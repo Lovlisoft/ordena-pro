@@ -27,6 +27,11 @@ class ItemResource extends JsonResource
             'updated_at' => $this->updated_at,
             'tax_per_item' => $this->tax_per_item,
             'formatted_created_at' => $this->formattedCreatedAt,
+            'precision' => $this->precision,
+            'precision_price' => $this->precision_price,
+            'ieps' => $this->when($this->taxes()->exists(), function () {
+                return $this->taxes->first()->taxType->percent;
+            }),
             'unit' => $this->when($this->unit()->exists(), function () {
                 return new UnitResource($this->unit);
             }),

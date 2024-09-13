@@ -41,7 +41,7 @@ export const useEstimateStore = (useWindow = false) => {
       getSubTotal() {
         return this.newEstimate.items.reduce(function (a, b) {
           return a + b['total']
-        }, 0)
+        }, 0) / 10000;
       },
       getTotalSimpleTax() {
         return _.sumBy(this.newEstimate.taxes, function (tax) {

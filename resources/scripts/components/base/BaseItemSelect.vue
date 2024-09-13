@@ -58,24 +58,6 @@
         </BaseSelectAction>
       </template>
     </BaseMultiselect>
-
-    <!-- Item Description  -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="description"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('estimates.item.type_item_description')"
-        :invalid="invalidDescription"
-      />
-      <div v-if="invalidDescription">
-        <span class="text-red-600">
-          {{ $tc('validation.description_maxlength') }}
-        </span>
-      </div>
-    </div>
   </div>
 </template>
 
