@@ -37,6 +37,7 @@ use Crater\Http\Controllers\V1\Admin\General\GetAllUsedCurrenciesController;
 use Crater\Http\Controllers\V1\Admin\General\NextNumberController;
 use Crater\Http\Controllers\V1\Admin\General\NotesController;
 use Crater\Http\Controllers\V1\Admin\General\NumberPlaceholdersController;
+use Crater\Http\Controllers\V1\Admin\General\SatRegimesController;
 use Crater\Http\Controllers\V1\Admin\General\SearchController;
 use Crater\Http\Controllers\V1\Admin\General\SearchUsersController;
 use Crater\Http\Controllers\V1\Admin\General\TimezonesController;
@@ -241,6 +242,8 @@ Route::prefix('/v1')->group(function () {
             Route::get('/number-placeholders', NumberPlaceholdersController::class);
 
             Route::get('/current-company', AdminCompanyController::class);
+
+            Route::get('/sat-regimes', SatRegimesController::class);
 
 
             // Customers

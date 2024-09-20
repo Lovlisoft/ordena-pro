@@ -25,6 +25,7 @@ export const useGlobalStore = (useWindow = false) => {
       countries: [],
       languages: [],
       fiscalYears: [],
+      satRegimes: [],
 
       // Menus
       mainMenu: [],
@@ -34,6 +35,7 @@ export const useGlobalStore = (useWindow = false) => {
       isAppLoaded: false,
       isSidebarOpen: false,
       areCurrenciesLoading: false,
+      areSatRegimesLoading: false,
 
       downloadReport: null,
     }),
@@ -115,6 +117,7 @@ export const useGlobalStore = (useWindow = false) => {
           }
         })
       },
+      
 
       fetchConfig(params) {
         return new Promise((resolve, reject) => {
@@ -203,6 +206,30 @@ export const useGlobalStore = (useWindow = false) => {
               handleError(err)
               reject(err)
             })
+        })
+      },
+
+      fetchSatRegimes() {
+        return new Promise((resolve, reject) => {
+          if (this.satRegimes.length || this.areSatRegimesLoading) {
+            resolve(this.satRegimes)
+          } else {
+            this.areSatRegimesLoading = true
+            axios
+              .get('/api/v1/sat-regimes')
+              .then((response) => {
+                this.satRegimes = response.data.data.filter((regime) => {
+                  return regime.name
+                })
+                this.areSatRegimesLoading = false
+                resolve(response)
+              })
+              .catch((err) => {
+                handleError(err)
+                this.areSatRegimesLoading = false
+                reject(err)
+              })
+          }
         })
       },
 
