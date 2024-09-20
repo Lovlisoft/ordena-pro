@@ -109,6 +109,32 @@
 
             <BaseInputGroup
               :content-loading="isFetchingInitialData"
+              :label="$t('users.offices')"
+              :error="
+                v$.userData.offices.$error &&
+                v$.userData.offices.$errors[0].$message
+              "
+              required
+            >
+              <BaseMultiselect
+                v-model="userStore.userData.offices"
+                mode="tags"
+                :object="true"
+                autocomplete="new-password"
+                label="name"
+                :options="offices"
+                value-prop="id"
+                :invalid="v$.userData.offices.$error"
+                :content-loading="isFetchingInitialData"
+                searchable
+                :can-deselect="false"
+                class="w-full"
+                track-by="name"
+              />
+            </BaseInputGroup>
+
+            <BaseInputGroup
+              :content-loading="isFetchingInitialData"
               :label="$tc('users.password')"
               :error="
                 v$.userData.password.$error &&
@@ -188,6 +214,7 @@ let isSaving = ref(false)
 let isFetchingInitialData = ref(false)
 let selectedCompanies = ref([])
 let companies = ref([])
+let offices = ref([])
 
 const isEdit = computed(() => route.name === 'users.edit')
 
@@ -222,6 +249,9 @@ const rules = computed(() => {
       companies: {
         required: helpers.withMessage(t('validation.required'), required),
       },
+      offices: {
+        required: helpers.withMessage(t('validation.required'), required),
+      },
     },
   }
 })
@@ -253,6 +283,14 @@ async function loadInitialData() {
       companies.value = res.data.data.map((r) => {
         r.role = null
 
+        return r
+      })
+    }
+
+    let off = await companyStore.fetchUserOffices()
+
+    if (off?.data?.data) {
+      offices.value = off.data.data.map((r) => {
         return r
       })
     }
