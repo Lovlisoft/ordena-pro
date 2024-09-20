@@ -58,6 +58,11 @@ class Company extends Model implements HasMedia
         return null;
     }
 
+    public function offices()
+    {
+        return $this->hasMany(Office::class);
+    }
+
     public function customers()
     {
         return $this->hasMany(Customer::class);
