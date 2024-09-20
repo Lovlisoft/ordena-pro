@@ -178,6 +178,8 @@
     "mail": "Correo | Correos",
     "statement": "Declaración",
     "display_name": "Nombre para mostrar",
+    "legal_name": "Razón social",
+    "rfc": "RFC",
     "primary_contact_name": "Nombre de contacto primario",
     "contact_name": "Nombre de contacto",
     "amount_due": "Importe pendiente",

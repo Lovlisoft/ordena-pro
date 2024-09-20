@@ -63,6 +63,7 @@ export const useCustomerStore = (useWindow = false) => {
         Promise.all([
           globalStore.fetchCurrencies(),
           globalStore.fetchCountries(),
+          globalStore.fetchSatRegimes(),
           ...editActions,
         ])
           .then(async ([res1, res2, res3]) => {

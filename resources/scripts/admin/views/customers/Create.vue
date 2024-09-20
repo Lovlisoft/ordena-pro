@@ -37,8 +37,29 @@
           </h6>
 
           <BaseInputGrid class="col-span-5 lg:col-span-4">
+
             <BaseInputGroup
-              :label="$t('customers.display_name')"
+              :label="$t('customers.rfc')"
+              required
+              :error="
+                v$.currentCustomer.rfc.$error &&
+                v$.currentCustomer.rfc.$errors[0].$message
+              "
+              :content-loading="isFetchingInitialData"
+            >
+              <BaseInput
+                v-model="customerStore.currentCustomer.rfc"
+                :content-loading="isFetchingInitialData"
+                type="text"
+                name="name"
+                class=""
+                :invalid="v$.currentCustomer.rfc.$error"
+                @input="v$.currentCustomer.rfc.$touch()"
+              />
+            </BaseInputGroup>
+
+            <BaseInputGroup
+              :label="$t('customers.legal_name')"
               required
               :error="
                 v$.currentCustomer.name.$error &&
@@ -58,6 +79,31 @@
             </BaseInputGroup>
 
             <BaseInputGroup
+              label="Regimen Fiscal"
+              :content-loading="isFetchingInitialData"
+              :error="
+                v$.currentCustomer.currency_id.$error &&
+                v$.currentCustomer.currency_id.$errors[0].$message
+              "
+              required
+            >
+              <BaseMultiselect
+                v-model="customerStore.currentCustomer.sat_regime_id"
+                value-prop="id"
+                label="name"
+                track-by="name"
+                :content-loading="isFetchingInitialData"
+                :options="globalStore.satRegimes"
+                searchable
+                :can-deselect="false"
+                :placeholder="$t('customers.select_currency')"
+                :invalid="v$.currentCustomer.currency_id.$error"
+                class="w-full"
+              >
+              </BaseMultiselect>
+            </BaseInputGroup>
+
+            <!-- <BaseInputGroup
               :label="$t('customers.primary_contact_name')"
               :content-loading="isFetchingInitialData"
             >
@@ -66,9 +112,9 @@
                 :content-loading="isFetchingInitialData"
                 type="text"
               />
-            </BaseInputGroup>
+            </BaseInputGroup> -->
 
-            <BaseInputGroup
+            <!-- <BaseInputGroup
               :error="
                 v$.currentCustomer.email.$error &&
                 v$.currentCustomer.email.$errors[0].$message
@@ -84,9 +130,9 @@
                 :invalid="v$.currentCustomer.email.$error"
                 @input="v$.currentCustomer.email.$touch()"
               />
-            </BaseInputGroup>
+            </BaseInputGroup> -->
 
-            <BaseInputGroup
+            <!-- <BaseInputGroup
               :label="$t('customers.phone')"
               :content-loading="isFetchingInitialData"
             >
@@ -96,9 +142,9 @@
                 type="text"
                 name="phone"
               />
-            </BaseInputGroup>
+            </BaseInputGroup> -->
 
-            <BaseInputGroup
+            <!-- <BaseInputGroup
               :label="$t('customers.primary_currency')"
               :content-loading="isFetchingInitialData"
               :error="
@@ -121,9 +167,9 @@
                 class="w-full"
               >
               </BaseMultiselect>
-            </BaseInputGroup>
+            </BaseInputGroup> -->
 
-            <BaseInputGroup
+            <!-- <BaseInputGroup
               label="Asesor"
               :content-loading="isFetchingInitialData"
               required
@@ -141,7 +187,7 @@
                 class="w-full"
               >
               </BaseMultiselect>
-            </BaseInputGroup>
+            </BaseInputGroup> -->
 
           </BaseInputGrid>
         </div>  
@@ -619,6 +665,13 @@ const rules = computed(() => {
   return {
     currentCustomer: {
       name: {
+        required: helpers.withMessage(t('validation.required'), required),
+        minLength: helpers.withMessage(
+          t('validation.name_min_length', { count: 3 }),
+          minLength(3)
+        ),
+      },
+      rfc: {
         required: helpers.withMessage(t('validation.required'), required),
         minLength: helpers.withMessage(
           t('validation.name_min_length', { count: 3 }),

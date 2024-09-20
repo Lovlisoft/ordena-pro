@@ -210,7 +210,15 @@ class Customer extends Authenticatable implements HasMedia
             return 'you_cannot_edit_currency';
         }
 
+        //dd($request->getCustomerPayload());
+
         $customer->update($request->getCustomerPayload());
+
+        if (is_null($customer->manager_id)) {
+            $customer->update([
+                'manager_id' => $request->user()->id,
+            ]);
+        }
 
         $customer->addresses()->delete();
 
