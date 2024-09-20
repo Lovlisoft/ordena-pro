@@ -39,7 +39,10 @@ class UserResource extends JsonResource
             }),
             'companies' => $this->when($this->companies()->exists(), function () {
                 return CompanyResource::collection($this->companies);
-            })
+            }),
+            'offices' => $this->when($this->offices()->exists(), function () {
+                return OfficeResource::collection($this->offices);
+            }),
         ];
     }
 }

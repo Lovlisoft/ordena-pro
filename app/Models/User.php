@@ -92,6 +92,11 @@ class User extends Authenticatable implements HasMedia
         return Carbon::parse($this->created_at)->format($dateFormat);
     }
 
+    public function offices()
+    {
+        return $this->belongsToMany(Office::class, 'user_offices', 'user_id', 'office_id');
+    }
+
     public function estimates()
     {
         return $this->hasMany(Estimate::class, 'creator_id');
@@ -341,6 +346,10 @@ class User extends Authenticatable implements HasMedia
         $companies = collect($request->companies);
         $user->companies()->sync($companies->pluck('id'));
 
+        if ($offices = collect($request->offices)) {
+            $user->offices()->sync($offices->pluck('id'));
+        }
+
         foreach ($companies as $company) {
             BouncerFacade::scope()->to($company['id']);
 
@@ -357,6 +366,10 @@ class User extends Authenticatable implements HasMedia
         $companies = collect($request->companies);
         $this->companies()->sync($companies->pluck('id'));
 
+        if ($offices = collect($request->offices)) {
+            $this->offices()->sync($offices->pluck('id'));
+        }
+        
         foreach ($companies as $company) {
             BouncerFacade::scope()->to($company['id']);
 

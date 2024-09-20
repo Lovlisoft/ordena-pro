@@ -730,7 +730,8 @@
     "updated_message": "Usuario actualizado satisfactoriamente",
     "deleted_message": "Usuario eliminado exitosamente | Usuario eliminado correctamente",
     "select_company_role": "Seleccionar rol para {company}",
-    "companies": "Empresas"
+    "companies": "Empresas",
+    "offices": "Oficinas"
   },
   "reports": {
     "title": "Informe",
