@@ -23,8 +23,13 @@ class CustomersController extends Controller
 
         $limit = $request->has('limit') ? $request->limit : 10;
 
+        $user = $request->user();
+
         $customers = Customer::with('creator')
             ->whereCompany()
+            ->when($user->role == 'user', function ($query) use ($user) {
+                $query->where('customers.creator_id', $user->id);
+            })
             ->applyFilters($request->all())
             ->select(
                 'customers.*',
