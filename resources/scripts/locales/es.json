@@ -8,6 +8,7 @@
     "expenses": "Gastos",
     "estimates": "Previas",
     "payments": "Pagos",
+    "bank-transactions": "Movimientos",
     "reports": "Informes",
     "settings": "Ajustes",
     "logout": "Cerrar sesión",
@@ -600,6 +601,15 @@
     "updated_message": "Pago actualizado con éxito",
     "deleted_message": "Pago eliminado con éxito | Pagos eliminados exitosamente",
     "invalid_amount_message": "El importe del pago no es válido."
+  },
+  "transactions": {
+    "title": "Movimientos",
+    "transactions": "Movimientos",
+    "date": "Fecha",
+    "bank": "Banco",
+    "reference": "Referencia",
+    "debit": "Abono",
+    "credit": "Cargo"
   },
   "expenses": {
     "title": "Gastos",
