@@ -5,6 +5,7 @@ use Crater\Http\Controllers\V1\Admin\Auth\ForgotPasswordController;
 use Crater\Http\Controllers\V1\Admin\Auth\ResetPasswordController;
 use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Crater\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
+use Crater\Http\Controllers\V1\Admin\Banks\BankAccountTransactionsController;
 use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Crater\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
 use Crater\Http\Controllers\V1\Admin\Office\OfficesController;
@@ -338,6 +339,8 @@ Route::prefix('/v1')->group(function () {
             Route::apiResource('payments', PaymentsController::class);
 
             Route::apiResource('payment-methods', PaymentMethodsController::class);
+
+            Route::apiResource('bank-transactions', BankAccountTransactionsController::class);
 
 
             // Custom fields

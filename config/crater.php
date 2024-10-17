@@ -1,5 +1,6 @@
 <?php
 
+use Crater\Models\BankAccountTransaction;
 use Crater\Models\Customer;
 use Crater\Models\CustomField;
 use Crater\Models\Estimate;
@@ -350,6 +351,16 @@ return [
             'owner_only' => false,
             'ability' => 'view-payment',
             'model' => Payment::class
+        ],
+        [
+            'title' => 'navigation.bank-transactions',
+            'group' => 2,
+            'link' => '/admin/bank-transactions',
+            'icon' => 'CashIcon',
+            'name' => 'Payments',
+            'owner_only' => false,
+            'ability' => 'view-payment',
+            'model' => BankAccountTransaction::class
         ],
         // [
         //     'title' => 'navigation.expenses',
