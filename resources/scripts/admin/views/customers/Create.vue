@@ -641,6 +641,8 @@ const usersStore = useUsersStore()
 
 const customFieldValidationScope = 'customFields'
 
+const validRFC = helpers.regex(/^([A-Z&]{3,4})\d{6}(?:[A-Z\d]{3})?$/)
+
 const { t } = useI18n()
 
 const router = useRouter()
@@ -673,10 +675,7 @@ const rules = computed(() => {
       },
       rfc: {
         required: helpers.withMessage(t('validation.required'), required),
-        minLength: helpers.withMessage(
-          t('validation.name_min_length', { count: 3 }),
-          minLength(3)
-        ),
+        validRFC: helpers.withMessage("El formato del RFC no es correcto", validRFC)
       },
       prefix: {
         minLength: helpers.withMessage(
