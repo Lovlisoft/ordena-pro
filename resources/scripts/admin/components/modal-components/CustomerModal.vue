@@ -20,406 +20,71 @@
         <BaseTabGroup>
           <BaseTab :title="$t('customers.basic_info')" class="!mt-2">
             <BaseInputGrid layout="one-column">
+             
               <BaseInputGroup
-                :label="$t('customers.display_name')"
-                required
-                :error="v$.name.$error && v$.name.$errors[0].$message"
-              >
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.name"
-                  type="text"
-                  name="name"
-                  class="mt-1 md:mt-0"
-                  :invalid="v$.name.$error"
-                  @input="v$.name.$touch()"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup
-                :label="$tc('settings.currencies.currency')"
-                required
-                :error="
-                  v$.currency_id.$error && v$.currency_id.$errors[0].$message
-                "
-              >
-                <BaseMultiselect
-                  v-model="customerStore.currentCustomer.currency_id"
-                  :options="globalStore.currencies"
-                  value-prop="id"
-                  searchable
-                  :placeholder="$t('customers.select_currency')"
-                  :max-height="200"
-                  class="mt-1 md:mt-0"
-                  track-by="name"
-                  :invalid="v$.currency_id.$error"
-                  label="name"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.primary_contact_name')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.contact_name"
-                  type="text"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-              <BaseInputGroup
-                :label="$t('login.email')"
-                :error="v$.email.$error && v$.email.$errors[0].$message"
-              >
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.email"
-                  type="text"
-                  name="email"
-                  class="mt-1 md:mt-0"
-                  :invalid="v$.email.$error"
-                  @input="v$.email.$touch()"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup
-                :label="$t('customers.prefix')"
-                :error="v$.prefix.$error && v$.prefix.$errors[0].$message"
+              :label="$t('customers.rfc')"
+              required
+              :error="
+                v$.rfc.$error &&
+                v$.rfc.$errors[0].$message
+              "
+              :content-loading="isFetchingInitialData"
+            >
+              <BaseInput
+                v-model="customerStore.currentCustomer.rfc"
                 :content-loading="isFetchingInitialData"
-              >
-                <BaseInput
-                  v-model="customerStore.currentCustomer.prefix"
-                  :content-loading="isFetchingInitialData"
-                  type="text"
-                  name="name"
-                  class=""
-                  :invalid="v$.prefix.$error"
-                  @input="v$.prefix.$touch()"
-                />
-              </BaseInputGroup>
+                type="text"
+                name="name"
+                class=""
+                :invalid="v$.rfc.$error"
+                @input="v$.rfc.$touch()"
+              />
+            </BaseInputGroup>
 
-              <BaseInputGrid>
-                <BaseInputGroup :label="$t('customers.phone')">
-                  <BaseInput
-                    v-model.trim="customerStore.currentCustomer.phone"
-                    type="text"
-                    name="phone"
-                    class="mt-1 md:mt-0"
-                  />
-                </BaseInputGroup>
-
-                <BaseInputGroup
-                  :label="$t('customers.website')"
-                  :error="v$.website.$error && v$.website.$errors[0].$message"
-                >
-                  <BaseInput
-                    v-model="customerStore.currentCustomer.website"
-                    type="url"
-                    class="mt-1 md:mt-0"
-                    :invalid="v$.website.$error"
-                    @input="v$.website.$touch()"
-                  />
-                </BaseInputGroup>
-              </BaseInputGrid>
-            </BaseInputGrid>
-          </BaseTab>
-
-          <BaseTab :title="$t('customers.portal_access')">
-            <BaseInputGrid class="col-span-5 lg:col-span-4">
-              <div class="md:col-span-2">
-                <p class="text-sm text-gray-500">
-                  {{ $t('customers.portal_access_text') }}
-                </p>
-
-                <BaseSwitch
-                  v-model="customerStore.currentCustomer.enable_portal"
-                  class="mt-1 flex"
-                />
-              </div>
-
-              <BaseInputGroup
-                v-if="customerStore.currentCustomer.enable_portal"
+            <BaseInputGroup
+              :label="$t('customers.legal_name')"
+              required
+              :error="
+                v$.name.$error &&
+                v$.name.$errors[0].$message
+              "
+              :content-loading="isFetchingInitialData"
+            >
+              <BaseInput
+                v-model="customerStore.currentCustomer.name"
                 :content-loading="isFetchingInitialData"
-                :label="$t('customers.portal_access_url')"
-                class="md:col-span-2"
-                :help-text="$t('customers.portal_access_url_help')"
-              >
-                <CopyInputField :token="getCustomerPortalUrl" />
-              </BaseInputGroup>
+                type="text"
+                name="name"
+                class=""
+                :invalid="v$.name.$error"
+                @input="v$.name.$touch()"
+              />
+            </BaseInputGroup>
 
-              <BaseInputGroup
-                v-if="customerStore.currentCustomer.enable_portal"
+            <BaseInputGroup
+              label="Regimen Fiscal"
+              :content-loading="isFetchingInitialData"
+              :error="
+                v$.currency_id.$error &&
+                v$.currency_id.$errors[0].$message
+              "
+              required
+            >
+              <BaseMultiselect
+                v-model="customerStore.currentCustomer.sat_regime_id"
+                value-prop="id"
+                label="name"
+                track-by="name"
                 :content-loading="isFetchingInitialData"
-                :error="v$.password.$error && v$.password.$errors[0].$message"
-                :label="$t('customers.password')"
+                :options="globalStore.satRegimes"
+                searchable
+                :can-deselect="false"
+                :placeholder="$t('customers.select_currency')"
+                :invalid="v$.currency_id.$error"
+                class="w-full"
               >
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.password"
-                  :content-loading="isFetchingInitialData"
-                  :type="isShowPassword ? 'text' : 'password'"
-                  name="password"
-                  :invalid="v$.password.$error"
-                  @input="v$.password.$touch()"
-                >
-                  <template #right>
-                    <BaseIcon
-                      v-if="isShowPassword"
-                      name="EyeOffIcon"
-                      class="w-5 h-5 mr-1 text-gray-500 cursor-pointer"
-                      @click="isShowPassword = !isShowPassword"
-                    />
-                    <BaseIcon
-                      v-else
-                      name="EyeIcon"
-                      class="w-5 h-5 mr-1 text-gray-500 cursor-pointer"
-                      @click="isShowPassword = !isShowPassword"
-                    /> </template
-                ></BaseInput>
-              </BaseInputGroup>
-              <BaseInputGroup
-                v-if="customerStore.currentCustomer.enable_portal"
-                :error="
-                  v$.confirm_password.$error &&
-                  v$.confirm_password.$errors[0].$message
-                "
-                :content-loading="isFetchingInitialData"
-                label="Confirm Password"
-              >
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.confirm_password"
-                  :content-loading="isFetchingInitialData"
-                  :type="isShowConfirmPassword ? 'text' : 'password'"
-                  name="confirm_password"
-                  :invalid="v$.confirm_password.$error"
-                  @input="v$.confirm_password.$touch()"
-                >
-                  <template #right>
-                    <BaseIcon
-                      v-if="isShowConfirmPassword"
-                      name="EyeOffIcon"
-                      class="w-5 h-5 mr-1 text-gray-500 cursor-pointer"
-                      @click="isShowConfirmPassword = !isShowConfirmPassword"
-                    />
-                    <BaseIcon
-                      v-else
-                      name="EyeIcon"
-                      class="w-5 h-5 mr-1 text-gray-500 cursor-pointer"
-                      @click="isShowConfirmPassword = !isShowConfirmPassword"
-                    /> </template
-                ></BaseInput>
-              </BaseInputGroup>
-            </BaseInputGrid>
-          </BaseTab>
-
-          <BaseTab :title="$t('customers.billing_address')" class="!mt-2">
-            <BaseInputGrid layout="one-column">
-              <BaseInputGroup :label="$t('customers.name')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.billing.name"
-                  type="text"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.country')">
-                <BaseMultiselect
-                  v-model="customerStore.currentCustomer.billing.country_id"
-                  :options="globalStore.countries"
-                  searchable
-                  :show-labels="false"
-                  :placeholder="$t('general.select_country')"
-                  :allow-empty="false"
-                  track-by="name"
-                  class="mt-1 md:mt-0"
-                  label="name"
-                  value-prop="id"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.state')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.billing.state"
-                  type="text"
-                  name="billingState"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.city')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.billing.city"
-                  type="text"
-                  name="billingCity"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup
-                :label="$t('customers.address')"
-                :error="
-                  v$.billing.address_street_1.$error &&
-                  v$.billing.address_street_1.$errors[0].$message
-                "
-              >
-                <BaseTextarea
-                  v-model="
-                    customerStore.currentCustomer.billing.address_street_1
-                  "
-                  :placeholder="$t('general.street_1')"
-                  rows="2"
-                  cols="50"
-                  class="mt-1 md:mt-0"
-                  :invalid="v$.billing.address_street_1.$error"
-                  @input="v$.billing.address_street_1.$touch()"
-                />
-              </BaseInputGroup>
-            </BaseInputGrid>
-
-            <BaseInputGrid layout="one-column">
-              <BaseInputGroup
-                :error="
-                  v$.billing.address_street_2.$error &&
-                  v$.billing.address_street_2.$errors[0].$message
-                "
-              >
-                <BaseTextarea
-                  v-model="
-                    customerStore.currentCustomer.billing.address_street_2
-                  "
-                  :placeholder="$t('general.street_2')"
-                  rows="2"
-                  cols="50"
-                  :invalid="v$.billing.address_street_2.$error"
-                  @input="v$.billing.address_street_2.$touch()"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.phone')">
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.billing.phone"
-                  type="text"
-                  name="phone"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.zip_code')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.billing.zip"
-                  type="text"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-            </BaseInputGrid>
-          </BaseTab>
-
-          <BaseTab :title="$t('customers.shipping_address')" class="!mt-2">
-            <div class="grid md:grid-cols-12">
-              <div class="flex justify-end col-span-12">
-                <BaseButton
-                  variant="primary"
-                  type="button"
-                  size="xs"
-                  @click="copyAddress(true)"
-                >
-                  {{ $t('customers.copy_billing_address') }}
-                </BaseButton>
-              </div>
-            </div>
-
-            <BaseInputGrid layout="one-column">
-              <BaseInputGroup :label="$t('customers.name')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.shipping.name"
-                  type="text"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.country')">
-                <BaseMultiselect
-                  v-model="customerStore.currentCustomer.shipping.country_id"
-                  :options="globalStore.countries"
-                  :searchable="true"
-                  :show-labels="false"
-                  :allow-empty="false"
-                  :placeholder="$t('general.select_country')"
-                  track-by="name"
-                  class="mt-1 md:mt-0"
-                  label="name"
-                  value-prop="id"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.state')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.shipping.state"
-                  type="text"
-                  name="shippingState"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.city')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.shipping.city"
-                  type="text"
-                  name="shippingCity"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup
-                :label="$t('customers.address')"
-                :error="
-                  v$.shipping.address_street_1.$error &&
-                  v$.shipping.address_street_1.$errors[0].$message
-                "
-              >
-                <BaseTextarea
-                  v-model="
-                    customerStore.currentCustomer.shipping.address_street_1
-                  "
-                  :placeholder="$t('general.street_1')"
-                  rows="2"
-                  cols="50"
-                  class="mt-1 md:mt-0"
-                  :invalid="v$.shipping.address_street_1.$error"
-                  @input="v$.shipping.address_street_1.$touch()"
-                />
-              </BaseInputGroup>
-            </BaseInputGrid>
-
-            <BaseInputGrid layout="one-column">
-              <BaseInputGroup
-                :error="
-                  v$.shipping.address_street_2.$error &&
-                  v$.shipping.address_street_2.$errors[0].$message
-                "
-              >
-                <BaseTextarea
-                  v-model="
-                    customerStore.currentCustomer.shipping.address_street_2
-                  "
-                  :placeholder="$t('general.street_2')"
-                  rows="2"
-                  cols="50"
-                  :invalid="v$.shipping.address_street_1.$error"
-                  @input="v$.shipping.address_street_2.$touch()"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.phone')">
-                <BaseInput
-                  v-model.trim="customerStore.currentCustomer.shipping.phone"
-                  type="text"
-                  name="phone"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
-
-              <BaseInputGroup :label="$t('customers.zip_code')">
-                <BaseInput
-                  v-model="customerStore.currentCustomer.shipping.zip"
-                  type="text"
-                  class="mt-1 md:mt-0"
-                />
-              </BaseInputGroup>
+              </BaseMultiselect>
+            </BaseInputGroup>
             </BaseInputGrid>
           </BaseTab>
         </BaseTabGroup>
@@ -498,6 +163,8 @@ const isLoading = ref(false)
 let isShowPassword = ref(false)
 let isShowConfirmPassword = ref(false)
 
+const validRFC = helpers.regex(/^([A-Z&]{3,4})\d{6}(?:[A-Z\d]{3})?$/)
+
 const modalActive = computed(
   () => modalStore.active && modalStore.componentName === 'CustomerModal'
 )
@@ -511,6 +178,10 @@ const rules = computed(() => {
         minLength(3)
       ),
     },
+    rfc: {
+        required: helpers.withMessage(t('validation.required'), required),
+        validRFC: helpers.withMessage("El formato del RFC no es correcto", validRFC)
+      },
     currency_id: {
       required: helpers.withMessage(t('validation.required'), required),
     },

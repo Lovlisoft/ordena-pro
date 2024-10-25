@@ -29,6 +29,7 @@ class CustomerRequest extends FormRequest
         $rules = [
             'rfc' => [
                 'required',
+                'regex:/^([A-Z&]{3,4})\d{6}(?:[A-Z\d]{3})?$/',
             ],
             'name' => [
                 'required',
