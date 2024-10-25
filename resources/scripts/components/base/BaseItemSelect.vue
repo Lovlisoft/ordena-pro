@@ -44,19 +44,6 @@
       @update:modelValue="(val) => $emit('select', val)"
       @searchChange="(val) => $emit('search', val)"
     >
-      <!-- Add Item Action  -->
-      <template #action>
-        <BaseSelectAction
-          v-if="userStore.hasAbilities(abilities.CREATE_ITEM)"
-          @click="openItemModal"
-        >
-          <BaseIcon
-            name="PlusCircleIcon"
-            class="h-4 mr-2 -ml-2 text-center text-primary-400"
-          />
-          {{ $t('general.add_new_item') }}
-        </BaseSelectAction>
-      </template>
     </BaseMultiselect>
   </div>
 </template>
