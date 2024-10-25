@@ -1,4 +1,5 @@
 <template>
+  <BankImportModal />
   <BasePage class="payments">
     <SendPaymentModal />
     <BasePageHeader :title="$t('transactions.title')">
@@ -24,6 +25,20 @@
             <BaseIcon v-else name="XIcon" :class="slotProps.class" />
           </template>
         </BaseButton>
+
+        <BaseButton
+            v-if="userStore.currentUser.is_owner"
+            @click="openBankImportModal"
+          >
+            <template #left="slotProps">
+              <BaseIcon
+                name="PlusIcon"
+                :class="slotProps.class"
+                aria-hidden="true"
+              />
+            </template>
+            Importar Movimientos
+          </BaseButton>
       </template>
     </BasePageHeader>
 
@@ -139,6 +154,8 @@ import abilities from '@/scripts/admin/stub/abilities'
 import CapsuleIcon from '@/scripts/components/icons/empty/CapsuleIcon.vue'
 // import PaymentDropdown from '@/scripts/admin/components/dropdowns/PaymentIndexDropdown.vue'
 import SendPaymentModal from '@/scripts/admin/components/modal-components/SendPaymentModal.vue'
+import BankImportModal from '@/scripts/admin/components/modal-components/BankImportModal.vue'
+import { useModalStore } from '@/scripts/stores/modal'
 
 const { t } = useI18n()
 let showFilters = ref(false)
@@ -156,10 +173,26 @@ const transactionStore = useTransactionStore()
 const companyStore = useCompanyStore()
 const dialogStore = useDialogStore()
 const userStore = useUserStore()
+const modalStore = useModalStore()
 
 const showEmptyScreen = computed(() => {
   return !transactionStore.transactionTotalCount && !isFetchingInitialData.value
 })
+
+function openBankImportModal() {
+  modalStore.openModal({
+    title: "Importar Movimientos",
+    componentName: 'BankImportModal',
+    refreshData: (val) => emit('select', val),
+    // data: {
+    //   taxPerItem: props.taxPerItem,
+    //   taxes: props.taxes,
+    //   itemIndex: props.index,
+    //   store: props.store,
+    //   storeProps: props.storeProp,
+    // },
+  })
+}
 
 const transactionColumns = computed(() => {
   return [

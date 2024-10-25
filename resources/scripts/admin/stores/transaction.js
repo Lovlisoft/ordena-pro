@@ -124,7 +124,7 @@ export const useTransactionStore = (useWindow = false) => {
         })
       },
 
-      addTransaction(data) {
+      importTransactions(data) {
         return new Promise((resolve, reject) => {
           axios
             .post('/api/v1/bank-transactions', data)
