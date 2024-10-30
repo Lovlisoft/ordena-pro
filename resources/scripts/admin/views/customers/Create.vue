@@ -764,7 +764,7 @@ customerStore.resetCurrentCustomer()
 
 customerStore.fetchCustomerInitialSettings(isEdit.value)
 
-usersStore.fetchUsers()
+// usersStore.fetchUsers()
 
 async function submitCustomerData() {
   v$.value.$touch()

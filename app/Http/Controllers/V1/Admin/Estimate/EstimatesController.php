@@ -22,6 +22,7 @@ class EstimatesController extends Controller
             ->join('customers', 'customers.id', '=', 'estimates.customer_id')
             ->applyFilters($request->all())
             ->select('estimates.*', 'customers.name')
+            ->allowedForUser($request->user())
             ->latest()
             ->paginateData($limit);
 

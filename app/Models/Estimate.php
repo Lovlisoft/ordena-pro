@@ -197,6 +197,11 @@ class Estimate extends Model implements HasMedia
         $query->where('estimates.customer_id', $customer_id);
     }
 
+    public function scopeAllowedForUser($query, $user)
+    {
+        $query->where('estimates.creator_id', $user->id);
+    }
+
     public function scopePaginateData($query, $limit)
     {
         if ($limit == 'all') {
