@@ -5,6 +5,7 @@ namespace Crater\Policies;
 use Crater\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Silber\Bouncer\Database\Role;
+use Silber\Bouncer\BouncerFacade;
 
 class RolePolicy
 {
@@ -18,7 +19,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->isOwner()) {
+        if ($user->isOwner() || BouncerFacade::can('create-user', User::class)) {
             return true;
         }
 

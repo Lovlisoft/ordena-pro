@@ -382,19 +382,19 @@ export default [
       {
         path: 'users',
         name: 'users.index',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         component: UserIndex,
       },
       {
         path: 'users/create',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         name: 'users.create',
         component: UserCreate,
       },
       {
         path: 'users/:id/edit',
         name: 'users.edit',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         component: UserCreate,
       },
 
