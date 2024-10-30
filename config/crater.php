@@ -12,6 +12,7 @@ use Crater\Models\Note;
 use Crater\Models\Payment;
 use Crater\Models\RecurringInvoice;
 use Crater\Models\TaxType;
+use Crater\Models\User;
 
 return [
 
@@ -388,9 +389,9 @@ return [
             'link' => '/admin/users',
             'icon' => 'UsersIcon',
             'name' => 'Users',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'create-user',
+            'model' => User::class,
         ],
         // [
         //     'title' => 'navigation.reports',

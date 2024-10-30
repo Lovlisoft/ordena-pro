@@ -11,6 +11,7 @@ use Crater\Models\Note;
 use Crater\Models\Payment;
 use Crater\Models\RecurringInvoice;
 use Crater\Models\TaxType;
+use Crater\Models\User;
 
 return [
     'abilities' => [
@@ -415,6 +416,13 @@ return [
             "depends_on" => [
                 'view-all-notes'
             ]
-        ]
+            ],
+
+         // Users
+         [
+            "name" => "create users",
+            "ability" => "create-user",
+            "model" => User::class,
+        ],
     ]
 ];
