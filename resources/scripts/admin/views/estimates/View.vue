@@ -1,5 +1,6 @@
 <template>
   <SendEstimateModal @update="updateSentEstimate" />
+  <EstimateFileUploadModal />
   <BasePage v-if="estimateData">
     <BasePageHeader :title="pageTitle">
       <template #actions>
@@ -35,13 +36,38 @@
       </template>
     </BasePageHeader>
 
-    <div class="relative table-container pt-5">
+    <div class="relative table-container pt-5" >
         <BaseTable
           :data="estimateData.items"
           :columns="itemsColumns"
           :loading="isLoadingEstimate"
         >
-         
+          <template #cell-id="{ row }">
+            <router-link
+              :to="openEstimateFileUploadModal"
+              class="font-medium text-primary-500"
+            >{{ row.data.id }}</router-link>
+          </template>
+
+          <template #cell-name="{ row }">
+            {{ row.data.name }}
+          </template>
+
+          <template #cell-quantity="{ row }">
+            {{ row.data.quantity }}
+          </template>
+
+          <template #cell-precision_price="{ row }">
+            {{ row.data.precision_price }}
+          </template>
+
+          <template #cell-total="{ row }">
+            {{ row.data.total }}
+          </template>
+
+          <template #cell-actions>
+            <EstimateItemDropDown class="ml-3" :row="estimateData" />
+          </template>
         </BaseTable>
     </div>
 
@@ -75,8 +101,10 @@ import { useModalStore } from '@/scripts/stores/modal'
 import { useDialogStore } from '@/scripts/stores/dialog'
 import { useUserStore } from '@/scripts/admin/stores/user'
 
+import EstimateItemDropDown from '@/scripts/admin/components/dropdowns/EstimateItemDropdown.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
 import SendEstimateModal from '@/scripts/admin/components/modal-components/SendEstimateModal.vue'
+import EstimateFileUploadModal from '@/scripts/admin/components/modal-components/EstimateFileUploadModal.vue'
 import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
 import BaseCard from '@/scripts/components/base/BaseCard.vue'
 
@@ -110,7 +138,7 @@ const searchData = reactive({
 const itemsColumns = computed(() => {
   return [
     {
-      key: 'key',
+      key: 'id',
       label: "Partida",
     },
     {
@@ -131,6 +159,7 @@ const itemsColumns = computed(() => {
     },
     {
       key: 'actions',
+      label: "Acciones",
       tdClass: 'text-right text-sm font-medium pl-0',
       thClass: 'text-right pl-0',
       sortable: false,
@@ -237,6 +266,21 @@ async function loadEstimates(pageNumber, fromScrollListener = false) {
       }
     }, 500)
   }
+}
+
+function openEstimateFileUploadModal() {
+  modalStore.openModal({
+    title: "Cargar Previa",
+    componentName: 'EstimateFileUploadModal',
+    refreshData: (val) => emit('select', val),
+    // data: {
+    //   taxPerItem: props.taxPerItem,
+    //   taxes: props.taxes,
+    //   itemIndex: props.index,
+    //   store: props.store,
+    //   storeProps: props.storeProp,
+    // },
+  })
 }
 
 function scrollToEstimate() {
