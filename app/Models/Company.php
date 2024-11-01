@@ -158,6 +158,11 @@ class Company extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'user_company', 'company_id', 'user_id');
     }
 
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class);
+    }
+
     public function setupRoles()
     {
         BouncerFacade::scope()->to($this->id);
