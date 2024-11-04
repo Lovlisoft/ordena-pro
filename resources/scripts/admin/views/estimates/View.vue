@@ -1,24 +1,9 @@
 <template>
-  <SendEstimateModal @update="updateSentEstimate" />
-  <EstimateFileUploadModal />
-  <BasePage v-if="estimateData">
+  <!-- <SendEstimateModal @update="updateSentEstimate" /> -->
+  <!-- <EstimateItemDetail /> -->
+  <BasePage v-if="estimateData" :class="{ 'w-1/2' : estimateItemDetailOpen }">
     <BasePageHeader :title="pageTitle">
       <template #actions>
-        <div class="mr-3 text-sm">
-          <BaseButton
-            v-if="
-              estimateData.status === 'DRAFT' &&
-              userStore.hasAbilities(abilities.EDIT_ESTIMATE)
-            "
-            :disabled="isMarkAsSent"
-            :content-loading="isLoadingEstimate"
-            variant="primary-outline"
-            @click="onMarkAsSent"
-          >
-            {{ $t('estimates.mark_as_sent') }}
-          </BaseButton>
-        </div>
-
         <BaseButton
           v-if="
             estimateData.status === 'DRAFT' &&
@@ -36,15 +21,17 @@
       </template>
     </BasePageHeader>
 
-    <div class="relative table-container pt-5" >
+    <div class="relative table-container pt-5">
         <BaseTable
           :data="estimateData.items"
           :columns="itemsColumns"
           :loading="isLoadingEstimate"
+          actionRow="openItemDetail"
+          @open-item-detail="openEstimateItemDetail"
         >
           <template #cell-id="{ row }">
             <router-link
-              :to="openEstimateFileUploadModal"
+              :to="openEstimateItemDetail"
               class="font-medium text-primary-500"
             >{{ row.data.id }}</router-link>
           </template>
@@ -64,30 +51,16 @@
           <template #cell-total="{ row }">
             {{ row.data.total }}
           </template>
-
-          <template #cell-actions>
-            <EstimateItemDropDown class="ml-3" :row="estimateData" />
-          </template>
         </BaseTable>
+
+        
     </div>
-
-
-    <!-- <div
-      class="flex flex-col min-h-0 mt-8 overflow-hidden"
-      style="height: 75vh"
-    >
-      <iframe
-        :src="`${shareableLink}`"
-        class="
-          flex-1
-          border border-gray-400 border-solid
-          rounded-md
-          bg-white
-          frame-style
-        "
-      />
-    </div> -->
   </BasePage>
+
+  <EstimateItemDetail 
+    :estimateItemDetailOpen="estimateItemDetailOpen" 
+    @close-estimateitemdetail="closeEstimateItemDetail"
+  />
 </template>
 
 <script setup>
@@ -104,7 +77,7 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import EstimateItemDropDown from '@/scripts/admin/components/dropdowns/EstimateItemDropdown.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
 import SendEstimateModal from '@/scripts/admin/components/modal-components/SendEstimateModal.vue'
-import EstimateFileUploadModal from '@/scripts/admin/components/modal-components/EstimateFileUploadModal.vue'
+import EstimateItemDetail from '@/scripts/admin/components/modal-components/EstimateItemDetail.vue'
 import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
 import BaseCard from '@/scripts/components/base/BaseCard.vue'
 
@@ -128,6 +101,7 @@ const estimateList = ref(null)
 const currentPageNumber = ref(1)
 const lastPageNumber = ref(1)
 const estimateListSection = ref(null)
+const estimateItemDetailOpen = ref(false)
 
 const searchData = reactive({
   orderBy: null,
@@ -156,14 +130,7 @@ const itemsColumns = computed(() => {
     {
       key: 'total',
       label: "Total",
-    },
-    {
-      key: 'actions',
-      label: "Acciones",
-      tdClass: 'text-right text-sm font-medium pl-0',
-      thClass: 'text-right pl-0',
-      sortable: false,
-    },
+    }
   ]
 })
 
@@ -268,19 +235,12 @@ async function loadEstimates(pageNumber, fromScrollListener = false) {
   }
 }
 
-function openEstimateFileUploadModal() {
-  modalStore.openModal({
-    title: "Cargar Previa",
-    componentName: 'EstimateFileUploadModal',
-    refreshData: (val) => emit('select', val),
-    // data: {
-    //   taxPerItem: props.taxPerItem,
-    //   taxes: props.taxes,
-    //   itemIndex: props.index,
-    //   store: props.store,
-    //   storeProps: props.storeProp,
-    // },
-  })
+function openEstimateItemDetail() {
+  estimateItemDetailOpen.value = true
+}
+
+function closeEstimateItemDetail() {
+  estimateItemDetailOpen.value = false
 }
 
 function scrollToEstimate() {
