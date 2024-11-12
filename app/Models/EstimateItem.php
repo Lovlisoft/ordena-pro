@@ -39,6 +39,16 @@ class EstimateItem extends Model
         return $this->hasMany(Tax::class);
     }
 
+    public function status()
+    {
+        return $this->belongsTo(EstimateStatus::class, 'estimate_status_id');
+    }
+
+    public function getCurrentStatusAttribute()
+    {
+        return $this->status ?? EstimateStatus::where('slug', 'requested')->first();
+    }
+
     public function scopeWhereCompany($query, $company_id)
     {
         $query->where('company_id', $company_id);

@@ -25,11 +25,14 @@ class Estimate extends Model implements HasMedia
     use HasCustomFieldsTrait;
 
     public const STATUS_DRAFT = 'DRAFT';
+    public const STATUS_REQUESTED = 'REQUESTED';
     public const STATUS_SENT = 'SENT';
     public const STATUS_VIEWED = 'VIEWED';
     public const STATUS_EXPIRED = 'EXPIRED';
     public const STATUS_ACCEPTED = 'ACCEPTED';
     public const STATUS_REJECTED = 'REJECTED';
+    public const STATUS_CHANGES = 'CHANGES';
+    public const STATUS_DONE = 'DONE';
 
     protected $dates = [
         'created_at',
@@ -95,6 +98,11 @@ class Estimate extends Model implements HasMedia
     public function taxes()
     {
         return $this->hasMany(Tax::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(EstimateStatus::class, 'estimate_status_id');
     }
 
     public function getFormattedExpiryDateAttribute($value)

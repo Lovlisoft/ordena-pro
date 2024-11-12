@@ -17,6 +17,11 @@ const props = defineProps({
       return null
     },
   },
+  precision: {
+    type: Number,
+    required: false,
+    default: 2,
+  }
 })
 
 const utils = inject('utils')
@@ -26,7 +31,10 @@ const companyStore = useCompanyStore()
 const formattedAmount = computed(() => {
   return utils.formatMoney(
     props.amount,
-    props.currency || companyStore.selectedCompanyCurrency
+    props.currency || companyStore.selectedCompanyCurrency,
+    {
+      itemPrecision: props.precision,
+    }
   )
 })
 </script>

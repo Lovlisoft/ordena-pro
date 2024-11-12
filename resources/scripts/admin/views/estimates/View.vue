@@ -1,7 +1,7 @@
 <template>
   <!-- <SendEstimateModal @update="updateSentEstimate" /> -->
   <!-- <EstimateItemDetail /> -->
-  <BasePage v-if="estimateData" :class="{ 'w-1/2' : estimateItemDetailOpen }">
+  <BasePage v-if="estimateData" :class="{ 'sm:w-1/2 lg:w-2/3' : estimateItemDetailOpen !== null }">
     <BasePageHeader :title="pageTitle">
       <template #actions>
         <BaseButton
@@ -14,7 +14,7 @@
           class="text-sm"
           @click="onSendEstimate"
         >
-          {{ $t('estimates.send_estimate') }}
+          Enviar a revisión
         </BaseButton>
 
         <EstimateDropDown class="ml-3" :row="estimateData" />
@@ -27,13 +27,14 @@
           :columns="itemsColumns"
           :loading="isLoadingEstimate"
           actionRow="openItemDetail"
+          :selectedRow="estimateItemDetailOpen"
           @open-item-detail="openEstimateItemDetail"
         >
           <template #cell-id="{ row }">
             <router-link
               :to="openEstimateItemDetail"
               class="font-medium text-primary-500"
-            >{{ row.data.id }}</router-link>
+            >{{ formatNumber(row.data.id) }}</router-link>
           </template>
 
           <template #cell-name="{ row }">
@@ -41,24 +42,30 @@
           </template>
 
           <template #cell-quantity="{ row }">
-            {{ row.data.quantity }}
+            {{ formatNumber(row.data.quantity) }}
           </template>
 
           <template #cell-precision_price="{ row }">
-            {{ row.data.precision_price }}
+            <BaseFormatMoney :amount="row.data.precision_price" precision="6" />
           </template>
 
           <template #cell-total="{ row }">
-            {{ row.data.total }}
+            <BaseFormatMoney :amount="row.data.total" />
+          </template>
+
+          <template #cell-status="{ row }">
+            <BaseEstimateStatusBadge :status="row.data.status" class="px-3 py-1">
+              {{ row.data.status_name }}
+            </BaseEstimateStatusBadge>
           </template>
         </BaseTable>
-
-        
     </div>
   </BasePage>
 
   <EstimateItemDetail 
-    :estimateItemDetailOpen="estimateItemDetailOpen" 
+    :estimateItemDetailOpen="estimateItemDetailOpen !== null" 
+    :estimateItem="estimateItemDetailOpen"
+    :estimateData="estimateData"
     @close-estimateitemdetail="closeEstimateItemDetail"
   />
 </template>
@@ -74,6 +81,7 @@ import { useModalStore } from '@/scripts/stores/modal'
 import { useDialogStore } from '@/scripts/stores/dialog'
 import { useUserStore } from '@/scripts/admin/stores/user'
 
+import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue';
 import EstimateItemDropDown from '@/scripts/admin/components/dropdowns/EstimateItemDropdown.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
 import SendEstimateModal from '@/scripts/admin/components/modal-components/SendEstimateModal.vue'
@@ -82,6 +90,10 @@ import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
 import BaseCard from '@/scripts/components/base/BaseCard.vue'
 
 import abilities from '@/scripts/admin/stub/abilities'
+import BaseFormatMoney from '@/scripts/components/base/BaseFormatMoney.vue'
+import utilities from '@/scripts/helpers/utilities';
+
+const { formatMoney, formatNumber } = utilities
 
 const modalStore = useModalStore()
 const estimateStore = useEstimateStore()
@@ -101,7 +113,7 @@ const estimateList = ref(null)
 const currentPageNumber = ref(1)
 const lastPageNumber = ref(1)
 const estimateListSection = ref(null)
-const estimateItemDetailOpen = ref(false)
+const estimateItemDetailOpen = ref(null)
 
 const searchData = reactive({
   orderBy: null,
@@ -122,14 +134,24 @@ const itemsColumns = computed(() => {
     {
       key: 'quantity',
       label: "Litros",
+      thClass: "text-right",
+      tdClass: "text-right",
     },
     {
       key: 'precision_price',
       label: "Precio Unitario",
+      thClass: "text-right",
+      tdClass: "text-right",
     },
     {
       key: 'total',
       label: "Total",
+      thClass: "text-right",
+      tdClass: "text-right",
+    },
+    {
+      key: 'status',
+      label: "Estatus",
     }
   ]
 })
@@ -154,7 +176,7 @@ const shareableLink = computed(() => {
   return `/estimates/pdf/${estimateData.value.unique_hash}`
 })
 
-const getCurrentEstimateId = computed(() => {
+const estimateItemSelected = computed(() => {
   if (estimateData.value && estimateData.value.id) {
     return estimate.value.id
   }
@@ -235,12 +257,12 @@ async function loadEstimates(pageNumber, fromScrollListener = false) {
   }
 }
 
-function openEstimateItemDetail() {
-  estimateItemDetailOpen.value = true
+function openEstimateItemDetail(estimateItem) {
+  estimateItemDetailOpen.value = estimateItem
 }
 
 function closeEstimateItemDetail() {
-  estimateItemDetailOpen.value = false
+  estimateItemDetailOpen.value = null
 }
 
 function scrollToEstimate() {
