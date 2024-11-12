@@ -8,7 +8,7 @@
     </template>
 
     <!-- Copy PDF url  -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="route.name === 'estimates.view'"
       @click="copyPdfUrl"
     >
@@ -17,7 +17,7 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('general.copy_pdf_url') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Edit Estimate -->
     <router-link
@@ -63,7 +63,7 @@
     </router-link>
 
     <!-- Convert into Invoice  -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="userStore.hasAbilities(abilities.CREATE_INVOICE)"
       @click="convertInToinvoice(row.id)"
     >
@@ -72,10 +72,10 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.convert_to_invoice') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Mark as sent  -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="
         row.status !== 'SENT' &&
         route.name !== 'estimates.view' &&
@@ -88,10 +88,10 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.mark_as_sent') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Send Estimate  -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="
         row.status !== 'SENT' &&
         route.name !== 'estimates.view' &&
@@ -104,19 +104,19 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.send_estimate') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Resend Estimate -->
-    <BaseDropdownItem v-if="canResendEstimate(row)" @click="sendEstimate(row)">
+    <!-- <BaseDropdownItem v-if="canResendEstimate(row)" @click="sendEstimate(row)">
       <BaseIcon
         name="PaperAirplaneIcon"
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.resend_estimate') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Mark as Accepted -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="
         row.status !== 'ACCEPTED' &&
         userStore.hasAbilities(abilities.EDIT_ESTIMATE)
@@ -128,10 +128,10 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.mark_as_accepted') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
 
     <!-- Mark as Rejected  -->
-    <BaseDropdownItem
+    <!-- <BaseDropdownItem
       v-if="
         row.status !== 'REJECTED' &&
         userStore.hasAbilities(abilities.EDIT_ESTIMATE)
@@ -143,7 +143,7 @@
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
       />
       {{ $t('estimates.mark_as_rejected') }}
-    </BaseDropdownItem>
+    </BaseDropdownItem> -->
   </BaseDropdown>
 </template>
 

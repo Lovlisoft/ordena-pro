@@ -9,6 +9,8 @@ export default {
   quantity: 1,
   price: 0,
   precision_price: 0,
+  status: null,
+  status_name: null,
   precision:DEFAULT_ITEM_PRECISION,
   discount_type: 'fixed',
   discount_val: 0,

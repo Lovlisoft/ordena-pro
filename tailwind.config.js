@@ -39,6 +39,7 @@ module.exports = {
         red: colors.red,
         teal: colors.teal,
         gray: colors.slate,
+        orange: colors.orange,
       },
       spacing: {
         88: '22rem',
@@ -73,5 +74,13 @@ module.exports = {
     require('tailwind-scrollbar'),
     require('@rvxlab/tailwind-plugin-ios-full-height'),
     require('@tailwindcss/line-clamp'),
+  ],
+  safelist: [
+    {
+      pattern: /^bg-(blue|green|yellow|red|purple|pink|indigo|cyan|teal|lime|amber|orange|emerald|violet|fuchsia|rose|sky)-[1-9]00$/,
+    },
+    {
+      pattern: /^text-(blue|green|yellow|red|purple|pink|indigo|cyan|teal|lime|amber|orange|emerald|violet|fuchsia|rose|sky)-[1-9]00$/,
+    },
   ],
 }

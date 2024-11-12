@@ -22,6 +22,10 @@ export default {
     return hasClass
   },
 
+  formatNumber(value, decimals = 2, separator = ',') {
+    return new Intl.NumberFormat('es-MX').format(value)
+  },
+
   formatMoney(amount, currency = 0 , options = {}) {
     if (!currency) {
       currency = {
@@ -47,6 +51,7 @@ export default {
     try {
       precision = Math.abs(precision)
       precision = isNaN(precision) ? 2 : precision
+      precision = options.itemPrecision ?? precision
 
       const negativeSign = amount < 0 ? '-' : ''
 
@@ -54,6 +59,8 @@ export default {
         (amount = Math.abs(Number(amount) || 0).toFixed(precision))
       ).toString()
       let j = i.length > 3 ? i.length % 3 : 0
+
+      
 
       let moneySymbol = `${symbol}`
       let thousandText = j ? i.substr(0, j) + thousand_separator : ''
