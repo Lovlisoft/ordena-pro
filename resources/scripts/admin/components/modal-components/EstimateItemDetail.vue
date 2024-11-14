@@ -65,25 +65,13 @@
           </div>
 
           <!-- Receipts -->
-          <div class="mt-6">
-            <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Adjuntar Previa</div>
-            <BaseFileUploader 
-              v-model="fileToUpload"
-              accept=".pdf"
-              @change="onFileInputChange"
-              @remove="onFileInputRemove"
-            />
-          </div>
-          
-
-          <!-- Notes -->
-          <!-- <div class="mt-6">
-            <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Comentarios</div>
-            <form>
-              <label class="sr-only" for="notes">Write a note</label>
-              <textarea id="notes" class="form-textarea w-full focus:border-gray-300" rows="4" placeholder="Write a note…"></textarea>
-            </form>
-          </div> -->
+          <FileAttachedTo 
+            modelType="estimate-items"
+            :modelId="estimateItem?.id"
+            types=".pdf"
+            collection="estimate_pdf"
+            @update-parent-model="$emit('update-estimate-item')"
+          />
 
         </div>
       </div>
@@ -93,21 +81,15 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import BaseFileUploader from '@/scripts/components/base/BaseFileUploader.vue';
-import utilities from '@/scripts/helpers/utilities';
-import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue';
+
+import utilities from '@/scripts/helpers/utilities'
+import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue'
+import FileAttachedTo from '@/scripts/admin/components/FileAttachedTo.vue'
 
 const { formatMoney, formatNumber } = utilities
 
 const panelContent = ref(null)
 const closeBtn = ref(null)
-const fileToUpload = ref(null)
-
-// close if the esc key is pressed
-const keyHandler = ({ keyCode }) => {
-  if (!props.estimateItemDetailOpen || keyCode !== 27) return
-  emit('close-estimateitemdetail')
-}
 
 const props = defineProps({
   estimateItemDetailOpen: {

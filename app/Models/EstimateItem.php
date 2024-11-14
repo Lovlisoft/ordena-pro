@@ -5,11 +5,14 @@ namespace Crater\Models;
 use Crater\Traits\HasCustomFieldsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Crater\Traits\HasAttachedFiles;
+use Spatie\MediaLibrary\HasMedia;
 
-class EstimateItem extends Model
+class EstimateItem extends Model implements HasMedia
 {
     use HasFactory;
     use HasCustomFieldsTrait;
+    use HasAttachedFiles;
 
     protected $guarded = [
         'id'
@@ -52,5 +55,23 @@ class EstimateItem extends Model
     public function scopeWhereCompany($query, $company_id)
     {
         $query->where('company_id', $company_id);
+    }
+
+    public function updateStatus($status)
+    {
+        if (! $this->isClosed) {
+            $this->updateStatusBySlug($status);
+        }
+    }
+
+    public function updateStatusBySlug($status)
+    {
+        $this->estimate_status_id = EstimateStatus::where('slug', $status)->first()->id;
+        $this->save();
+    }
+
+    public function getIsClosedAttribute()
+    {
+        return in_array($this->currentStatus->slug, EstimateStatus::CLOSED_STATUSES);
     }
 }

@@ -15,4 +15,20 @@ class EstimateStatus extends Model
         'slug',
         'description',
     ];
+
+    const DRAFT = 'draft';
+    const REQUESTED = 'requested';
+    const REVIEW = 'review';
+    const CHANGES = 'changes';
+    const APPROVED = 'approved';
+    const REJECTED = 'rejected';
+    const CANCELED = 'canceled';  
+    const DONE = 'done';
+
+    const CLOSED_STATUSES = [
+        self::APPROVED,
+        self::REJECTED,
+        self::CANCELED,
+        self::DONE,
+    ];
 }

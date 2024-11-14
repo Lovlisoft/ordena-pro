@@ -54,7 +54,11 @@
           </template>
 
           <template #cell-status="{ row }">
-            <BaseEstimateStatusBadge :status="row.data.status" class="px-3 py-1">
+            <BaseEstimateStatusBadge 
+              :status="row.data.status" 
+              :color="row.data.status_color"
+              class="px-3 py-1"
+            >
               {{ row.data.status_name }}
             </BaseEstimateStatusBadge>
           </template>
@@ -67,6 +71,7 @@
     :estimateItem="estimateItemDetailOpen"
     :estimateData="estimateData"
     @close-estimateitemdetail="closeEstimateItemDetail"
+    @update-estimate-item="loadEstimate(false)"
   />
 </template>
 
@@ -84,10 +89,8 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue';
 import EstimateItemDropDown from '@/scripts/admin/components/dropdowns/EstimateItemDropdown.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
-import SendEstimateModal from '@/scripts/admin/components/modal-components/SendEstimateModal.vue'
 import EstimateItemDetail from '@/scripts/admin/components/modal-components/EstimateItemDetail.vue'
 import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
-import BaseCard from '@/scripts/components/base/BaseCard.vue'
 
 import abilities from '@/scripts/admin/stub/abilities'
 import BaseFormatMoney from '@/scripts/components/base/BaseFormatMoney.vue'
@@ -172,10 +175,6 @@ const getOrderName = computed(() => {
   return t('general.descending')
 })
 
-const shareableLink = computed(() => {
-  return `/estimates/pdf/${estimateData.value.unique_hash}`
-})
-
 const estimateItemSelected = computed(() => {
   if (estimateData.value && estimateData.value.id) {
     return estimate.value.id
@@ -183,78 +182,12 @@ const estimateItemSelected = computed(() => {
   return null
 })
 
-watch(route, (to, from) => {
-  if (to.name === 'estimates.view') {
-    loadEstimate()
-  }
-})
-
-loadEstimates()
 loadEstimate()
 
 onSearched = debounce(onSearched, 500)
 
 function hasActiveUrl(id) {
   return route.params.id == id
-}
-
-async function loadEstimates(pageNumber, fromScrollListener = false) {
-  if (isLoading.value) {
-    return
-  }
-
-  let params = {}
-  if (
-    searchData.searchText !== '' &&
-    searchData.searchText !== null &&
-    searchData.searchText !== undefined
-  ) {
-    params.search = searchData.searchText
-  }
-
-  if (searchData.orderBy !== null && searchData.orderBy !== undefined) {
-    params.orderBy = searchData.orderBy
-  }
-
-  if (
-    searchData.orderByField !== null &&
-    searchData.orderByField !== undefined
-  ) {
-    params.orderByField = searchData.orderByField
-  }
-
-  isLoading.value = true
-  let response = await estimateStore.fetchEstimates({
-    page: pageNumber,
-    ...params,
-  })
-  isLoading.value = false
-
-  estimateList.value = estimateList.value ? estimateList.value : []
-  estimateList.value = [...estimateList.value, ...response.data.data]
-
-  currentPageNumber.value = pageNumber ? pageNumber : 1
-  lastPageNumber.value = response.data.meta.last_page
-  let estimateFound = estimateList.value.find(
-    (est) => est.id == route.params.id
-  )
-
-  if (
-    fromScrollListener == false &&
-    !estimateFound &&
-    currentPageNumber.value < lastPageNumber.value &&
-    Object.keys(params).length === 0
-  ) {
-    loadEstimates(++currentPageNumber.value)
-  }
-
-  if (estimateFound) {
-    setTimeout(() => {
-      if (fromScrollListener == false) {
-        scrollToEstimate()
-      }
-    }, 500)
-  }
 }
 
 function openEstimateItemDetail(estimateItem) {
@@ -288,8 +221,8 @@ function addScrollListener() {
   })
 }
 
-async function loadEstimate() {
-  isLoadingEstimate.value = true
+async function loadEstimate(blockScreen = true) {
+  isLoadingEstimate.value = blockScreen
   let response = await estimateStore.fetchEstimate(route.params.id)
 
   if (response.data) {
@@ -346,31 +279,6 @@ async function onSendEstimate(id) {
     id: estimateData.value.id,
     data: estimateData.value,
   })
-}
-
-async function removeEstimate(id) {
-  dialogStore
-    .openDialog({
-      title: t('general.are_you_sure'),
-      message: t('estimates.confirm_delete'),
-      yesLabel: t('general.ok'),
-      noLabel: t('general.cancel'),
-      variant: 'danger',
-      hideNoButton: false,
-      size: 'lg',
-    })
-    .then((res) => {
-      if (res) {
-        estimateStore
-          .deleteEstimate({ ids: [id] })
-          .then(() => {
-            router.push('/admin/estimates')
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      }
-    })
 }
 
 function updateSentEstimate() {

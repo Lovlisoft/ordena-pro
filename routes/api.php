@@ -15,6 +15,7 @@ use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
 use Crater\Http\Controllers\V1\Admin\Dashboard\DashboardController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
+use Crater\Http\Controllers\V1\Admin\Estimate\EstimateItemsController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
@@ -312,6 +313,10 @@ Route::prefix('/v1')->group(function () {
 
             Route::apiResource('estimates', EstimatesController::class);
 
+            // Estimate Items
+            //-------------------------------------------------
+            Route::post('/estimate-items/{estimateItem}/files', [EstimateItemsController::class, 'attachFile']);
+            Route::delete('/estimate-items/{estimateItem}/files/{mediaFile}', [EstimateItemsController::class, 'removeFile']);
 
             // Expenses
             //----------------------------------

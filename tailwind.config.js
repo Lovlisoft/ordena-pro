@@ -40,6 +40,7 @@ module.exports = {
         teal: colors.teal,
         gray: colors.slate,
         orange: colors.orange,
+        amber: colors.amber,
       },
       spacing: {
         88: '22rem',
