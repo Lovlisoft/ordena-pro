@@ -27,6 +27,7 @@ class EstimateItemResource extends JsonResource
             'precision_price' => $this->precision_price,
             'status' => $this->currentStatus?->slug,
             'status_name' => $this->currentStatus?->description,
+            'status_color' => $this->currentStatus?->color,
             'tax' => $this->tax,
             'total' => $this->total,
             'item_id' => $this->item_id,
