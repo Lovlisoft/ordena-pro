@@ -475,7 +475,7 @@ function save(formData) {
       setTimeout(function() {
         emit('upload', x.data.data)
         reset()
-      }, 1000)
+      }, 300)
       
       currentStatus = STATUS_SUCCESS
     })

@@ -1,23 +1,34 @@
 <template>
-  <!-- <SendEstimateModal @update="updateSentEstimate" /> -->
-  <!-- <EstimateItemDetail /> -->
   <BasePage v-if="estimateData" :class="{ 'sm:w-1/2 lg:w-2/3' : estimateItemDetailOpen !== null }">
-    <BasePageHeader :title="pageTitle">
+    <BasePageHeader :title="pageTitle" class="items-center">
       <template #actions>
-        <BaseButton
-          v-if="
-            estimateData.status === 'DRAFT' &&
-            userStore.hasAbilities(abilities.SEND_ESTIMATE)
-          "
-          :content-loading="isLoadingEstimate"
-          variant="primary"
-          class="text-sm"
-          @click="onSendEstimate"
-        >
-          Enviar a revisión
-        </BaseButton>
+        <div class="flex jusitfy-between items-center ">
+          <BaseEstimateStatusBadge 
+            :status="estimateData.status.slug" 
+            :color="estimateData.status.color"
+            size="md"
+            class="px-3 py-1 flex-none"
+          >
+            {{ estimateData.status.name }}
+          </BaseEstimateStatusBadge>
 
-        <EstimateDropDown class="ml-3" :row="estimateData" />
+          <div class="grow flex items-center justify-end">
+            <BaseButton
+              v-if="userStore.hasAbilities(abilities.SEND_ESTIMATE)"
+              :disabled="itemsPendingToReview"
+              :content-loading="isLoadingEstimate"
+              variant="primary"
+              class="text-sm"
+              @click="sendToNextStatus"
+            >
+              {{ nextStatusDescription }}
+            </BaseButton>
+
+            <EstimateDropDown class="ml-3" :row="estimateData" />
+          </div>
+        </div>
+
+
       </template>
     </BasePageHeader>
 
@@ -161,6 +172,18 @@ const itemsColumns = computed(() => {
 
 const pageTitle = computed(() => 'Previa: ' + estimateData.value.estimate_number)
 
+const itemsPendingToReview = computed(() => {
+  let pendingItems = 0
+
+  estimateData.value.items?.forEach(function (item) {
+    if (item.status == 'requested') {
+      pendingItems++
+    }
+  })
+
+  return pendingItems > 0
+})
+
 const getOrderBy = computed(() => {
   if (searchData.orderBy === 'asc' || searchData.orderBy == null) {
     return true
@@ -182,9 +205,43 @@ const estimateItemSelected = computed(() => {
   return null
 })
 
+const nextStatusDescription = computed(() => {
+  let description = 'Avanzar status'
+
+  switch(estimateData.value.status?.slug) {
+    case 'requested':
+    case 'draft':
+      description = 'Enviar a Revisión'
+      break
+    case "review":
+      description = 'Solicitar Facturas'
+      break
+  }
+
+  return description
+})
+
 loadEstimate()
 
 onSearched = debounce(onSearched, 500)
+
+async function sendToNextStatus(status = null) {
+  let nextStatus = 'review'
+  let estimate = estimateData.value
+
+  switch (estimate.status.slug) {
+    case 'requested':
+    case 'draft':
+      nextStatus = 'review'
+      break
+    default:
+      nextStatus = 'requested'
+  }
+
+  let resp = await estimateStore.updateStatus(estimate.id, nextStatus)
+
+  loadEstimate()
+}
 
 function hasActiveUrl(id) {
   return route.params.id == id
@@ -245,31 +302,6 @@ function sortData() {
   searchData.orderBy = 'asc'
   onSearched()
   return true
-}
-
-async function onMarkAsSent() {
-  dialogStore
-    .openDialog({
-      title: t('general.are_you_sure'),
-      message: t('estimates.confirm_mark_as_sent'),
-      yesLabel: t('general.ok'),
-      noLabel: t('general.cancel'),
-      variant: 'primary',
-      hideNoButton: false,
-      size: 'lg',
-    })
-    .then((response) => {
-      isMarkAsSent.value = false
-      if (response) {
-        estimateStore.markAsSent({
-          id: estimateData.value.id,
-          status: 'SENT',
-        })
-        estimateData.value.status = 'SENT'
-        isMarkAsSent.value = true
-      }
-      isMarkAsSent.value = false
-    })
 }
 
 async function onSendEstimate(id) {

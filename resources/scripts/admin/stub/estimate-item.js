@@ -23,4 +23,5 @@ export default {
   tax: 0,
   taxes: [],
   ieps: 0,
+  files: [],
 }

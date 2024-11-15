@@ -300,23 +300,19 @@ Route::prefix('/v1')->group(function () {
             //-------------------------------------------------
 
             Route::get('/estimates/{estimate}/send/preview', SendEstimatePreviewController::class);
-
             Route::post('/estimates/{estimate}/send', SendEstimateController::class);
-
             Route::post('/estimates/{estimate}/status', ChangeEstimateStatusController::class);
-
             Route::post('/estimates/{estimate}/convert-to-invoice', ConvertEstimateController::class);
-
             Route::get('/estimates/templates', EstimateTemplatesController::class);
-
             Route::post('/estimates/delete', [EstimatesController::class, 'delete']);
-
             Route::apiResource('estimates', EstimatesController::class);
+
+
 
             // Estimate Items
             //-------------------------------------------------
             Route::post('/estimate-items/{estimateItem}/files', [EstimateItemsController::class, 'attachFile']);
-            Route::delete('/estimate-items/{estimateItem}/files/{mediaFile}', [EstimateItemsController::class, 'removeFile']);
+            Route::delete('/estimate-items/{estimateItem}/files/{mediaFileId}', [EstimateItemsController::class, 'removeFile']);
 
             // Expenses
             //----------------------------------

@@ -215,8 +215,8 @@
         </template>
 
         <template #cell-status="{ row }">
-          <BaseEstimateStatusBadge :status="row.data.status" class="px-3 py-1">
-            {{ row.data.status }}
+          <BaseEstimateStatusBadge :status="row.data.status.name" :color="row.data.status.color" class="px-3 py-1">
+            {{ row.data.status.name }}
           </BaseEstimateStatusBadge>
         </template>
 

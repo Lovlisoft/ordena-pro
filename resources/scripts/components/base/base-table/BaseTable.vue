@@ -266,7 +266,6 @@ function getThClass(column) {
 }
 
 function getTrClass(index, row) {
-  console.log(props.selectedRow?.id)
   let bgClasses = props.selectedRow?.id == row.data.id ? 'bg-primary-50'
     : index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
 
