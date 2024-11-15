@@ -293,6 +293,33 @@ export const useEstimateStore = (useWindow = false) => {
         })
       },
 
+      updateStatus(estimate, status) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/estimates/${estimate}/status`, {'status': status})
+            .then((response) => {
+              // let pos = this.estimates.findIndex(
+              //   (estimate) => estimate.id === data.id
+              // )
+              // if (this.estimates[pos]) {
+              //   //this.estimates[pos].status = 'ACCEPTED'
+
+              //   const notificationStore = useNotificationStore()
+
+              //   notificationStore.showNotification({
+              //     type: 'success',
+              //     message: global.t('estimates.marked_as_accepted_message'),
+              //   })
+              // }
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       markAsAccepted(data) {
         return new Promise((resolve, reject) => {
           axios

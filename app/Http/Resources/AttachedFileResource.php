@@ -20,7 +20,7 @@ class AttachedFileResource extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
-            'file_name' => $this->name,
+            'file_name' => $this->file_name,
             'url' => $this->getUrl(),
             'type' => $this->collection_name,
             'author' => [

@@ -82,22 +82,32 @@ const placeHolderSize = computed(() => {
 const variantClass = computed(() => {
   return {
     'border-transparent shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500':
-      props.variant === 'primary',
+      dynamicVariant.value === 'primary',
     'border-transparent text-primary-700 bg-primary-100 hover:bg-primary-200 focus:ring-primary-500':
-      props.variant === 'secondary',
+      dynamicVariant.value === 'secondary',
     'border-transparent  border-solid border-primary-500 font-normal transition ease-in-out duration-150 text-primary-500 hover:bg-primary-200 shadow-inner focus:ring-primary-500':
-      props.variant == 'primary-outline',
+      dynamicVariant.value == 'primary-outline',
     'border-gray-200 text-gray-700 bg-white hover:bg-gray-50 focus:ring-primary-500 focus:ring-offset-0':
-      props.variant == 'white',
+      dynamicVariant.value == 'white',
     'border-transparent shadow-sm text-white bg-red-600 hover:bg-red-700 focus:ring-red-500':
-      props.variant === 'danger',
+      dynamicVariant.value === 'danger',
     'border-transparent bg-gray-200 border hover:bg-opacity-60 focus:ring-gray-500 focus:ring-offset-0':
-      props.variant === 'gray',
+      dynamicVariant.value === 'gray',
+    'border-transparent bg-gray-200 border text-gray-300':
+      dynamicVariant.value === 'disabled',
   }
 })
 
 const roundedClass = computed(() => {
   return props.rounded ? '!rounded-full' : ''
+})
+
+const disabledClass = computed(() => {
+  return props.disabled ? 'opacity-100' : ''
+})
+
+const dynamicVariant = computed(() => {
+  return props.disabled ? 'disabled' : props.variant
 })
 
 const iconLeftClass = computed(() => {
@@ -142,7 +152,7 @@ const iconRightClass = computed(() => {
     v-else
     :tag="tag"
     :disabled="disabled"
-    :class="[defaultClass, sizeClass, variantClass, roundedClass]"
+    :class="[defaultClass, sizeClass, variantClass, roundedClass, disabledClass]"
   >
     <SpinnerIcon v-if="loading" :class="[iconLeftClass, iconVariantClass]" />
 

@@ -9,6 +9,7 @@ use Crater\Mail\SendEstimateMail;
 use Crater\Services\SerialNumberFormatter;
 use Crater\Traits\GeneratesPdfTrait;
 use Crater\Traits\HasCustomFieldsTrait;
+use Crater\Traits\HasEstimateStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,7 @@ class Estimate extends Model implements HasMedia
     use InteractsWithMedia;
     use GeneratesPdfTrait;
     use HasCustomFieldsTrait;
+    use HasEstimateStatus;
 
     public const STATUS_DRAFT = 'DRAFT';
     public const STATUS_REQUESTED = 'REQUESTED';
@@ -98,11 +100,6 @@ class Estimate extends Model implements HasMedia
     public function taxes()
     {
         return $this->hasMany(Tax::class);
-    }
-
-    public function status()
-    {
-        return $this->belongsTo(EstimateStatus::class, 'estimate_status_id');
     }
 
     public function getFormattedExpiryDateAttribute($value)

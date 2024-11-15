@@ -5,9 +5,9 @@
     </template>
 
     <!-- View Estimate -->
-    <router-link
+    <div
       v-if="userStore.hasAbilities(abilities.VIEW_ESTIMATE)"
-      to="/nada/"
+      @click="viewFile"
     >
       <BaseDropdownItem>
         <BaseIcon
@@ -16,7 +16,7 @@
         />
         {{ $t('general.view') }}
       </BaseDropdownItem>
-    </router-link>
+    </div>
 
     <!-- Delete Estimate  -->
     <BaseDropdownItem
@@ -39,9 +39,9 @@ import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { useModalStore } from '@/scripts/stores/modal'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useDialogStore } from '@/scripts/stores/dialog'
-import { inject } from 'vue'
+import { inject, computed } from 'vue'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import abilities from '@/scripts/admin/stub/abilities'
 
@@ -58,8 +58,11 @@ const estimateStore = useEstimateStore()
 const dialogStore = useDialogStore()
 const userStore = useUserStore()
 
-const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
+function viewFile() {
+  window.open(props.file.url);
+}
 
+const { t } = useI18n()
+
+const router = useRouter()
 </script>

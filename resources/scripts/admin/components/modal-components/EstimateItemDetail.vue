@@ -21,14 +21,16 @@
           <div class="text-sm text-center italic">Solicita: {{ estimateData?.creator?.name }}</div>
 
           <!-- Details -->
-          <div class="drop-shadow-md mt-5 ">
+          <div class="drop-shadow-md mt-5">
             <!-- Top -->
-            <div class="bg-white dark:bg-gray-800 rounded-t-xl px-5 pb-2.5 text-center pt-5">
-              <div class="text-2xl font-semibold text-green-500 mb-1">{{ formatMoney(estimateItem?.total) }}</div>
-              <div class="text-sm font-medium text-gray-800 dark:text-gray-100 mb-3">{{ estimateItem?.name }}</div>
-              <BaseEstimateStatusBadge :status="estimateItem?.status" class="px-3 py-1">
-                {{ estimateItem?.status_name }}
-              </BaseEstimateStatusBadge>
+            <div class="bg-white dark:bg-gray-800 rounded-t-xl px-5 pb-2.5 text-center pt-5 flex items-center w-full">
+              
+              <div class="w-1/3 text-left">
+                <BaseEstimateStatusBadge :status="estimateItem?.status" :color="estimateItem?.status_color" class="px-3 py-1 ">
+                  {{ estimateItem?.status_name }}
+                </BaseEstimateStatusBadge>
+              </div>
+              <div class="text-2xl font-semibold mb-1 text-right w-2/3">{{ formatMoney(estimateItem?.total) }}</div>
             </div>
             <!-- Divider -->
             <div class="flex justify-between items-center" aria-hidden="true">
@@ -66,6 +68,7 @@
 
           <!-- Receipts -->
           <FileAttachedTo 
+            :file="currentEstimateItem?.files.estimate"
             modelType="estimate-items"
             :modelId="estimateItem?.id"
             types=".pdf"
@@ -80,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch, computed} from 'vue'
 
 import utilities from '@/scripts/helpers/utilities'
 import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue'
@@ -106,4 +109,12 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close-estimateitemdetail'])
+
+const currentEstimateItem = computed(() => {
+  return props.estimateItem
+})
+
+watch(currentEstimateItem, (x, y) => {
+  console.log('watch')
+})
 </script>

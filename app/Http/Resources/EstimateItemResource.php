@@ -45,6 +45,9 @@ class EstimateItemResource extends JsonResource
             'fields' => $this->when($this->fields()->exists(), function () {
                 return CustomFieldValueResource::collection($this->fields);
             }),
+            'files' => [
+                'estimate' => AttachedFileResource::make($this->estimate_pdf)
+            ]
         ];
     }
 }
