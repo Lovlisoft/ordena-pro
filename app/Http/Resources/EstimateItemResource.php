@@ -31,7 +31,9 @@ class EstimateItemResource extends JsonResource
             'tax' => $this->tax,
             'total' => $this->total,
             'item_id' => $this->item_id,
-            'ieps' => 0,
+            'ieps' => $this->when($this->item->taxes()->exists(), function () {
+                return $this->item->taxes->first()->taxType->percent;
+            }),
             'estimate_id' => $this->estimate_id,
             'company_id' => $this->company_id,
             'exchange_rate' => $this->exchange_rate,
