@@ -246,6 +246,7 @@ const basePrice = computed({
 
 const iepsTax = computed({
   get: () => {
+    console.log(props.store)
     return props.itemData.quantity * props.itemData.ieps
   },
 })
@@ -271,6 +272,7 @@ const ivaTaxStr = computed({
 
 const iepsTaxStr = computed({
   get: () => {
+    console.log(iepsTax.value)
     return formatMoney(iepsTax)
   },
 })
@@ -291,20 +293,20 @@ const subtotal = computed(() => {
 
 const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
 
-const discount = computed({
-  get: () => {
-    return props.itemData.discount
-  },
-  set: (newValue) => {
-    if (props.itemData.discount_type === 'percentage') {
-      updateItemAttribute('discount_val', (subtotal.value * newValue) / 100)
-    } else {
-      updateItemAttribute('discount_val', Math.round(newValue * 100))
-    }
+// const discount = computed({
+//   get: () => {
+//     return props.itemData.discount
+//   },
+//   set: (newValue) => {
+//     if (props.itemData.discount_type === 'percentage') {
+//       updateItemAttribute('discount_val', (subtotal.value * newValue) / 100)
+//     } else {
+//       updateItemAttribute('discount_val', Math.round(newValue * 100))
+//     }
 
-    updateItemAttribute('discount', newValue)
-  },
-})
+//     updateItemAttribute('discount', newValue)
+//   },
+// })
 
 const total = computed(() => {
   // return subtotalPrecision.value + ivaTax.value
