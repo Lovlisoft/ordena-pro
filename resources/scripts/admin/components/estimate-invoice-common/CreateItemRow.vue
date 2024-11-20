@@ -246,7 +246,6 @@ const basePrice = computed({
 
 const iepsTax = computed({
   get: () => {
-    console.log(props.store)
     return props.itemData.quantity * props.itemData.ieps
   },
 })
