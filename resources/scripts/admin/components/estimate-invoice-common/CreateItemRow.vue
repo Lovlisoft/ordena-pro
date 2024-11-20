@@ -271,7 +271,6 @@ const ivaTaxStr = computed({
 
 const iepsTaxStr = computed({
   get: () => {
-    console.log(iepsTax.value)
     return formatMoney(iepsTax)
   },
 })
