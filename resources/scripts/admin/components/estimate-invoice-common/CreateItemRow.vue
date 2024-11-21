@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Guid from 'guid'
@@ -238,25 +238,6 @@ const precisionPrice = computed({
   },
 })
 
-const basePrice = computed({
-  get: () => {
-    return iepsBreakdown.value ? subtotalPrecision.value : subtotalPrecision.value - iepsTax.value;
-  },
-})
-
-const iepsTax = computed({
-  get: () => {
-    return props.itemData.quantity * props.itemData.ieps
-  },
-})
-
-const ivaTax = computed({
-  get: () => {
-    // Replace this with the dynamic IVA condition
-    return basePrice.value * 0.16;
-  },
-})
-
 const basePriceStr = computed({
   get: () => {
     return formatMoney(basePrice)
@@ -282,8 +263,10 @@ function formatMoney(value) {
   })
 }
 
-const subtotal = computed(() => { 
+const applyAfter = ref(null)
+const fixedTotal = ref(null)
 
+const subtotal = computed(() => { 
   const precisionPrice = props.itemData.precision_price;
 
   return precisionPrice * props.itemData.quantity;
@@ -291,26 +274,76 @@ const subtotal = computed(() => {
 
 const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
 
-// const discount = computed({
-//   get: () => {
-//     return props.itemData.discount
-//   },
-//   set: (newValue) => {
-//     if (props.itemData.discount_type === 'percentage') {
-//       updateItemAttribute('discount_val', (subtotal.value * newValue) / 100)
-//     } else {
-//       updateItemAttribute('discount_val', Math.round(newValue * 100))
-//     }
+const total = computed({
+  get: () => {
+    return fixedTotal.value ?? basePrice.value + ivaTax.value + iepsTax.value
+  },
+  set: (newValue) => {
+    let old = Math.round((total.value + Number.EPSILON) * 100) / 100
+    let current = Math.round((parseFloat(newValue) + Number.EPSILON) * 100) / 100
 
-//     updateItemAttribute('discount', newValue)
-//   },
-// })
+    if (old !== current) {
+      applyAfter.value = Math.floor(Date.now()) + 300 
 
-const total = computed(() => {
-  // return subtotalPrecision.value + ivaTax.value
-  return basePrice.value + iepsTax.value + ivaTax.value
-  // return (iepsBreakdown ? iepsTax.value : 0) + subtotalPrecision.value + ivaTax.value 
+      setTimeout(function(event) {
+        let now = Math.floor(Date.now())
+
+        if (now > applyAfter.value) {
+          calculateFromTotal(parseFloat(newValue))
+          fixedTotal.value = parseFloat(newValue)
+        }
+      }, 300)
+    }
+  }
 })
+
+function calculateFromTotal(total) {
+  let cantidad = 0
+  let ieps = props.itemData.ieps
+  let ivaRate = 1.16
+
+  cantidad = iepsBreakdown.value
+    ? Math.round(total / (ieps + (precisionPrice.value - ieps) * ivaRate))
+    : Math.round(total / (ieps + (precisionPrice.value * ivaRate)))
+
+  // calculo del ajuste de precio
+  let precioUnitario = iepsBreakdown.value
+    ? ((total / cantidad - ieps) / ivaRate) + ieps
+    : ((total / cantidad - ieps) / ivaRate)
+
+  if (cantidad > 0 && precioUnitario > 0 && total > 0) {
+    quantity.value = cantidad
+    precisionPrice.value = precioUnitario
+  }
+}
+
+const basePrice = computed({
+  get: () => {
+    return !iepsBreakdown.value ? subtotalPrecision.value : subtotalPrecision.value - iepsTax.value;
+  },
+})
+
+const iepsTax = computed({
+  get: () => {
+    return props.itemData.quantity * props.itemData.ieps
+  },
+})
+
+const ivaTax = computed({
+  get: () => {
+    // Replace this with the dynamic IVA condition
+    return basePrice.value * 0.16;
+  },
+})
+
+watch(
+  () => iepsBreakdown.value,
+  (val) => {
+    if (fixedTotal.value) {
+      calculateFromTotal(fixedTotal.value)
+    }
+  }
+)
 
 const totalPrecision = computed(() => {
   return subtotalPrecision.value - props.itemData.discount_val
