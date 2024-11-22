@@ -53,4 +53,42 @@ class EstimateItem extends Model implements HasMedia
     {
         return $this->getMedia('estimate_pdf')->first() ?? null;
     }
+
+    public function getCalculatedTotalAttribute()
+    {
+        return $this->base_amount + $this->ieps_amount + $this->iva_amount;
+    }
+
+    public function getPrecisionSubtotalAttribute()
+    {
+        return $this->precision_price * $this->quantity / 1000000;
+    }
+
+    public function getIepsAttribute()
+    {
+        // TODO: Return the specific tax related to IEPS, not only the first one
+        return $this->item->taxes->first()->taxType->percent;
+    }
+
+    public function getIepsAmountAttribute()
+    {
+        return $this->quantity * $this->ieps;
+    }
+
+    public function getBaseAmountAttribute()
+    {
+        return $this->ieps_breakdown 
+            ? $this->precision_subtotal - $this->ieps_amount
+            : $this->precision_subtotal;
+    }
+
+    public function getIvaAmountAttribute()
+    {
+        return $this->base_amount * 0.16;
+    }
+
+    public function getIepsBreakdownAttribute()
+    {
+        return !! $this->estimate->show_price_breakdown;
+    }
 }
