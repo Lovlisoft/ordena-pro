@@ -89,7 +89,7 @@ import utilities from '@/scripts/helpers/utilities'
 import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue'
 import FileAttachedTo from '@/scripts/admin/components/FileAttachedTo.vue'
 
-const { formatMoney, formatNumber } = utilities
+const { formatNumber } = utilities
 
 const panelContent = ref(null)
 const closeBtn = ref(null)
@@ -113,6 +113,13 @@ const emit = defineEmits(['close-estimateitemdetail'])
 const currentEstimateItem = computed(() => {
   return props.estimateItem
 })
+
+function formatMoney(value) {
+  return value?.toLocaleString('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+  })
+}
 
 watch(currentEstimateItem, (x, y) => {
   console.log('watch')

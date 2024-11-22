@@ -61,7 +61,7 @@
           </template>
 
           <template #cell-total="{ row }">
-            <BaseFormatMoney :amount="row.data.total" />
+            <BaseFormatMoney :amount="row.data.total" onlyFormat="true"/>
           </template>
 
           <template #cell-status="{ row }">

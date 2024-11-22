@@ -29,7 +29,7 @@ class EstimateItemResource extends JsonResource
             'status_name' => $this->currentStatus?->description,
             'status_color' => $this->currentStatus?->color,
             'tax' => $this->tax,
-            'total' => $this->total,
+            'total' => $this->calculated_total,
             'item_id' => $this->item_id,
             'ieps' => $this->when($this->item->taxes()->exists(), function () {
                 return $this->item->taxes->first()->taxType->percent;
