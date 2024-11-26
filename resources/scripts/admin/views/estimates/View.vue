@@ -1,17 +1,18 @@
 <template>
   <BasePage v-if="estimateData" :class="{ 'sm:w-1/2 lg:w-2/3' : estimateItemDetailOpen !== null }">
     <BasePageHeader :title="pageTitle" class="items-center">
-      <template #actions>
-        <div class="flex jusitfy-between items-center ">
-          <BaseEstimateStatusBadge 
+      <template #title>
+        <BaseEstimateStatusBadge 
             :status="estimateData.status.slug" 
             :color="estimateData.status.color"
             size="md"
             class="px-3 py-1 flex-none"
           >
             {{ estimateData.status.name }}
-          </BaseEstimateStatusBadge>
-
+          </BaseEstimateStatusBadge>  
+      </template>
+      <template #actions>
+        <div class="flex jusitfy-between items-center ">
           <div class="grow flex items-center justify-end">
             <BaseButton
               v-if="userStore.hasAbilities(abilities.SEND_ESTIMATE)"

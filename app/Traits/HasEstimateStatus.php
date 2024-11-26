@@ -36,4 +36,12 @@ trait HasEstimateStatus
     {
         return in_array($this->currentStatus->slug, EstimateStatus::CLOSED_STATUSES);
     }
+
+    public function getUserFlowAttribute()
+    {
+        // TODO: Move this to a database structure
+        $statuses = EstimateStatus::all();
+
+        return $statuses;
+    }
 }

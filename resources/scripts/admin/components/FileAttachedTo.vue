@@ -27,18 +27,31 @@
         </div>
       </label>
     </div>
-
-    <BaseFileUploader v-else
-        v-model="fileToUpload"
-        :accept="types"
-        @change="fileChange"
-        @upload="fileUploaded"
-        :autoProcess=true
-        :uploadUrl="uploadUrl"
-        inputFieldName="file"
-      />
+    <div v-else-if="userStore.hasAbilities(abilities.EDIT_ESTIMATE_FILES)">
+      <BaseFileUploader 
+            v-model="fileToUpload"
+          :accept="types"
+          @change="fileChange"
+          @upload="fileUploaded"
+          :autoProcess=true
+          :uploadUrl="uploadUrl"
+          inputFieldName="file"
+        />
     </div>
+    <div v-else>
+      <label class="flex flex-col p-4 rounded-lg border border-gray-200 text-xs text-gray-400" >
 
+        <div class="w-full flex justify-center">
+          <BaseIcon
+            name="ExclamationIcon"
+            class="h-6 mb-2 text-xl leading-6 text-gray-400 w-full"
+          />
+        </div>  
+        
+        <p class="text-center">Archivo pendiente de ser cargado por el personal de facturación</p>
+      </label>
+    </div>  
+  </div>
 </template>
 
 <script setup>
@@ -49,6 +62,8 @@ import abilities from '@/scripts/admin/stub/abilities'
 import BaseFileUploader from '@/scripts/components/base/BaseFileUploader.vue'
 import EstimateIcon from '@/scripts/components/icons/EstimateIcon.vue'
 import AttachedFileDropdown from './dropdowns/AttachedFileDropdown.vue'
+
+const userStore = useUserStore()
 
 const props = defineProps({
   file: {

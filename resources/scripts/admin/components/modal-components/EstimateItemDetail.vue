@@ -30,7 +30,7 @@
                   {{ estimateItem?.status_name }}
                 </BaseEstimateStatusBadge>
               </div>
-              <div class="text-2xl font-semibold mb-1 text-right w-2/3">{{ formatMoney(estimateItem?.total) }}</div>
+              <div class="text-2xl font-semibold mb-1 text-right w-2/3">{{ simpleFormatMoney(estimateItem?.total) }}</div>
             </div>
             <!-- Divider -->
             <div class="flex justify-between items-center" aria-hidden="true">
@@ -89,7 +89,7 @@ import utilities from '@/scripts/helpers/utilities'
 import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue'
 import FileAttachedTo from '@/scripts/admin/components/FileAttachedTo.vue'
 
-const { formatNumber } = utilities
+const { formatNumber, formatMoney } = utilities
 
 const panelContent = ref(null)
 const closeBtn = ref(null)
@@ -114,7 +114,9 @@ const currentEstimateItem = computed(() => {
   return props.estimateItem
 })
 
-function formatMoney(value) {
+function simpleFormatMoney(value) {
+  console.log(value)
+
   return value?.toLocaleString('es-MX', {
     style: 'currency',
     currency: 'MXN',
@@ -122,6 +124,6 @@ function formatMoney(value) {
 }
 
 watch(currentEstimateItem, (x, y) => {
-  console.log('watch')
+  console.log(currentEstimateItem?.total)
 })
 </script>
