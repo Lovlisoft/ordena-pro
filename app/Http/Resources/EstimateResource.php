@@ -20,6 +20,7 @@ class EstimateResource extends JsonResource
             'expiry_date' => $this->expiry_date,
             'estimate_number' => $this->estimate_number,
             'status' => EstimateStatusResource::make($this->currentStatus),
+            'user_flow' => $this->userFlow,
             'reference_number' => $this->reference_number,
             'tax_per_item' => $this->tax_per_item,
             'discount_per_item' => $this->discount_per_item,

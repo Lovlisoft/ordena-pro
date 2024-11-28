@@ -26,7 +26,6 @@ class EstimateStatus extends Model
     const DONE = 'done';
 
     const CLOSED_STATUSES = [
-        self::APPROVED,
         self::REJECTED,
         self::CANCELED,
         self::DONE,

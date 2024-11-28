@@ -1,7 +1,5 @@
 <template>
   <BasePage>
-    <SendEstimateModal />
-
     <BasePageHeader :title="$t('estimates.title')">
       <BaseBreadcrumb>
         <BaseBreadcrumbItem :title="$t('general.home')" to="dashboard" />
@@ -220,13 +218,6 @@
           </BaseEstimateStatusBadge>
         </template>
 
-        <template #cell-total="{ row }">
-          <BaseFormatMoney
-            :amount="row.data.total"
-            :currency="row.data.customer.currency"
-          />
-        </template>
-
         <!-- Actions -->
         <template v-if="hasAtleastOneAbility()" #cell-actions="{ row }">
           <EstimateDropDown :row="row.data" :table="tableComponent" />
@@ -306,11 +297,6 @@ const estimateColumns = computed(() => {
     { key: 'estimate_number', label: t('estimates.number', 2) },
     { key: 'name', label: t('estimates.customer') },
     { key: 'status', label: t('estimates.status') },
-    {
-      key: 'total',
-      label: t('estimates.total'),
-      tdClass: 'font-medium text-gray-900',
-    },
     {
       key: 'actions',
       tdClass: 'text-right text-sm font-medium pl-0',

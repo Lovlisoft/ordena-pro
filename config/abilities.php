@@ -157,6 +157,11 @@ return [
             "ability" => "send-estimate",
             "model" => Estimate::class,
         ],
+        [
+            "name" => "edit estimate files",
+            "ability" => "edit-estimate-files",
+            "model" => Estimate::class,
+        ],
 
         // Invoice
         [

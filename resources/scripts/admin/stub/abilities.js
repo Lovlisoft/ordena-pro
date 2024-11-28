@@ -28,6 +28,7 @@ export default {
   EDIT_ESTIMATE: 'edit-estimate',
   VIEW_ESTIMATE: 'view-estimate',
   SEND_ESTIMATE: 'send-estimate',
+  EDIT_ESTIMATE_FILES: 'edit-estimate-files',
 
   // Invoices
   CREATE_INVOICE: 'create-invoice',

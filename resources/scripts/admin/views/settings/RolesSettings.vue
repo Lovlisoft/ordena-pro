@@ -1,6 +1,5 @@
 <template>
   <RolesModal />
-
   <BaseSettingCard
     :title="$t('settings.roles.title')"
     :description="$t('settings.roles.description')"

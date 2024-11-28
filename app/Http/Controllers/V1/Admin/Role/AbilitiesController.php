@@ -15,6 +15,7 @@ class AbilitiesController extends Controller
      */
     public function __invoke(Request $request)
     {
+        // TODO: Devolver la lista de abilities que está en la base de datos en su lugar 
         return response()->json(['abilities' => config('abilities.abilities')]);
     }
 }

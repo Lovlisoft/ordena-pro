@@ -37,5 +37,6 @@ export default function () {
     selectedCurrency: '',
     show_price_breakdown: false,
     status: null,
+    user_flow: null,
   }
 }

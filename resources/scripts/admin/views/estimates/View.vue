@@ -1,30 +1,31 @@
 <template>
   <BasePage v-if="estimateData" :class="{ 'sm:w-1/2 lg:w-2/3' : estimateItemDetailOpen !== null }">
     <BasePageHeader :title="pageTitle" class="items-center">
-      <template #actions>
-        <div class="flex jusitfy-between items-center ">
-          <BaseEstimateStatusBadge 
+      <template #title>
+        <BaseEstimateStatusBadge 
             :status="estimateData.status.slug" 
             :color="estimateData.status.color"
             size="md"
             class="px-3 py-1 flex-none"
           >
             {{ estimateData.status.name }}
-          </BaseEstimateStatusBadge>
-
+          </BaseEstimateStatusBadge>  
+      </template>
+      <template #actions>
+        <div class="flex jusitfy-between items-center ">
           <div class="grow flex items-center justify-end">
             <BaseButton
-              v-if="userStore.hasAbilities(abilities.SEND_ESTIMATE)"
-              :disabled="itemsPendingToReview"
+              v-if="statusButtonVisible"
+              :disabled="actionPendingToEnable"
               :content-loading="isLoadingEstimate"
               variant="primary"
               class="text-sm"
-              @click="sendToNextStatus"
+              @click="sendToStatus(mainAction?.action)"
             >
               {{ nextStatusDescription }}
             </BaseButton>
 
-            <EstimateDropDown class="ml-3" :row="estimateData" />
+            <EstimateDropDown class="ml-3" :row="estimateData" :statusActions="estimateAvailableActions"/>
           </div>
         </div>
 
@@ -106,6 +107,7 @@ import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
 import abilities from '@/scripts/admin/stub/abilities'
 import BaseFormatMoney from '@/scripts/components/base/BaseFormatMoney.vue'
 import utilities from '@/scripts/helpers/utilities';
+import { main } from '@popperjs/core'
 
 const { formatMoney, formatNumber } = utilities
 
@@ -128,6 +130,7 @@ const currentPageNumber = ref(1)
 const lastPageNumber = ref(1)
 const estimateListSection = ref(null)
 const estimateItemDetailOpen = ref(null)
+const mainAction = ref(null)
 
 const searchData = reactive({
   orderBy: null,
@@ -172,17 +175,44 @@ const itemsColumns = computed(() => {
 
 const pageTitle = computed(() => 'Previa: ' + estimateData.value.estimate_number)
 
-const itemsPendingToReview = computed(() => {
+const actionPendingToEnable = computed(() => {
+  let currentStatus = estimateData.value.status.slug
+  let isEnabled = true
+
+  switch (currentStatus) {
+    case 'requested':
+      isEnabled = checkForItemsStatus([
+        'requested',
+        'changes',
+      ])
+      break
+    case 'changes':
+      isEnabled = checkForItemsStatus([
+        'requested',
+        'changes',
+      ])
+      break
+  }
+
+  console.log(isEnabled)
+
+  return ! isEnabled
+})
+
+function checkForItemsStatus(statuses) {
   let pendingItems = 0
 
   estimateData.value.items?.forEach(function (item) {
-    if (item.status == 'requested') {
+    console.log(item.status)
+    if (statuses.includes(item.status)) {
       pendingItems++
     }
   })
 
-  return pendingItems > 0
-})
+  console.log(pendingItems)
+
+  return pendingItems == 0 
+}
 
 const getOrderBy = computed(() => {
   if (searchData.orderBy === 'asc' || searchData.orderBy == null) {
@@ -208,37 +238,41 @@ const estimateItemSelected = computed(() => {
 const nextStatusDescription = computed(() => {
   let description = 'Avanzar status'
 
-  switch(estimateData.value.status?.slug) {
-    case 'requested':
-    case 'draft':
-      description = 'Enviar a Revisión'
-      break
-    case "review":
-      description = 'Solicitar Facturas'
-      break
+  if (mainAction.value.action) {
+    description = mainAction.value.label
   }
 
   return description
+})
+
+const statusButtonVisible = computed(() => {
+  return typeof mainAction.value !== 'undefined' && mainAction.value !== null
+})
+
+const estimateAvailableActions = computed(() => {
+  let actions = []
+
+  estimateData.value.user_flow.next?.forEach(function (value) {
+    if (value.main) {
+      mainAction.value = value
+    }
+
+    actions.push(value)
+  })
+
+  estimateData.value.user_flow.previous?.forEach(function (value) {
+    actions.push(value)
+  })
 })
 
 loadEstimate()
 
 onSearched = debounce(onSearched, 500)
 
-async function sendToNextStatus(status = null) {
-  let nextStatus = 'review'
+async function sendToStatus(status = null) {
+  mainAction.value = null
   let estimate = estimateData.value
-
-  switch (estimate.status.slug) {
-    case 'requested':
-    case 'draft':
-      nextStatus = 'review'
-      break
-    default:
-      nextStatus = 'requested'
-  }
-
-  let resp = await estimateStore.updateStatus(estimate.id, nextStatus)
+  let resp = await estimateStore.updateStatus(estimate.id, status)
 
   loadEstimate()
 }
@@ -253,15 +287,6 @@ function openEstimateItemDetail(estimateItem) {
 
 function closeEstimateItemDetail() {
   estimateItemDetailOpen.value = null
-}
-
-function scrollToEstimate() {
-  const el = document.getElementById(`estimate-${route.params.id}`)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' })
-    el.classList.add('shake')
-    addScrollListener()
-  }
 }
 
 function addScrollListener() {
@@ -302,25 +327,5 @@ function sortData() {
   searchData.orderBy = 'asc'
   onSearched()
   return true
-}
-
-async function onSendEstimate(id) {
-  modalStore.openModal({
-    title: t('estimates.send_estimate'),
-    componentName: 'SendEstimateModal',
-    id: estimateData.value.id,
-    data: estimateData.value,
-  })
-}
-
-function updateSentEstimate() {
-  let pos = estimateList.value.findIndex(
-    (estimate) => estimate.id === estimateData.value.id
-  )
-
-  if (estimateList.value[pos]) {
-    estimateList.value[pos].status = 'SENT'
-    estimateData.value.status = 'SENT'
-  }
 }
 </script>

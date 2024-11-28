@@ -92,6 +92,16 @@ class User extends Authenticatable implements HasMedia
         return Carbon::parse($this->created_at)->format($dateFormat);
     }
 
+    public function getRolesAttribute()
+    {
+        return UserRole::whereIn('name', $this->getRoles()->toArray())->get();
+    }
+
+    public function getMainRoleAttribute()
+    {
+        return $this->roles->first();
+    }
+
     public function offices()
     {
         return $this->belongsToMany(Office::class, 'user_offices', 'user_id', 'office_id');

@@ -4,6 +4,7 @@ namespace Crater\Traits;
 
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Crater\Models\EstimateStatus;
+use Illuminate\Support\Arr;
 
 trait HasEstimateStatus
 {
@@ -35,5 +36,42 @@ trait HasEstimateStatus
     public function getIsClosedAttribute()
     {
         return in_array($this->currentStatus->slug, EstimateStatus::CLOSED_STATUSES);
+    }
+
+    public function getUserFlowAttribute()
+    {
+        // TODO: Move this to a database structure
+        return (object) Arr::get($this->flowMapResource, $this->currentStatus->slug);
+    }
+
+    public function getFlowMapResourceAttribute()
+    {
+        $map = $this->flowMap;
+        
+        $userPermittedActions = Arr::get($this->userActions, request()->user()->mainRole->id);
+
+        foreach ($map as $key => $status) {
+            foreach ($status as $sequence => $action) {
+                $actions = [];
+
+                $iteration = 1;
+                foreach ($action as $slug => $label) {
+                    if (in_array($slug, $userPermittedActions) && $status = EstimateStatus::where('slug', $slug)->first()) {
+                        $actions[] = [
+                            'action' => $status->slug,
+                            'label' => $label,
+                            'color' => $status->color,
+                            'main' => $iteration == 1 && $sequence == 'next',
+                        ];
+                    };
+
+                    $iteration++;
+                }
+
+                Arr::set($map, "{$key}.{$sequence}", $actions);
+            }
+        }
+
+        return $map;
     }
 }
