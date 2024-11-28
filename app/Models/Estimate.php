@@ -62,6 +62,55 @@ class Estimate extends Model implements HasMedia
         'show_price_breakdown' => 'boolean',
     ];
 
+    // TODO: Move this to a specific and shared class and database storage
+    protected $flowMap = [
+        'draft' => [
+            'next' => [
+                'requested' => 'Solicitar previa',
+            ],
+        ],
+        'requested' => [
+            'next' => [
+                'review' => 'Enviar a revisión',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+        'review' => [
+            'previous' => [
+                'changes' => 'Solicitar ajustes',
+            ],
+            'next' => [
+                'approved' => 'Solicitar facturas',
+                'rejected' => 'Rechazar definitivamente',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+        'approved' => [
+            'previous' => [
+                'review' => 'Devolver a revisión',
+            ],
+            'next' => [
+                'done' => 'Facturas emitidas',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+    ];
+
+    protected $userActions = [
+        UserRole::AGENTE => [
+            'requested',
+            'changes',
+            'approved',
+            'rejected',
+            'canceled',
+        ],
+        UserRole::ADMIN => [
+            'review',
+            'done',
+            'canceled',
+        ],
+    ];
+
     public function getEstimatePdfUrlAttribute()
     {
         return url('/estimates/pdf/'.$this->unique_hash);
