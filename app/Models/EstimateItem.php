@@ -54,6 +54,16 @@ class EstimateItem extends Model implements HasMedia
         return $this->getMedia('estimate_pdf')->first() ?? null;
     }
 
+    public function getInvoiceXmlAttribute()
+    {
+        return $this->getMedia('invoice_xml')->first() ?? null;
+    }
+
+    public function getInvoicePdfAttribute()
+    {
+        return $this->getMedia('invoice_pdf')->first() ?? null;
+    }
+
     public function getCalculatedTotalAttribute()
     {
         return $this->base_amount + $this->ieps_amount + $this->iva_amount;

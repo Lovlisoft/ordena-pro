@@ -20,7 +20,7 @@
 
     <!-- Delete Estimate  -->
     <BaseDropdownItem
-      v-if="userStore.hasAbilities(abilities.DELETE_ESTIMATE)"
+      v-if="userStore.hasAbilities(abilities.EDIT_ESTIMATE_FILES)"
       @click="$emit('deleteFile')"
     >
       <BaseIcon

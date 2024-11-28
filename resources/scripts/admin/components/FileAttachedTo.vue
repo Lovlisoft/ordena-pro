@@ -1,6 +1,6 @@
 <template>
   <div class="mt-6">
-    <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Archivo Previa (PDF)</div>
+    <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">{{ fileTitle }}</div>
     
     <div v-if="isAttached">
       <label class="relative block cursor-pointer text-left w-full" >
@@ -9,7 +9,9 @@
           <div class="grid grid-cols-12 items-center gap-3">
             <!-- Card -->
             <div class="col-span-2 order-1 sm:order-none flex items-center space-x-4 p-2">
-              <EstimateIcon />
+              <EstimateIcon v-if="collection == 'estimate_pdf'" />
+              <InvoiceXmlIcon v-if="collection == 'invoice_xml'" />
+              <InvoicePdfIcon v-if="collection == 'invoice_pdf'" />
             </div>
             <!-- Name -->
             <div class="col-span-7 order-2 sm:order-none text-left">
@@ -48,7 +50,7 @@
           />
         </div>  
         
-        <p class="text-center">Archivo pendiente de ser cargado por el personal de facturación</p>
+        <p class="text-center">{{ missingFileMessage }}</p>
       </label>
     </div>  
   </div>
@@ -61,6 +63,8 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import abilities from '@/scripts/admin/stub/abilities'
 import BaseFileUploader from '@/scripts/components/base/BaseFileUploader.vue'
 import EstimateIcon from '@/scripts/components/icons/EstimateIcon.vue'
+import InvoiceXmlIcon from '@/scripts/components/icons/InvoiceXmlIcon.vue'
+import InvoicePdfIcon from '@/scripts/components/icons/InvoicePdfIcon.vue'
 import AttachedFileDropdown from './dropdowns/AttachedFileDropdown.vue'
 
 const userStore = useUserStore()
@@ -69,6 +73,16 @@ const props = defineProps({
   file: {
     type: Object,
     default: null,
+  },
+  fileTitle: {
+    type: String,
+    default: 'Archivo adjunto',
+    required: false,
+  },
+  missingFileMessage: {
+    type: String,
+    default: 'Archivo pendiente de ser cargado por el personal de facturación',
+    required: false,
   },
   types: {
     type: String,

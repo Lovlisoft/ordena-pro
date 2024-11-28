@@ -75,6 +75,12 @@ class Estimate extends Model implements HasMedia
                 'canceled' => 'Cancelar solicitud',
             ],
         ],
+        'changes' => [
+            'next' => [
+                'review' => 'Enviar a revisión',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
         'review' => [
             'previous' => [
                 'changes' => 'Solicitar ajustes',

@@ -25,11 +25,14 @@
               {{ nextStatusDescription }}
             </BaseButton>
 
-            <EstimateDropDown class="ml-3" :row="estimateData" :statusActions="estimateAvailableActions"/>
+            <EstimateDropDown 
+              class="ml-3" 
+              :row="estimateData" 
+              :statusActions="estimateAvailableActions"
+              @action-execute="sendToStatus"
+            />
           </div>
         </div>
-
-
       </template>
     </BasePageHeader>
 
@@ -99,7 +102,6 @@ import { useDialogStore } from '@/scripts/stores/dialog'
 import { useUserStore } from '@/scripts/admin/stores/user'
 
 import BaseEstimateStatusBadge from '@/scripts/components/base/BaseEstimateStatusBadge.vue';
-import EstimateItemDropDown from '@/scripts/admin/components/dropdowns/EstimateItemDropdown.vue'
 import EstimateDropDown from '@/scripts/admin/components/dropdowns/EstimateIndexDropdown.vue'
 import EstimateItemDetail from '@/scripts/admin/components/modal-components/EstimateItemDetail.vue'
 import LoadingIcon from '@/scripts/components/icons/LoadingIcon.vue'
@@ -194,8 +196,6 @@ const actionPendingToEnable = computed(() => {
       break
   }
 
-  console.log(isEnabled)
-
   return ! isEnabled
 })
 
@@ -219,20 +219,6 @@ const getOrderBy = computed(() => {
     return true
   }
   return false
-})
-
-const getOrderName = computed(() => {
-  if (getOrderBy.value) {
-    return t('general.ascending')
-  }
-  return t('general.descending')
-})
-
-const estimateItemSelected = computed(() => {
-  if (estimateData.value && estimateData.value.id) {
-    return estimate.value.id
-  }
-  return null
 })
 
 const nextStatusDescription = computed(() => {
@@ -263,6 +249,8 @@ const estimateAvailableActions = computed(() => {
   estimateData.value.user_flow.previous?.forEach(function (value) {
     actions.push(value)
   })
+
+  return actions
 })
 
 loadEstimate()

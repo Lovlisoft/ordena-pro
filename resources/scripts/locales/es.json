@@ -7,7 +7,7 @@
     "recurring-invoices": "Facturas recurrentes",
     "expenses": "Gastos",
     "estimates": "Previas",
-    "payments": "Pagos",
+    "payments": "Ref. Pago",
     "bank-transactions": "Movimientos",
     "reports": "Informes",
     "settings": "Ajustes",
@@ -240,7 +240,7 @@
     "manager": "Asesor"
   },
   "items": {
-    "title": "Artículos",
+    "title": "Productos",
     "items_list": "Lista de artículos",
     "name": "Nombre",
     "unit": "Unidad",
@@ -565,8 +565,8 @@
     "invalid_due_amount_message": "La cantidad total de la factura recurrente no puede ser menor a la cantidad total pagada. Por favor, actualiza la factura o elimina los pagos asociados para continuar."
   },
   "payments": {
-    "title": "Pagos",
-    "payments_list": "Lista de pagos",
+    "title": "Referencias de Pago",
+    "payments_list": "Lista de referencias",
     "record_payment": "Registro de pago",
     "customer": "Cliente",
     "date": "Fecha",
@@ -576,7 +576,7 @@
     "payment_mode": "Modo de pago",
     "invoice": "Factura",
     "note": "Nota",
-    "add_payment": "Agregar pago",
+    "add_payment": "Crear Referencia",
     "new_payment": "Nuevo pago",
     "edit_payment": "Editar pago",
     "view_payment": "Ver pago",

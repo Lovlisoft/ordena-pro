@@ -66,13 +66,39 @@
             </div>
           </div>
 
-          <!-- Receipts -->
+          <!-- Files -->
           <FileAttachedTo 
             :file="currentEstimateItem?.files.estimate"
             modelType="estimate-items"
             :modelId="estimateItem?.id"
             types=".pdf"
             collection="estimate_pdf"
+            fileTitle="Archivo Previa (PDF)"
+            missingFileMessage="Archivo pendiente de ser cargado por el personal de facturación"
+            @update-parent-model="$emit('update-estimate-item')"
+          />
+
+          <FileAttachedTo 
+            v-if="isReadyToInvoice"
+            :file="currentEstimateItem?.files.cfdi"
+            modelType="estimate-items"
+            :modelId="estimateItem?.id"
+            types=".xml"
+            collection="invoice_xml"
+            fileTitle="Factura XML (CFDi)"
+            missingFileMessage="Archivo pendiente de ser cargado por el personal de facturación"
+            @update-parent-model="$emit('update-estimate-item')"
+          />
+
+          <FileAttachedTo 
+            v-if="isReadyToInvoice"
+            :file="currentEstimateItem?.files.invoice"
+            modelType="estimate-items"
+            :modelId="estimateItem?.id"
+            types=".pdf"
+            collection="invoice_pdf"
+            fileTitle="Factura PDF"
+            missingFileMessage="Archivo pendiente de ser cargado por el personal de facturación"
             @update-parent-model="$emit('update-estimate-item')"
           />
 
@@ -112,6 +138,15 @@ const emit = defineEmits(['close-estimateitemdetail'])
 
 const currentEstimateItem = computed(() => {
   return props.estimateItem
+})
+
+const isReadyToInvoice = computed(() => {
+  let statusToInvoice = [
+    'approved',
+    'done',
+  ]
+
+  return statusToInvoice.includes(props.estimateData?.status.slug)
 })
 
 function simpleFormatMoney(value) {
