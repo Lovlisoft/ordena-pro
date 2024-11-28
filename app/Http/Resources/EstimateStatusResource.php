@@ -19,6 +19,7 @@ class EstimateStatusResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->description,
             'color' => $this->color,
+            'icon' => $this->icon,
         ];
     }
 }

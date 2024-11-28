@@ -62,6 +62,7 @@ trait HasEstimateStatus
                             'label' => $label,
                             'color' => $status->color,
                             'main' => $iteration == 1 && $sequence == 'next',
+                            'icon' => $status->icon,
                         ];
                     };
 

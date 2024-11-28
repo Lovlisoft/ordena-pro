@@ -48,8 +48,10 @@ class EstimateItemResource extends JsonResource
                 return CustomFieldValueResource::collection($this->fields);
             }),
             'files' => [
-                'estimate' => AttachedFileResource::make($this->estimate_pdf)
-            ]
+                'estimate' => AttachedFileResource::make($this->estimate_pdf),
+                'cfdi' => AttachedFileResource::make($this->invoice_xml),
+                'invoice' => AttachedFileResource::make($this->invoice_pdf),
+            ],
         ];
     }
 }
