@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-md bg-red-50 p-4">
+  <div class="rounded-md bg-red-50 p-4 border-red-200 border w-full">
     <div class="flex">
       <div class="shrink-0">
         <XCircleIcon class="h-5 w-5 text-red-400" aria-hidden="true" />

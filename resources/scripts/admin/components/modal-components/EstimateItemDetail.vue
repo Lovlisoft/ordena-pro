@@ -150,15 +150,9 @@ const isReadyToInvoice = computed(() => {
 })
 
 function simpleFormatMoney(value) {
-  console.log(value)
-
   return value?.toLocaleString('es-MX', {
     style: 'currency',
     currency: 'MXN',
   })
 }
-
-watch(currentEstimateItem, (x, y) => {
-  console.log(currentEstimateItem?.total)
-})
 </script>

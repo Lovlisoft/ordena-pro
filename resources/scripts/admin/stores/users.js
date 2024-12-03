@@ -75,7 +75,6 @@ export const useUsersStore = (useWindow = false) => {
               resolve(response)
             })
             .catch((err) => {
-              console.log(err)
               handleError(err)
               reject(err)
             })

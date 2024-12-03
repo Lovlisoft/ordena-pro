@@ -378,8 +378,6 @@ async function onSelectInvoice(invoice) {
 
     paymentStore.currentPayment.maxPayableAmount = payableAmount
   }
-
-  console.log(paymentStore.currentPayment.maxPayableAmount)
 }
 
 function onCustomerChange(customer_id) {

@@ -147,7 +147,6 @@ export const useEstimateStore = (useWindow = false) => {
               resolve(response)
             })
             .catch((err) => {
-              console.log(err);
               handleError(err)
               reject(err)
             })
@@ -165,10 +164,7 @@ export const useEstimateStore = (useWindow = false) => {
             }
           }
           salesTax.id = found.tax_type_id
-          console.log(salesTax, 'salesTax');
-
           taxTypeStore.taxTypes.push(salesTax)
-          console.log(taxTypeStore.taxTypes);
         }
       },
 

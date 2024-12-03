@@ -103,10 +103,6 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-onMounted(() => {
-  console.log(props.statusActions)
-})
-
 async function removeEstimate(id) {
   dialogStore
     .openDialog({
