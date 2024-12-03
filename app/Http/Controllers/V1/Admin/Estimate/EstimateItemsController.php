@@ -8,18 +8,54 @@ use Crater\Models\EstimateItem;
 use Crater\Models\EstimateStatus;
 use Illuminate\Http\Request;
 use Crater\Models\Media;
+use Crater\Services\CFDi\CfdiService;
+use Illuminate\Support\Arr;
 
 class EstimateItemsController extends Controller
 {
     public function attachFile(Request $request, EstimateItem $estimateItem)
     {
         $fileType =  $request->collection;
+        $estimate = $estimateItem->estimate;
+        $errors = collect();
 
+        if (! $request->hasFile('file')) {
+            abort(400, 'No se encuentra el archivo cargado');
+        }
+
+        $filePath = $request->file->getRealPath();
+        $fileContent = file_get_contents($filePath);
+        $newItemStatus = null;
+        
+        switch($fileType) {
+            // If the file is the estimate PDF then update the status of the item
+            case 'estimate_pdf':
+                $newItemStatus = EstimateStatus::REVIEW;
+                break;
+
+            // If the file is the invoice / CFDI then 
+            case 'invoice_xml':
+                $cfdiService = new CfdiService($fileContent);
+                $response = $cfdiService
+                    ->checkIsValidFile()
+                    ->isEmitedFor($estimate->customer->rfc)
+                    ->getResponse();
+
+                $errors = $errors->merge($response->errors);
+
+                break;
+        }
+
+        // If any errror, abort the attachement process
+        if ($errors->isNotEmpty()) {
+            return $response->throw();
+        }
+
+        // Attach the file to the entity
         $item = $estimateItem->syncUniqueFile('file', $fileType);
 
-        // If the attached file is for the Estimate PDF, move status to REVIEW
-        if ($fileType == 'estimate_pdf') {
-            $estimateItem->updateStatus(EstimateStatus::REVIEW);
+        if ($newItemStatus) {
+            $estimateItem->updateStatus($newItemStatus);
         }
         
         return AttachedFileResource::collection(

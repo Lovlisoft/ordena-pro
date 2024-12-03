@@ -31,13 +31,13 @@
     </div>
     <div v-else-if="userStore.hasAbilities(abilities.EDIT_ESTIMATE_FILES)">
       <BaseFileUploader 
-            v-model="fileToUpload"
           :accept="types"
           @change="fileChange"
           @upload="fileUploaded"
           :autoProcess=true
           :uploadUrl="uploadUrl"
           inputFieldName="file"
+          :fileId="modelId"
         />
     </div>
     <div v-else>
@@ -110,7 +110,6 @@ const emit = defineEmits(['update-parent-model'])
 
 onMounted(() => {
   attachedFile.value = props.file
-  console.log(attachedFile.value)
 })
 
 const isAttached = computed(() => {
@@ -140,15 +139,15 @@ const deleteUrl = computed(() => {
   return '/api/v1/' + props.modelType + '/' + props.modelId + '/files/' + attachedFile.value.id
 })
 
-const currentFile = computed(() => {
-  return props.file
+const currentModel = computed(() => {
+  return props.modelId
 })
 
 watch(attachedFile, () => {
   emit('update-parent-model')
 })
 
-watch(currentFile, (x,) => {
-  attachedFile.value = currentFile.value
+watch(currentModel, (x) => {
+  attachedFile.value = props.file
 })
 </script>

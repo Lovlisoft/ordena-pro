@@ -2,6 +2,8 @@
 
 namespace Crater\Models;
 
+use Crater\DTO\CfdiValidationResponse;
+use Crater\Services\CFDi\CfdiService;
 use Crater\Traits\HasCustomFieldsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

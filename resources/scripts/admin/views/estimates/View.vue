@@ -203,13 +203,10 @@ function checkForItemsStatus(statuses) {
   let pendingItems = 0
 
   estimateData.value.items?.forEach(function (item) {
-    console.log(item.status)
     if (statuses.includes(item.status)) {
       pendingItems++
     }
   })
-
-  console.log(pendingItems)
 
   return pendingItems == 0 
 }
