@@ -2,43 +2,25 @@
   <table class="text-center item-table min-w-full">
     <colgroup>
       <col style="width: 30%; min-width: 280px" />
-      <col style="width: 10%; min-width: 120px" />
       <col style="width: 20%; min-width: 120px" />
+      <col style="width: 20%; min-width: 120px" />
+      <col style="width: 15%; min-width: 120px" />
       <col style="width: 15%; min-width: 120px" />
     </colgroup>
     <thead class="bg-white border border-gray-200 border-solid">
-      <tr>
-        <th
-          class="
-            px-2
-            py-3
-            text-sm
-            not-italic
-            font-medium
-            leading-5
-            text-left text-gray-700
-            border-t border-b border-gray-200 border-solid
-          "
-        >
+      <tr class="
+            px-2 text-sm not-italic font-medium text-left gap-2
+            text-gray-700 border-t border-b border-gray-200 border-solid
+          ">
+        <th class="py-3">
           <BaseContentPlaceholders v-if="isLoading">
             <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
           </BaseContentPlaceholders>
-          <span v-else class="pl-7">
+          <span v-else class="pl-10">
             {{ $tc('items.item', 2) }}
           </span>
         </th>
-        <th
-          class="
-            px-2
-            py-3
-            text-sm
-            not-italic
-            font-medium
-            leading-5
-            text-left text-gray-700
-            border-t border-b border-gray-200 border-solid
-          "
-        >
+        <th>
           <BaseContentPlaceholders v-if="isLoading">
             <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
           </BaseContentPlaceholders>
@@ -46,18 +28,7 @@
             {{ $t('invoices.item.quantity') }}
           </span>
         </th>
-        <th
-          class="
-            px-2
-            py-3
-            text-sm
-            not-italic
-            font-medium
-            leading-5
-            text-left text-gray-700
-            border-t border-b border-gray-200 border-solid
-          "
-        >
+        <th>
           <BaseContentPlaceholders v-if="isLoading">
             <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
           </BaseContentPlaceholders>
@@ -65,38 +36,15 @@
             {{ $t('invoices.item.price') }}
           </span>
         </th>
-        <th
-          v-if="store[storeProp].discount_per_item === 'YES'"
-          class="
-            px-2
-            py-3
-            text-sm
-            not-italic
-            font-medium
-            leading-5
-            text-left text-gray-700
-            border-t border-b border-gray-200 border-solid
-          "
-        >
+        <th>
           <BaseContentPlaceholders v-if="isLoading">
             <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
           </BaseContentPlaceholders>
           <span v-else>
-            {{ $t('invoices.item.discount') }}
+            Precio de Venta
           </span>
         </th>
-        <th
-          class="
-            px-2
-            py-3
-            text-sm
-            not-italic
-            font-medium
-            leading-5
-            text-right text-gray-700
-            border-t border-b border-gray-200 border-solid
-          "
-        >
+        <th>
           <BaseContentPlaceholders v-if="isLoading">
             <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
           </BaseContentPlaceholders>
