@@ -4,8 +4,9 @@
       <table class="w-full">
         <colgroup>
           <col style="width: 30%; min-width: 280px" />
-          <col style="width: 10%; min-width: 120px" />
           <col style="width: 20%; min-width: 120px" />
+          <col style="width: 20%; min-width: 120px" />
+          <col style="width: 15%; min-width: 120px" />
           <col style="width: 15%; min-width: 120px" />
         </colgroup>
         <tbody>
@@ -13,7 +14,8 @@
             <td class="px-2 py-2 text-left align-top">
               <div class="flex justify-start">
                 <div
-                  class="flex items-center justify-center w-5 h-5 mt-2 mr-2 text-gray-300 cursor-move  handle"
+                  class="flex items-center justify-center w-5 
+                    h-5 mt-2 mr-2 text-gray-300 cursor-move  handle"
                 >
                   <DragIcon />
                 </div>
@@ -51,6 +53,24 @@
                     <BaseItemMoney
                       :key="selectedCurrency"
                       v-model="precisionPrice"
+                      :invalid="v$.price.$error"
+                      :content-loading="loading"
+                      :currency="selectedCurrency"
+                      :item-precision="DEFAULT_ITEM_PRECISION"
+
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td class="px-2 py-2 text-left align-top">
+              <div class="flex flex-col">
+                <div class="flex-auto flex-fill bd-highlight">
+                  <div class="relative w-full">
+                    <BaseItemMoney
+                      :key="selectedCurrency"
+                      v-model="compositePrice"
                       :invalid="v$.price.$error"
                       :content-loading="loading"
                       :currency="selectedCurrency"
@@ -264,7 +284,9 @@ function formatMoney(value) {
 }
 
 const applyAfter = ref(null)
-const fixedTotal = ref(null)
+const fixedPrice = ref(null)
+const loadedPrice = ref(null)
+const loadedTotal = ref(null)
 
 const subtotal = computed(() => { 
   const precisionPrice = props.itemData.precision_price;
@@ -274,37 +296,42 @@ const subtotal = computed(() => {
 
 const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
 
+const compositePrice = computed({
+  get: () => {
+    let compPrice = fixedPrice.value ?? total.value / quantity.value
+
+    loadedPrice.value = compPrice
+
+    return compPrice
+  },
+  set: (newValue) => {
+    total.value = newValue * quantity.value
+    fixedPrice.value = parseFloat(newValue)
+  }
+})
+
 const total = computed({
   get: () => {
-    return fixedTotal.value ?? basePrice.value + ivaTax.value + iepsTax.value
+    let tempTotal = basePrice.value + ivaTax.value + iepsTax.value
+
+    loadedTotal.value = tempTotal
+
+    return tempTotal
   },
   set: (newValue) => {
     let old = Math.round((total.value + Number.EPSILON) * 100) / 100
     let current = Math.round((parseFloat(newValue) + Number.EPSILON) * 100) / 100
 
     if (old !== current) {
-      applyAfter.value = Math.floor(Date.now()) + 300 
-
-      setTimeout(function(event) {
-        let now = Math.floor(Date.now())
-
-        if (now > applyAfter.value) {
-          calculateFromTotal(parseFloat(newValue))
-          fixedTotal.value = parseFloat(newValue)
-        }
-      }, 300)
+      calculateFromTotal(parseFloat(newValue))
     }
   }
 })
 
 function calculateFromTotal(total) {
-  let cantidad = 0
+  let cantidad = quantity.value
   let ieps = props.itemData.ieps
   let ivaRate = 1.16
-
-  cantidad = iepsBreakdown.value
-    ? Math.round(total / (ieps + (precisionPrice.value - ieps) * ivaRate))
-    : Math.round(total / (ieps + (precisionPrice.value * ivaRate)))
 
   // calculo del ajuste de precio
   let precioUnitario = iepsBreakdown.value
@@ -339,9 +366,8 @@ const ivaTax = computed({
 watch(
   () => iepsBreakdown.value,
   (val) => {
-    if (fixedTotal.value) {
-      calculateFromTotal(fixedTotal.value)
-    }
+    console.log(loadedPrice.value, loadedTotal.value)
+    calculateFromTotal(loadedTotal.value)
   }
 )
 
