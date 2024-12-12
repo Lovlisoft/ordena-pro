@@ -62,7 +62,19 @@
                 <span class="italic">Precio Unitario:</span>
                 <span class="font-medium text-gray-700 dark:text-gray-100 text-right">{{ formatMoney(estimateItem?.precision_price, 0, {itemPrecision: 6} )}}</span>
               </div>
-              
+              <div class="flex justify-between space-x-1">
+                <span class="italic">Subtotal:</span>
+                <span class="font-medium text-gray-700 dark:text-gray-100 text-right">{{ simpleFormatMoney(estimateItem?.subtotal) }}</span>
+              </div>
+
+              <div v-if="estimateItem?.item_taxes.ieps > 0" class="flex justify-between space-x-1">
+                <span class="italic">IEPS:</span>
+                <span class="font-medium text-gray-700 dark:text-gray-100 text-right">{{ simpleFormatMoney(estimateItem?.item_taxes.ieps) }}</span>
+              </div>
+              <div v-if="estimateItem?.item_taxes.iva > 0" class="flex justify-between space-x-1">
+                <span class="italic">IVA (16%):</span>
+                <span class="font-medium text-gray-700 dark:text-gray-100 text-right">{{ simpleFormatMoney(estimateItem?.item_taxes.iva) }}</span>
+              </div>
             </div>
           </div>
 

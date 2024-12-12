@@ -29,11 +29,9 @@ class EstimateItemResource extends JsonResource
             'status_name' => $this->currentStatus?->description,
             'status_color' => $this->currentStatus?->color,
             'tax' => $this->tax,
-            'total' => $this->calculated_total,
+            'subtotal' => $this->precision_subtotal,
+            'total' => $this->base_total,
             'item_id' => $this->item_id,
-            'ieps' => $this->when($this->item->taxes()->exists(), function () {
-                return $this->item->taxes->first()->taxType->percent;
-            }),
             'estimate_id' => $this->estimate_id,
             'company_id' => $this->company_id,
             'exchange_rate' => $this->exchange_rate,
@@ -41,6 +39,7 @@ class EstimateItemResource extends JsonResource
             'base_price' => $this->base_price,
             'base_tax' => $this->base_tax,
             'base_total' => $this->base_total,
+            'item_taxes' => $this->itemTaxes,
             'taxes' => $this->when($this->taxes()->exists(), function () {
                 return TaxResource::collection($this->taxes);
             }),

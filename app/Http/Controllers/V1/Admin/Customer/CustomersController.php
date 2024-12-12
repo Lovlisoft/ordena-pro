@@ -27,9 +27,7 @@ class CustomersController extends Controller
 
         $customers = Customer::with('creator')
             ->whereCompany()
-            ->when($user->role == 'user', function ($query) use ($user) {
-                $query->where('customers.creator_id', $user->id);
-            })
+            ->allowedForUser($user)
             ->applyFilters($request->all())
             ->select(
                 'customers.*',
