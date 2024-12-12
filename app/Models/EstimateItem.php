@@ -84,14 +84,12 @@ class EstimateItem extends Model implements HasMedia
 
     public function getIepsAmountAttribute()
     {
-        return $this->quantity * $this->ieps;
+        return $this->ieps_breakdown ? $this->quantity * $this->ieps : 0;
     }
 
     public function getBaseAmountAttribute()
     {
-        return $this->ieps_breakdown 
-            ? $this->precision_subtotal - $this->ieps_amount
-            : $this->precision_subtotal;
+        return $this->precision_subtotal - $this->ieps_amount;
     }
 
     public function getIvaAmountAttribute()
@@ -102,5 +100,13 @@ class EstimateItem extends Model implements HasMedia
     public function getIepsBreakdownAttribute()
     {
         return !! $this->estimate->show_price_breakdown;
+    }
+
+    public function getItemTaxesAttribute()
+    {
+        return [
+            'iva' => $this->iva_amount,
+            'ieps' => $this->ieps_amount,
+        ];
     }
 }

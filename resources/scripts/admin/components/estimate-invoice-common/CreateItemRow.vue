@@ -57,7 +57,7 @@
                       :content-loading="loading"
                       :currency="selectedCurrency"
                       :item-precision="DEFAULT_ITEM_PRECISION"
-
+                      :disabled="true"
                     />
                   </div>
                 </div>
@@ -112,7 +112,7 @@
 
       <div class="px-12 pb-4 text-right">
         <BaseLabel>Monto Base:</BaseLabel> <span class="text-sm pr-6">{{ basePriceStr }}</span>
-        <BaseLabel>IEPS:</BaseLabel> <span class="text-sm pr-6">{{ iepsTaxStr }}</span>
+        <span v-if="iepsBreakdown"><BaseLabel>IEPS:</BaseLabel> <span class="text-sm pr-6">{{ iepsTaxStr }}</span></span>
         <BaseLabel>IVA (16%): </BaseLabel> <span class="text-sm">{{ ivaTaxStr }}</span>
       </div>
     </td>
@@ -323,6 +323,7 @@ const total = computed({
     let current = Math.round((parseFloat(newValue) + Number.EPSILON) * 100) / 100
 
     if (old !== current) {
+      fixedPrice.value = parseFloat(newValue / quantity.value)
       calculateFromTotal(parseFloat(newValue))
     }
   }
@@ -330,13 +331,10 @@ const total = computed({
 
 function calculateFromTotal(total) {
   let cantidad = quantity.value
-  let ieps = props.itemData.ieps
+  let ieps = iepsBreakdown.value ? props.itemData.ieps : 0
   let ivaRate = 1.16
 
-  // calculo del ajuste de precio
-  let precioUnitario = iepsBreakdown.value
-    ? ((total / cantidad - ieps) / ivaRate) + ieps
-    : ((total / cantidad - ieps) / ivaRate)
+  let precioUnitario =  ((total / cantidad - ieps) / ivaRate) + ieps
 
   if (cantidad > 0 && precioUnitario > 0 && total > 0) {
     quantity.value = cantidad
@@ -346,13 +344,13 @@ function calculateFromTotal(total) {
 
 const basePrice = computed({
   get: () => {
-    return !iepsBreakdown.value ? subtotalPrecision.value : subtotalPrecision.value - iepsTax.value;
+    return subtotalPrecision.value - iepsTax.value;
   },
 })
 
 const iepsTax = computed({
   get: () => {
-    return props.itemData.quantity * props.itemData.ieps
+    return iepsBreakdown.value ? props.itemData.quantity * props.itemData.ieps : 0
   },
 })
 
@@ -366,14 +364,9 @@ const ivaTax = computed({
 watch(
   () => iepsBreakdown.value,
   (val) => {
-    console.log(loadedPrice.value, loadedTotal.value)
     calculateFromTotal(loadedTotal.value)
   }
 )
-
-const totalPrecision = computed(() => {
-  return subtotalPrecision.value - props.itemData.discount_val
-})
 
 const selectedCurrency = computed(() => {
   if (props.currency) {
