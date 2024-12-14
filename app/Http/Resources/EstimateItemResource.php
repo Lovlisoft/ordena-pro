@@ -40,6 +40,7 @@ class EstimateItemResource extends JsonResource
             'base_tax' => $this->base_tax,
             'base_total' => $this->base_total,
             'item_taxes' => $this->itemTaxes,
+            'ieps' => $this->item->taxes->first()->taxType->percent,
             'taxes' => $this->when($this->taxes()->exists(), function () {
                 return TaxResource::collection($this->taxes);
             }),

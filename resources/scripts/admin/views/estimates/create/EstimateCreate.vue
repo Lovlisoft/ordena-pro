@@ -130,6 +130,11 @@ const companyStore = useCompanyStore()
 const customFieldStore = useCustomFieldStore()
 const { t } = useI18n()
 
+onMounted(() => {
+  console.log(estimateStore['newEstimate'])
+})
+
+
 const estimateValidationScope = 'newEstimate'
 let isSaving = ref(false)
 const isMarkAsDefault = ref(false)

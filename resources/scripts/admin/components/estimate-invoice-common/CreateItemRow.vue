@@ -283,9 +283,7 @@ function formatMoney(value) {
   })
 }
 
-const applyAfter = ref(null)
 const fixedPrice = ref(null)
-const loadedPrice = ref(null)
 const loadedTotal = ref(null)
 
 const subtotal = computed(() => { 
@@ -300,7 +298,7 @@ const compositePrice = computed({
   get: () => {
     let compPrice = fixedPrice.value ?? total.value / quantity.value
 
-    loadedPrice.value = compPrice
+    fixedPrice.value = compPrice
 
     return compPrice
   },
@@ -329,14 +327,17 @@ const total = computed({
   }
 })
 
-function calculateFromTotal(total) {
+function calculateFromTotal(value) {
+  let providedTotal = value
   let cantidad = quantity.value
   let ieps = iepsBreakdown.value ? props.itemData.ieps : 0
   let ivaRate = 1.16
 
-  let precioUnitario =  ((total / cantidad - ieps) / ivaRate) + ieps
+  console.log(providedTotal, cantidad, ieps)
 
-  if (cantidad > 0 && precioUnitario > 0 && total > 0) {
+  let precioUnitario =  ((providedTotal / cantidad - ieps) / ivaRate) + ieps
+
+  if (cantidad > 0 && precioUnitario > 0 && providedTotal > 0) {
     quantity.value = cantidad
     precisionPrice.value = precioUnitario
   }
@@ -510,15 +511,6 @@ function onSelectItem(itm) {
 
   itemStore.fetchItems()
   syncItemToStore()
-}
-
-function selectFixed() {
-  if (props.itemData.discount_type === 'fixed') {
-    return
-  }
-
-  updateItemAttribute('discount_val', Math.round(props.itemData.discount * 100))
-  updateItemAttribute('discount_type', 'fixed')
 }
 
 function selectPercentage() {
