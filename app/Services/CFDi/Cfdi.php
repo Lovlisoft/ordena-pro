@@ -2,7 +2,9 @@
 
 namespace Crater\Services\CFDi;
 
-class Cfdi
+use Carbon\Carbon;
+
+class Cfdi extends CfdiModel
 {
     public $folio;
 
@@ -18,6 +20,8 @@ class Cfdi
 
     public $subtotal;
 
+    public $tax;
+
     public $date;
 
     public function __construct(\CfdiUtils\Cfdi $cfdi)
@@ -32,7 +36,9 @@ class Cfdi
 
         $this->subtotal = $comprobante['SubTotal'];
 
-        $this->date = $comprobante['version'];
+        $this->tax = 0;
+
+        $this->date = Carbon::parse($comprobante['Fecha']);
 
         $this->issuing = new CfdiEntity(
             $comprobante->emisor['Rfc'],
@@ -46,6 +52,22 @@ class Cfdi
             $comprobante->receptor['RegimenFiscalReceptor'],
             $comprobante->receptor['DomicilioFiscalReceptor'],
             $comprobante->receptor['UsoCFDI']
-        );
+        );  
+
+        $items = $comprobante->conceptos;
+
+        $this->items = collect();
+
+        foreach ($items() as $key => $item) {
+            $this->items->push(new CfdiItem([
+                'rowNumber' => $key + 1,
+                'productId' => $item['NoIdentificacion'],
+                'description' => $item['Descripcion'],
+                'quantity' => $item['Cantidad'],
+                'unit' => $item['Unidad'],
+                'price' => $item['ValorUnitario'],
+                'subtotal' => $item['Importe'],
+            ]));
+        }
     }
 }

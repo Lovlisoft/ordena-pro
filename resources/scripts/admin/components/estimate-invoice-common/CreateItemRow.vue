@@ -513,19 +513,6 @@ function onSelectItem(itm) {
   syncItemToStore()
 }
 
-function selectPercentage() {
-  if (props.itemData.discount_type === 'percentage') {
-    return
-  }
-
-  updateItemAttribute(
-    'discount_val',
-    (subtotal.value * props.itemData.discount) / 100
-  )
-
-  updateItemAttribute('discount_type', 'percentage')
-}
-
 function syncItemToStore() {
   let itemTaxes = props.store[props.storeProp]?.items[props.index]?.taxes
 

@@ -6,6 +6,7 @@ use Crater\Http\Controllers\Controller;
 use Crater\Http\Resources\AttachedFileResource;
 use Crater\Models\EstimateItem;
 use Crater\Models\EstimateStatus;
+use Crater\Models\Invoice;
 use Illuminate\Http\Request;
 use Crater\Models\Media;
 use Crater\Services\CFDi\CfdiService;
@@ -38,10 +39,17 @@ class EstimateItemsController extends Controller
                 $cfdiService = new CfdiService($fileContent);
                 $response = $cfdiService
                     ->checkIsValidFile()
-                    ->isEmitedFor($estimate->customer->rfc)
+                    //->isEmitedFor($estimate->customer->rfc)
                     ->getResponse();
 
                 $errors = $errors->merge($response->errors);
+
+                
+
+                if ($response->ok()) {
+                    $newItemStatus = EstimateStatus::DONE;
+                    $invoice = Invoice::createFromCfdi($response->cfdi, $estimate->customer_id);
+                }
 
                 break;
         }
