@@ -345,6 +345,11 @@ class User extends Authenticatable implements HasMedia
         return false;
     }
 
+    public function getCurrentCompanyAttribute()
+    {
+        return Company::find(request()->header('company'));
+    }
+
     public static function createFromRequest(UserRequest $request)
     {
         $user = self::create($request->getUserPayload());

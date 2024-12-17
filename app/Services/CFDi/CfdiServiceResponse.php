@@ -6,7 +6,7 @@ use Crater\Services\Response;
 
 class CfdiServiceResponse extends Response
 {
-    protected $cfdi;
+    public $cfdi;
 
     public function __construct(Cfdi $cfdi = null)
     {

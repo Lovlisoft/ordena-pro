@@ -2,7 +2,7 @@
 
 namespace Crater\Services\CFDi;
 
-class CfdiEntity
+class CfdiEntity extends CfdiModel
 {
     public function __construct(
         public string $rfc,
