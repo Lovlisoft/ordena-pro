@@ -48,7 +48,7 @@ trait HasEstimateStatus
     {
         $map = $this->flowMap;
         
-        $userPermittedActions = Arr::get($this->userActions, request()->user()->mainRole->id);
+        $userPermittedActions = Arr::get($this->userActions, request()->user()->mainRole->id, []);
 
         foreach ($map as $key => $status) {
             foreach ($status as $sequence => $action) {

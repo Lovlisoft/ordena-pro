@@ -14,7 +14,7 @@
       md:h-16 md:px-8
       bg-gradient-to-r
       from-primary-500
-      to-primary-400
+      to-primary-600
     "
   >
     <router-link
@@ -33,7 +33,7 @@
         md:block
       "
     >
-      <MainLogo class="h-6" />
+      <MainLogo inverted="true"/>
       
     </router-link>
 
