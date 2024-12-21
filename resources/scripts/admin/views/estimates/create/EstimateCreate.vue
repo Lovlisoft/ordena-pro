@@ -69,7 +69,7 @@
       </BasePageHeader>
 
       <!-- Select Customer & Basic Fields  -->
-      <EstimateBasicFields
+      <EstimateCreateBasicFields
         :v="v$"
         :is-loading="isLoadingContent"
         :is-edit="isEdit"
@@ -77,7 +77,7 @@
 
       <BaseScrollPane>
         <!-- Estimate Items -->
-        <Items
+        <CreateItems
           :currency="estimateStore.newEstimate.selectedCurrency"
           :is-loading="isLoadingContent"
           :item-validation-scope="estimateValidationScope"
@@ -94,42 +94,6 @@
             lg:flex lg:justify-between lg:items-start
           "
         >
-          <div class="relative w-full lg:w-1/2">
-            <!-- Estimate Custom Notes -->
-            <NoteFields
-              :store="estimateStore"
-              store-prop="newEstimate"
-              :fields="estimateNoteFieldList"
-              type="Estimate"
-            />
-
-            <!-- Estimate Custom Fields -->
-            <EstimateCustomFields
-              type="Estimate"
-              :is-edit="isEdit"
-              :is-loading="isLoadingContent"
-              :store="estimateStore"
-              store-prop="newEstimate"
-              :custom-field-scope="estimateValidationScope"
-              class="mb-6"
-            />
-
-            <!-- Estimate Template Button-->
-            <SelectTemplate
-              :store="estimateStore"
-              component-name="EstimateTemplate"
-              store-prop="newEstimate"
-              :is-mark-as-default="isMarkAsDefault"
-            />
-          </div>
-
-          <Total
-            :currency="estimateStore.newEstimate.selectedCurrency"
-            :is-loading="isLoadingContent"
-            :store="estimateStore"
-            store-prop="newEstimate"
-            tax-popup-type="estimate"
-          />
         </div>
       </BaseScrollPane>
     </form>
@@ -153,12 +117,8 @@ import { useEstimateStore } from '@/scripts/admin/stores/estimate'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useCustomFieldStore } from '@/scripts/admin/stores/custom-field'
 
-import Items from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
-import Total from '@/scripts/admin/components/estimate-invoice-common/CreateTotal.vue'
-import SelectTemplate from '@/scripts/admin/components/estimate-invoice-common/SelectTemplateButton.vue'
-import EstimateCustomFields from '@/scripts/admin/components/custom-fields/CreateCustomFields.vue'
-import NoteFields from '@/scripts/admin/components/estimate-invoice-common/CreateNotesField.vue'
-import EstimateBasicFields from './EstimateCreateBasicFields.vue'
+import CreateItems from '@/scripts/admin/components/estimate-invoice-common/CreateItems.vue'
+import EstimateCreateBasicFields from './EstimateCreateBasicFields.vue'
 import SelectTemplateModal from '@/scripts/admin/components/modal-components/SelectTemplateModal.vue'
 import TaxTypeModal from '@/scripts/admin/components/modal-components/TaxTypeModal.vue'
 import ItemModal from '@/scripts/admin/components/modal-components/ItemModal.vue'
@@ -169,6 +129,11 @@ const moduleStore = useModuleStore()
 const companyStore = useCompanyStore()
 const customFieldStore = useCustomFieldStore()
 const { t } = useI18n()
+
+onMounted(() => {
+  console.log(estimateStore['newEstimate'])
+})
+
 
 const estimateValidationScope = 'newEstimate'
 let isSaving = ref(false)

@@ -2,6 +2,7 @@ import i18n from '../plugins/i18n'
 const { global } = i18n
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { isArray } from 'lodash'
+import { DEFAULT_ITEM_PRECISION } from '../admin/config/constants'
 
 export default {
   isImageFile(fileType) {
@@ -21,17 +22,23 @@ export default {
     return hasClass
   },
 
-  formatMoney(amount, currency = 0) {
+  formatNumber(value, decimals = 2, separator = ',') {
+    return new Intl.NumberFormat('es-MX').format(value)
+  },
+
+  formatMoney(amount, currency = 0 , options = {}) {
     if (!currency) {
       currency = {
-        precision: 2,
+        precision: options.itemPrecision || 2,
         thousand_separator: ',',
         decimal_separator: '.',
         symbol: '$',
       }
     }
 
-    amount = amount / 10000
+    const divideBy = !isNaN(options.itemPrecision) ? Number(`1${'0'.repeat(options.itemPrecision)}`) : 100
+
+    amount = amount / divideBy
 
     let {
       precision,
@@ -44,6 +51,7 @@ export default {
     try {
       precision = Math.abs(precision)
       precision = isNaN(precision) ? 2 : precision
+      precision = options.itemPrecision ?? precision
 
       const negativeSign = amount < 0 ? '-' : ''
 
@@ -51,6 +59,8 @@ export default {
         (amount = Math.abs(Number(amount) || 0).toFixed(precision))
       ).toString()
       let j = i.length > 3 ? i.length % 3 : 0
+
+      
 
       let moneySymbol = `${symbol}`
       let thousandText = j ? i.substr(0, j) + thousand_separator : ''
@@ -137,7 +147,6 @@ export default {
     try {
       var successful = document.execCommand('copy')
       var msg = successful ? 'successful' : 'unsuccessful'
-      console.log('Fallback: Copying text command was ' + msg)
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err)
     }
@@ -277,5 +286,12 @@ export default {
 
     return formData
   },
-
+  /**
+   * Returns the decimal precision multiplier for items.
+   * @returns {number} The decimal precision multiplier based on the default item precision.
+   * @example If the default item precision is 6, the multiplier will be 1000000.
+   */
+  getItemDecimalPrecisionMultiplier() {
+    return Number(`1${'0'.repeat(DEFAULT_ITEM_PRECISION)}`)
+  }
 }

@@ -16,6 +16,7 @@ export default function () {
     estimate_number: '',
     customer_id: null,
     sub_total: 0,
+    subtotal: 0,
     total: 0,
     tax: 0,
     notes: '',
@@ -35,5 +36,8 @@ export default function () {
     fields: [],
     selectedNote: null,
     selectedCurrency: '',
+    show_price_breakdown: false,
+    status: null,
+    user_flow: null,
   }
 }

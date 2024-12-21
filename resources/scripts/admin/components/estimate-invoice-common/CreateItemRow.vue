@@ -1,23 +1,21 @@
 <template>
   <tr class="box-border bg-white border border-gray-200 border-solid rounded-b">
-    <td colspan="5" class="p-0 text-left align-top">
+    <td colspan="5" class="p-0 text-left align-top pt-2">
       <table class="w-full">
         <colgroup>
-          <col style="width: 40%; min-width: 280px" />
-          <col style="width: 10%; min-width: 120px" />
+          <col style="width: 30%; min-width: 280px" />
+          <col style="width: 20%; min-width: 120px" />
+          <col style="width: 20%; min-width: 120px" />
           <col style="width: 15%; min-width: 120px" />
-          <col
-            v-if="store[storeProp].discount_per_item === 'YES'"
-            style="width: 15%; min-width: 160px"
-          />
           <col style="width: 15%; min-width: 120px" />
         </colgroup>
         <tbody>
           <tr>
-            <td class="px-5 py-4 text-left align-top">
+            <td class="px-2 py-2 text-left align-top">
               <div class="flex justify-start">
                 <div
-                  class="flex items-center justify-center w-5 h-5 mt-2 mr-2 text-gray-300 cursor-move  handle"
+                  class="flex items-center justify-center w-5 
+                    h-5 mt-2 mr-2 text-gray-300 cursor-move  handle"
                 >
                   <DragIcon />
                 </div>
@@ -35,7 +33,7 @@
                 />
               </div>
             </td>
-            <td class="px-5 py-4 text-right align-top">
+            <td class="px-2 py-2 text-right align-top">
               <BaseInput
                 v-model="quantity"
                 :invalid="v$.quantity.$error"
@@ -48,83 +46,54 @@
                 @input="v$.quantity.$touch()"
               />
             </td>
-            <td class="px-5 py-4 text-left align-top">
+            <td class="px-2 py-2 text-left align-top">
               <div class="flex flex-col">
                 <div class="flex-auto flex-fill bd-highlight">
                   <div class="relative w-full">
-                    <BaseMoney
+                    <BaseItemMoney
                       :key="selectedCurrency"
-                      v-model="price"
+                      v-model="precisionPrice"
                       :invalid="v$.price.$error"
                       :content-loading="loading"
                       :currency="selectedCurrency"
+                      :item-precision="DEFAULT_ITEM_PRECISION"
+                      :disabled="true"
                     />
                   </div>
                 </div>
               </div>
             </td>
-            <td
-              v-if="store[storeProp].discount_per_item === 'YES'"
-              class="px-5 py-4 text-left align-top"
-            >
+
+            <td class="px-2 py-2 text-left align-top">
               <div class="flex flex-col">
-                <div class="flex" style="width: 120px" role="group">
-                  <BaseInput
-                    v-model="discount"
-                    :invalid="v$.discount_val.$error"
-                    :content-loading="loading"
-                    class="
-                      border-r-0
-                      focus:border-r-2
-                      rounded-tr-sm rounded-br-sm
-                      h-[38px]
-                    "
-                  />
-                  <BaseDropdown position="bottom-end">
-                    <template #activator>
-                      <BaseButton
-                        :content-loading="loading"
-                        class="rounded-tr-md rounded-br-md !p-2 rounded-none"
-                        type="button"
-                        variant="white"
-                      >
-                        <span class="flex items-center">
-                          {{
-                            itemData.discount_type == 'fixed'
-                              ? currency.symbol
-                              : '%'
-                          }}
-
-                          <BaseIcon
-                            name="ChevronDownIcon"
-                            class="w-4 h-4 ml-1 text-gray-500"
-                          />
-                        </span>
-                      </BaseButton>
-                    </template>
-
-                    <BaseDropdownItem @click="selectFixed">
-                      {{ $t('general.fixed') }}
-                    </BaseDropdownItem>
-
-                    <BaseDropdownItem @click="selectPercentage">
-                      {{ $t('general.percentage') }}
-                    </BaseDropdownItem>
-                  </BaseDropdown>
+                <div class="flex-auto flex-fill bd-highlight">
+                  <div class="relative w-full">
+                    <BaseItemMoney
+                      :key="selectedCurrency"
+                      v-model="compositePrice"
+                      :invalid="v$.price.$error"
+                      :content-loading="loading"
+                      :currency="selectedCurrency"
+                      :item-precision="DEFAULT_ITEM_PRECISION"
+                    />
+                  </div>
                 </div>
               </div>
             </td>
-            <td class="px-5 py-4 text-right align-top">
+        
+            <td class="px-2 py-2 text-right align-top">
               <div class="flex items-center justify-end text-sm">
                 <span>
                   <BaseContentPlaceholders v-if="loading">
                     <BaseContentPlaceholdersText :lines="1" class="w-16 h-5" />
                   </BaseContentPlaceholders>
 
-                  <BaseFormatMoney
+                  <BaseItemMoney
                     v-else
-                    :amount="total"
+                    :key="selectedCurrency"
+                    v-model="total"
                     :currency="selectedCurrency"
+                    :item-precision="2"
                   />
                 </span>
                 <div class="flex items-center justify-center w-6 h-10 mx-2">
@@ -138,45 +107,20 @@
               </div>
             </td>
           </tr>
-          <tr v-if="store[storeProp].tax_per_item === 'YES'">
-            <td class="px-5 py-4 text-left align-top" />
-            <td colspan="4" class="px-5 py-4 text-left align-top">
-              <BaseContentPlaceholders v-if="loading">
-                <BaseContentPlaceholdersText
-                  :lines="1"
-                  class="w-24 h-8 border rounded-md"
-                />
-              </BaseContentPlaceholders>
-
-              <ItemTax
-                v-for="(tax, index1) in itemData.taxes"
-                v-else
-                :key="tax.id"
-                :index="index1"
-                :item-index="index"
-                :tax-data="tax"
-                :taxes="itemData.taxes"
-                :discounted-total="total"
-                :total-tax="totalSimpleTax"
-                :total="subtotal"
-                :currency="currency"
-                :update-items="syncItemToStore"
-                :ability="abilities.CREATE_INVOICE"
-                :store="store"
-                :store-prop="storeProp"
-                :discount="discount"
-                @update="updateTax"
-              />
-            </td>
-          </tr>
         </tbody>
       </table>
+
+      <div class="px-12 pb-4 text-right">
+        <BaseLabel>Monto Base:</BaseLabel> <span class="text-sm pr-6">{{ basePriceStr }}</span>
+        <span v-if="iepsBreakdown"><BaseLabel>IEPS:</BaseLabel> <span class="text-sm pr-6">{{ iepsTaxStr }}</span></span>
+        <BaseLabel>IVA (16%): </BaseLabel> <span class="text-sm">{{ ivaTaxStr }}</span>
+      </div>
     </td>
   </tr>
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Guid from 'guid'
@@ -195,6 +139,14 @@ import useVuelidate from '@vuelidate/core'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useItemStore } from '@/scripts/admin/stores/item'
 import DragIcon from '@/scripts/components/icons/DragIcon.vue'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+import BaseLabel from '@/scripts/components/base/BaseLabel.vue'
+import BaseItemMoney from '@/scripts/components/base/BaseItemMoney.vue'
+import { useEstimateStore } from '../../stores/estimate'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const props = defineProps({
   store: {
@@ -237,11 +189,19 @@ const props = defineProps({
 
 const emit = defineEmits(['update', 'remove', 'itemValidate'])
 
+
 const companyStore = useCompanyStore()
 const itemStore = useItemStore()
+const estimateStore = useEstimateStore()
 
 let route = useRoute()
 const { t } = useI18n()
+
+const iepsBreakdown = computed({
+  get: () => {
+    return estimateStore.newEstimate.show_price_breakdown
+  },
+})
 
 const quantity = computed({
   get: () => {
@@ -257,7 +217,7 @@ const price = computed({
     const price = props.itemData.price
 
     if (parseFloat(price) > 0) {
-      return price / 10000
+      return price / 100
     }
 
     return price
@@ -265,7 +225,7 @@ const price = computed({
 
   set: (newValue) => {
     if (parseFloat(newValue) > 0) {
-      let price = Math.round(newValue * 10000)
+      let price = Math.round(newValue * 100)
 
       updateItemAttribute('price', price)
     } else {
@@ -274,26 +234,140 @@ const price = computed({
   },
 })
 
-const subtotal = computed(() => props.itemData.price * props.itemData.quantity)
-
-const discount = computed({
+const precisionPrice = computed({
   get: () => {
-    return props.itemData.discount
-  },
-  set: (newValue) => {
-    if (props.itemData.discount_type === 'percentage') {
-      updateItemAttribute('discount_val', (subtotal.value * newValue) / 100)
-    } else {
-      updateItemAttribute('discount_val', Math.round(newValue * 100))
+    const precisionPrice = props.itemData.precision_price
+
+    if (parseFloat(precisionPrice) > 0) {
+      return precisionPrice / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
     }
 
-    updateItemAttribute('discount', newValue)
+    return precisionPrice
+  },
+  set: (newValue) => {
+    if (parseFloat(newValue) > 0) {
+      let precisionPrice = Math.round(newValue * getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
+      let price = Math.round(newValue * 100) // Calculate the corresponding price
+
+      updateItemAttribute('precision_price', precisionPrice)
+      updateItemAttribute('price', price) // Update the price attribute
+    } else {
+      updateItemAttribute('precision_price', newValue)
+      updateItemAttribute('price', newValue) // Update the price attribute
+    }
   },
 })
 
-const total = computed(() => {
-  return subtotal.value - props.itemData.discount_val
+const basePriceStr = computed({
+  get: () => {
+    return formatMoney(basePrice)
+  },
 })
+
+const ivaTaxStr = computed({
+  get: () => {
+    return formatMoney(ivaTax)
+  },
+})
+
+const iepsTaxStr = computed({
+  get: () => {
+    return formatMoney(iepsTax)
+  },
+})
+
+function formatMoney(value) {
+  return value.value.toLocaleString('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+  })
+}
+
+const fixedPrice = ref(null)
+const loadedTotal = ref(null)
+
+const subtotal = computed(() => { 
+  const precisionPrice = props.itemData.precision_price;
+
+  return precisionPrice * props.itemData.quantity;
+})
+
+const subtotalPrecision = computed(() => props.itemData.precision_price * props.itemData.quantity / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION))
+
+const compositePrice = computed({
+  get: () => {
+    let compPrice = fixedPrice.value ?? total.value / quantity.value
+
+    fixedPrice.value = compPrice
+
+    return compPrice
+  },
+  set: (newValue) => {
+    total.value = newValue * quantity.value
+    fixedPrice.value = parseFloat(newValue)
+  }
+})
+
+const total = computed({
+  get: () => {
+    let tempTotal = basePrice.value + ivaTax.value + iepsTax.value
+
+    loadedTotal.value = tempTotal
+
+    return tempTotal
+  },
+  set: (newValue) => {
+    let old = Math.round((total.value + Number.EPSILON) * 100) / 100
+    let current = Math.round((parseFloat(newValue) + Number.EPSILON) * 100) / 100
+
+    if (old !== current) {
+      fixedPrice.value = parseFloat(newValue / quantity.value)
+      calculateFromTotal(parseFloat(newValue))
+    }
+  }
+})
+
+function calculateFromTotal(value) {
+  let providedTotal = value
+  let cantidad = quantity.value
+  let ieps = iepsBreakdown.value ? props.itemData.ieps : 0
+  let ivaRate = 1.16
+
+  console.log(providedTotal, cantidad, ieps)
+
+  let precioUnitario =  ((providedTotal / cantidad - ieps) / ivaRate) + ieps
+
+  if (cantidad > 0 && precioUnitario > 0 && providedTotal > 0) {
+    quantity.value = cantidad
+    precisionPrice.value = precioUnitario
+  }
+}
+
+const basePrice = computed({
+  get: () => {
+    return subtotalPrecision.value - iepsTax.value;
+  },
+})
+
+const iepsTax = computed({
+  get: () => {
+    return iepsBreakdown.value ? props.itemData.quantity * props.itemData.ieps : 0
+  },
+})
+
+const ivaTax = computed({
+  get: () => {
+    // Replace this with the dynamic IVA condition
+    return basePrice.value * 0.16;
+  },
+})
+
+watch(
+  () => iepsBreakdown.value,
+  (val) => {
+    calculateFromTotal(loadedTotal.value)
+  }
+)
 
 const selectedCurrency = computed(() => {
   if (props.currency) {
@@ -383,20 +457,6 @@ const v$ = useVuelidate(
   { $scope: props.itemValidationScope }
 )
 
-//
-// if (
-//   route.params.id &&
-//   (props.store[props.storeProp].tax_per_item === 'YES' || 'NO')
-// ) {
-//   if (props.store[props.storeProp].items[props.index].taxes === undefined) {
-//     props.store.$patch((state) => {
-//       state[props.storeProp].items[props.index].taxes = [
-//         { ...TaxStub, id: Guid.raw() },
-//       ]
-//     })
-//   }
-// }
-
 function updateTax(data) {
   props.store.$patch((state) => {
     state[props.storeProp].items[props.index]['taxes'][data.index] = data.item
@@ -426,6 +486,9 @@ function onSelectItem(itm) {
     state[props.storeProp].items[props.index].price = itm.price
     state[props.storeProp].items[props.index].item_id = itm.id
     state[props.storeProp].items[props.index].description = itm.description
+    state[props.storeProp].items[props.index].precision = itm.precision
+    state[props.storeProp].items[props.index].precision_price = itm.precision_price
+    state[props.storeProp].items[props.index].ieps = itm.ieps
 
     if (itm.unit) {
       state[props.storeProp].items[props.index].unit_name = itm.unit.name
@@ -448,28 +511,6 @@ function onSelectItem(itm) {
 
   itemStore.fetchItems()
   syncItemToStore()
-}
-
-function selectFixed() {
-  if (props.itemData.discount_type === 'fixed') {
-    return
-  }
-
-  updateItemAttribute('discount_val', Math.round(props.itemData.discount * 100))
-  updateItemAttribute('discount_type', 'fixed')
-}
-
-function selectPercentage() {
-  if (props.itemData.discount_type === 'percentage') {
-    return
-  }
-
-  updateItemAttribute(
-    'discount_val',
-    (subtotal.value * props.itemData.discount) / 100
-  )
-
-  updateItemAttribute('discount_type', 'percentage')
 }
 
 function syncItemToStore() {

@@ -11,6 +11,8 @@ class Item extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_DECIMALS = 6;
+    
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -133,7 +135,11 @@ class Item extends Model
 
     public static function createItem($request)
     {
+        $precision_price = $request->get('precision_price');
         $data = $request->validated();
+
+        $data['precision'] = self::DEFAULT_DECIMALS;
+        $data['precision_price'] = $precision_price;
         $data['company_id'] = $request->header('company');
         $data['creator_id'] = Auth::id();
         $company_currency = CompanySetting::getSetting('currency', $request->header('company'));
@@ -156,7 +162,12 @@ class Item extends Model
 
     public function updateItem($request)
     {
-        $this->update($request->validated());
+        $precision_price = $request->get('precision_price');
+
+        $this->update([
+            'precision_price' => $precision_price,
+            ...$request->validated()
+        ]);        
 
         $this->taxes()->delete();
 

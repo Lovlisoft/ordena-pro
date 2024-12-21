@@ -44,38 +44,7 @@
       @update:modelValue="(val) => $emit('select', val)"
       @searchChange="(val) => $emit('search', val)"
     >
-      <!-- Add Item Action  -->
-      <template #action>
-        <BaseSelectAction
-          v-if="userStore.hasAbilities(abilities.CREATE_ITEM)"
-          @click="openItemModal"
-        >
-          <BaseIcon
-            name="PlusCircleIcon"
-            class="h-4 mr-2 -ml-2 text-center text-primary-400"
-          />
-          {{ $t('general.add_new_item') }}
-        </BaseSelectAction>
-      </template>
     </BaseMultiselect>
-
-    <!-- Item Description  -->
-    <div class="w-full pt-1 text-xs text-light">
-      <BaseTextarea
-        v-model="description"
-        :content-loading="contentLoading"
-        :autosize="true"
-        class="text-xs"
-        :borderless="true"
-        :placeholder="$t('estimates.item.type_item_description')"
-        :invalid="invalidDescription"
-      />
-      <div v-if="invalidDescription">
-        <span class="text-red-600">
-          {{ $tc('validation.description_maxlength') }}
-        </span>
-      </div>
-    </div>
   </div>
 </template>
 

@@ -166,9 +166,10 @@
         </template>
 
         <template #cell-price="{ row }">
-          <BaseFormatMoney
-            :amount="row.data.price"
+          <BaseFormatItemMoney 
+            :amount="row.data.precision_price"
             :currency="companyStore.selectedCompanyCurrency"
+            :item-precision="row.data.precision" 
           />
         </template>
 
@@ -200,6 +201,7 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import ItemDropdown from '@/scripts/admin/components/dropdowns/ItemIndexDropdown.vue'
 import SatelliteIcon from '@/scripts/components/icons/empty/SatelliteIcon.vue'
 import abilities from '@/scripts/admin/stub/abilities'
+import BaseFormatItemMoney from '@/scripts/components/base/BaseFormatItemMoney.vue'
 
 const utils = inject('utils')
 

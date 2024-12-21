@@ -6,6 +6,7 @@ use App;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Crater\Mail\SendInvoiceMail;
+use Crater\Services\CFDi\Cfdi;
 use Crater\Services\SerialNumberFormatter;
 use Crater\Traits\GeneratesPdfTrait;
 use Crater\Traits\HasCustomFieldsTrait;
@@ -61,6 +62,20 @@ class Invoice extends Model implements HasMedia
         'formattedDueDate',
         'invoicePdfUrl',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Model $model) {
+            $model->status = self::STATUS_DRAFT;
+            $model->paid_status = self::STATUS_UNPAID;
+            $model->tax_per_item = 'NO';
+            $model->discount_per_item = 'NO';
+            $model->due_amount = 0;
+            $model->company_id = request()->user()->currentCompany->id;
+        });
+    }
 
     public function transactions()
     {
@@ -312,6 +327,21 @@ class Invoice extends Model implements HasMedia
         }
 
         return $query->paginate($limit);
+    }
+
+    public static function createFromCfdi(\Crater\Services\CFDi\Cfdi $cfdi, $customerId)
+    {
+        $newInvoice = Invoice::create([
+            'invoice_date' => $cfdi->date,
+            'invoice_number' => $cfdi->folio,
+            'subtotal' => $cfdi->subtotal * 100,
+            'total' => $cfdi->total * 100,
+            'tax' => $cfdi->tax * 100,
+            'customer_id' => $customerId,
+            'creator_id' => request()->user()->id,
+        ]);
+
+        return $newInvoice;
     }
 
     public static function createInvoice($request)

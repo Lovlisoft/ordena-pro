@@ -4,6 +4,7 @@ namespace Crater\Policies;
 
 use Crater\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Silber\Bouncer\BouncerFacade;
 
 class UserPolicy
 {
@@ -17,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->isOwner()) {
+        if ($user->isOwner() || BouncerFacade::can('create-user', User::class)) {
             return true;
         }
 
@@ -33,7 +34,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if ($user->isOwner() || BouncerFacade::can('create-user', User::class)) {
             return true;
         }
 
@@ -48,7 +49,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->isOwner()) {
+        if ($user->isOwner() || BouncerFacade::can('create-user', User::class)) {
             return true;
         }
 
@@ -64,7 +65,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if ($user->isOwner() || BouncerFacade::can('create-user', User::class)) {
             return true;
         }
 

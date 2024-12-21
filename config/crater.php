@@ -1,5 +1,6 @@
 <?php
 
+use Crater\Models\BankAccountTransaction;
 use Crater\Models\Customer;
 use Crater\Models\CustomField;
 use Crater\Models\Estimate;
@@ -11,6 +12,7 @@ use Crater\Models\Note;
 use Crater\Models\Payment;
 use Crater\Models\RecurringInvoice;
 use Crater\Models\TaxType;
+use Crater\Models\User;
 
 return [
 
@@ -351,6 +353,16 @@ return [
             'ability' => 'view-payment',
             'model' => Payment::class
         ],
+        [
+            'title' => 'navigation.bank-transactions',
+            'group' => 2,
+            'link' => '/admin/bank-transactions',
+            'icon' => 'CashIcon',
+            'name' => 'Payments',
+            'owner_only' => false,
+            'ability' => 'view-payment',
+            'model' => BankAccountTransaction::class
+        ],
         // [
         //     'title' => 'navigation.expenses',
         //     'group' => 2,
@@ -377,9 +389,9 @@ return [
             'link' => '/admin/users',
             'icon' => 'UsersIcon',
             'name' => 'Users',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'create-user',
+            'model' => User::class,
         ],
         // [
         //     'title' => 'navigation.reports',

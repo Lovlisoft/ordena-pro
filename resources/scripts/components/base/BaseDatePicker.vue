@@ -42,7 +42,7 @@
       :disabled="disabled"
       :config="config"
       :class="[defaultInputClass, inputInvalidClass, inputDisabledClass]"
-    /> -->
+    />  -->
   </div>
 </template>
 

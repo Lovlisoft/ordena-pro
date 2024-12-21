@@ -95,7 +95,7 @@ class Customer extends Authenticatable implements HasMedia
 
     public function creator()
     {
-        return $this->belongsTo(Customer::class, 'creator_id');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function company()
@@ -210,7 +210,15 @@ class Customer extends Authenticatable implements HasMedia
             return 'you_cannot_edit_currency';
         }
 
+        //dd($request->getCustomerPayload());
+
         $customer->update($request->getCustomerPayload());
+
+        if (is_null($customer->manager_id)) {
+            $customer->update([
+                'manager_id' => $request->user()->id,
+            ]);
+        }
 
         $customer->addresses()->delete();
 
@@ -337,5 +345,17 @@ class Customer extends Authenticatable implements HasMedia
             $orderBy = $filters->get('orderBy') ? $filters->get('orderBy') : 'asc';
             $query->whereOrder($field, $orderBy);
         }
+    }
+
+    public function scopeAllowedForUser($query, $user)
+    {
+        $query->whereHas('creator', function ($q) use ($user) {
+            $userOffices = $user->offices->pluck('id')->toArray();
+
+            $q->where('creator_id', $user->id)
+                ->orWhereHas('offices', function($query) use ($userOffices) {
+                    $query->whereIn('offices.id', $userOffices);
+                });
+        });
     }
 }

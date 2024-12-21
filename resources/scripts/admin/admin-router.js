@@ -80,6 +80,9 @@ const PaymentsIndex = () => import('@/scripts/admin/views/payments/Index.vue')
 const PaymentCreate = () => import('@/scripts/admin/views/payments/Create.vue')
 const PaymentView = () => import('@/scripts/admin/views/payments/View.vue')
 
+// Bank Transactions
+const BankTransactionsIndex = () => import('@/scripts/admin/views/bank-transactions/Index.vue')
+
 const NotFoundPage = () => import('@/scripts/admin/views/errors/404.vue')
 
 // Invoice
@@ -224,6 +227,13 @@ export default [
         name: 'payments.view',
         meta: { ability: abilities.VIEW_PAYMENT },
         component: PaymentView,
+      },
+
+      // Bank Transactions
+      {
+        path: 'bank-transactions',
+        // meta: { ability: abilities.VIEW_PAYMENT },
+        component: BankTransactionsIndex,
       },
 
       //settings
@@ -372,19 +382,19 @@ export default [
       {
         path: 'users',
         name: 'users.index',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         component: UserIndex,
       },
       {
         path: 'users/create',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         name: 'users.create',
         component: UserCreate,
       },
       {
         path: 'users/:id/edit',
         name: 'users.edit',
-        meta: { isOwner: true },
+        meta: { isOwner: false },
         component: UserCreate,
       },
 

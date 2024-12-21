@@ -27,7 +27,14 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'rfc' => [
+                'required',
+                'regex:/^([A-Z&]{3,4})\d{6}(?:[A-Z\d]{3})?$/',
+            ],
             'name' => [
+                'required',
+            ],
+            'sat_regime_id' => [
                 'required',
             ],
             'email' => [
@@ -134,7 +141,9 @@ class CustomerRequest extends FormRequest
     {
         return collect($this->validated())
             ->only([
+                'rfc',
                 'name',
+                'sat_regime_id',
                 'email',
                 'currency_id',
                 'password',

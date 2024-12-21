@@ -66,6 +66,11 @@ import { useTaxTypeStore } from '@/scripts/admin/stores/tax-type'
 import { useModalStore } from '@/scripts/stores/modal'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/scripts/admin/stores/user'
+import { DEFAULT_ITEM_PRECISION } from '@/scripts/admin/config/constants'
+
+import utilities from '@/scripts/helpers/utilities'
+
+const { getItemDecimalPrecisionMultiplier } = utilities;
 
 const props = defineProps({
   ability: {
@@ -147,11 +152,11 @@ const filteredTypes = computed(() => {
 
 const taxAmount = computed(() => {
   if (localTax.compound_tax && props.discountedTotal) {
-    return ((props.discountedTotal + props.totalTax) * localTax.percent) / 100
+    return ((props.discountedTotal + props.totalTax) * localTax.percent) / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
   }
 
   if (props.discountedTotal && localTax.percent) {
-    return (props.discountedTotal * localTax.percent) / 100
+    return (props.discountedTotal * localTax.percent) / getItemDecimalPrecisionMultiplier(DEFAULT_ITEM_PRECISION)
   }
 
   return 0

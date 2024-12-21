@@ -26,7 +26,7 @@
           </BaseButton>
 
           <BaseButton
-            v-if="userStore.currentUser.is_owner"
+            v-if="userStore.currentUser.is_owner || userStore.hasAbilities([abilities.CREATE_USER])"
             @click="$router.push('users/create')"
           >
             <template #left="slotProps">

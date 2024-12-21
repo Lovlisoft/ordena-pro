@@ -17,6 +17,16 @@ const props = defineProps({
       return null
     },
   },
+  precision: {
+    type: Number,
+    required: false,
+    default: 2,
+  },
+  onlyFormat: {
+    type: Boolean,
+    required: false,
+    default: false,
+  }
 })
 
 const utils = inject('utils')
@@ -24,9 +34,19 @@ const utils = inject('utils')
 const companyStore = useCompanyStore()
 
 const formattedAmount = computed(() => {
+  if (props.onlyFormat) {
+    return props.amount.toLocaleString('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    })
+  }
+
   return utils.formatMoney(
     props.amount,
-    !!props.currency ? { ...props.currency, precision: 2 } : { ...companyStore.selectedCompanyCurrency, precision: 2 }
+    props.currency || companyStore.selectedCompanyCurrency,
+    {
+      itemPrecision: props.precision,
+    }
   )
 })
 </script>

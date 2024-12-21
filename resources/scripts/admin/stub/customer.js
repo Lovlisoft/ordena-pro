@@ -2,6 +2,7 @@ import addressStub from '@/scripts/admin/stub/address.js'
 
 export default function () {
   return {
+    rfc: '',
     name: '',
     contact_name: '',
     email: '',

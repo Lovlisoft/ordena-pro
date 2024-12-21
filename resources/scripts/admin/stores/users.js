@@ -25,6 +25,7 @@ export const useUsersStore = (useWindow = false) => {
         password: null,
         phone: null,
         companies: [],
+        offices: [],
       },
     }),
 
@@ -37,6 +38,7 @@ export const useUsersStore = (useWindow = false) => {
           phone: null,
           role: null,
           companies: [],
+          offices: [],
         }
       },
 
@@ -73,7 +75,6 @@ export const useUsersStore = (useWindow = false) => {
               resolve(response)
             })
             .catch((err) => {
-              console.log(err)
               handleError(err)
               reject(err)
             })

@@ -63,7 +63,7 @@ return [
     | The URL at which the Vite development server runs.
     | This is used to generate the script tags when developing.
     */
-    'dev_url' => 'http://ordena-pro.test:3000',
+    'dev_url' => 'http://ordena-pro.test:3001',
 
     /**
      * TODO: We need to improve this behavior to a more definitive one

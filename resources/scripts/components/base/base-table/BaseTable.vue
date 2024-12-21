@@ -52,6 +52,7 @@
                 v-for="placeRow in placeholderCount"
                 :key="placeRow"
                 :class="placeRow % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+                @click="$emit(actionRow, row.data.id)"
               >
                 <td
                   v-for="column in columns"
@@ -75,7 +76,8 @@
               <tr
                 v-for="(row, index) in sortedRows"
                 :key="index"
-                :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+                :class="getTrClass(index, row)"
+                @click="$emit(actionRow, row.data)"
               >
                 <td
                   v-for="column in columns"
@@ -186,6 +188,14 @@ const props = defineProps({
     type: Number,
     default: 3,
   },
+  actionRow: {
+    type: String,
+    default: "none",
+  },
+  selectedRow: {
+    type: Number,
+    default: null,
+  },
 })
 
 let rows = reactive([])
@@ -253,6 +263,15 @@ function getThClass(column) {
   }
 
   return classes
+}
+
+function getTrClass(index, row) {
+  let bgClasses = props.selectedRow?.id == row.data.id ? 'bg-primary-50'
+    : index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+
+  let cursorClasses = props.actionRow.value !== "none" ? " cursor-pointer" : ""
+ 
+  return bgClasses + " " + cursorClasses 
 }
 
 function getTdClass(column) {

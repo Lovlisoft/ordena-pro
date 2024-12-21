@@ -1,12 +1,15 @@
 <template>
   <div class="flex flex-wrap justify-between">
-    <div>
-      <h3 class="text-2xl font-bold text-left text-black">
-        {{ title }}
-      </h3>
-      <slot />
+    <div class="flex-none">
+      <div class="flex">
+        <h3 class="text-2xl font-bold text-left text-black pr-5">
+          {{ title }}
+        </h3>
+        <slot name="title" />
+      </div>
+      
     </div>
-    <div class="flex items-center">
+    <div class="grow flex items-center justify-end">
       <slot name="actions" />
     </div>
   </div>

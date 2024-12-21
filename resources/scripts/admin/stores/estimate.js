@@ -41,7 +41,7 @@ export const useEstimateStore = (useWindow = false) => {
       getSubTotal() {
         return this.newEstimate.items.reduce(function (a, b) {
           return a + b['total']
-        }, 0)
+        }, 0) / 10000;
       },
       getTotalSimpleTax() {
         return _.sumBy(this.newEstimate.taxes, function (tax) {
@@ -147,7 +147,6 @@ export const useEstimateStore = (useWindow = false) => {
               resolve(response)
             })
             .catch((err) => {
-              console.log(err);
               handleError(err)
               reject(err)
             })
@@ -165,10 +164,7 @@ export const useEstimateStore = (useWindow = false) => {
             }
           }
           salesTax.id = found.tax_type_id
-          console.log(salesTax, 'salesTax');
-
           taxTypeStore.taxTypes.push(salesTax)
-          console.log(taxTypeStore.taxTypes);
         }
       },
 
@@ -284,6 +280,33 @@ export const useEstimateStore = (useWindow = false) => {
                 type: 'success',
                 message: global.t('estimates.updated_message'),
               })
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      updateStatus(estimate, status) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/estimates/${estimate}/status`, {'status': status})
+            .then((response) => {
+              // let pos = this.estimates.findIndex(
+              //   (estimate) => estimate.id === data.id
+              // )
+              // if (this.estimates[pos]) {
+              //   //this.estimates[pos].status = 'ACCEPTED'
+
+              //   const notificationStore = useNotificationStore()
+
+              //   notificationStore.showNotification({
+              //     type: 'success',
+              //     message: global.t('estimates.marked_as_accepted_message'),
+              //   })
+              // }
               resolve(response)
             })
             .catch((err) => {

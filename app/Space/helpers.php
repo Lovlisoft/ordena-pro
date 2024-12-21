@@ -45,7 +45,7 @@ function get_page_title($company_id)
     $routeName = Route::currentRouteName();
 
     $pageTitle = null;
-    $defaultPageTitle = 'Crater - Self Hosted Invoicing Platform';
+    $defaultPageTitle = 'V8 GARAGE';
 
     if (\Storage::disk('local')->has('database_created')) {
         if ($routeName === 'customer.dashboard') {
@@ -125,19 +125,26 @@ function getCustomFieldValueKey(string $type)
 
 /**
  * @param $money
- * @return formated_money
+ * @return string
  */
-function format_money_pdf($money, $currency = null)
+function format_money_pdf($money, $currency = null, $itemPrecision = null)
 {
-    $money = $money / 100;
+    
+    $divideBy = 100;
+    
+    if ($itemPrecision) {
+        $divideBy = intval('1'.str_repeat('0', $itemPrecision)); 
+    }
+    
+    $money = $money / $divideBy;
 
-    if (! $currency) {
+    if (!$currency) {
         $currency = Currency::findOrFail(CompanySetting::getSetting('currency', 1));
     }
 
     $format_money = number_format(
         $money,
-        $currency->precision,
+        $itemPrecision ?? $currency->precision,
         $currency->decimal_separator,
         $currency->thousand_separator
     );

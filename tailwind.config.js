@@ -14,6 +14,7 @@ function withOpacityValue(cssVariable) {
 }
 
 module.exports = {
+  darkMode: 'false',
   content: [
     './resources/views/**/*.php',
     './resources/scripts/**/*.js',
@@ -22,22 +23,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: withOpacityValue('--color-primary-50'),
-          100: withOpacityValue('--color-primary-100'),
-          200: withOpacityValue('--color-primary-200'),
-          300: withOpacityValue('--color-primary-300'),
-          400: withOpacityValue('--color-primary-400'),
-          500: withOpacityValue('--color-primary-500'),
-          600: withOpacityValue('--color-primary-600'),
-          700: withOpacityValue('--color-primary-700'),
-          800: withOpacityValue('--color-primary-800'),
-          900: withOpacityValue('--color-primary-900'),
-        },
+        primary: colors.indigo,
         black: '#040405',
         red: colors.red,
         teal: colors.teal,
         gray: colors.slate,
+        orange: colors.orange,
+        amber: colors.amber,
       },
       spacing: {
         88: '22rem',
@@ -72,5 +64,16 @@ module.exports = {
     require('tailwind-scrollbar'),
     require('@rvxlab/tailwind-plugin-ios-full-height'),
     require('@tailwindcss/line-clamp'),
+  ],
+  safelist: [
+    {
+      pattern: /^bg-(blue|green|yellow|red|purple|pink|indigo|cyan|teal|lime|amber|orange|emerald|violet|fuchsia|rose|sky)-[1-9]00$/,
+    },
+    {
+      pattern: /^text-(blue|green|yellow|red|purple|pink|indigo|cyan|teal|lime|amber|orange|emerald|violet|fuchsia|rose|sky)-[1-9]00$/,
+    },
+    {
+      pattern: /^border-(blue|green|yellow|red|purple|pink|indigo|cyan|teal|lime|amber|orange|emerald|violet|fuchsia|rose|sky)-[1-9]00$/,
+    },
   ],
 }

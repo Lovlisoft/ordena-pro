@@ -17,9 +17,7 @@ class ChangeEstimateStatusController extends Controller
     */
     public function __invoke(Request $request, Estimate $estimate)
     {
-        $this->authorize('send estimate', $estimate);
-
-        $estimate->update($request->only('status'));
+        $estimate->updateStatus($request->status);
 
         return response()->json([
             'success' => true,

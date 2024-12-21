@@ -1,6 +1,9 @@
 export default {
   DASHBOARD: 'dashboard',
 
+  // users
+  CREATE_USER: 'create-user',
+
   // customers
   CREATE_CUSTOMER: 'create-customer',
   DELETE_CUSTOMER: 'delete-customer',
@@ -25,6 +28,7 @@ export default {
   EDIT_ESTIMATE: 'edit-estimate',
   VIEW_ESTIMATE: 'view-estimate',
   SEND_ESTIMATE: 'send-estimate',
+  EDIT_ESTIMATE_FILES: 'edit-estimate-files',
 
   // Invoices
   CREATE_INVOICE: 'create-invoice',
@@ -76,4 +80,5 @@ export default {
   // settings
   MANAGE_NOTE: 'manage-all-notes',
   VIEW_NOTE: 'view-all-notes',
+
 }

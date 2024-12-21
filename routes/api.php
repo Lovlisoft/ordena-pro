@@ -5,14 +5,17 @@ use Crater\Http\Controllers\V1\Admin\Auth\ForgotPasswordController;
 use Crater\Http\Controllers\V1\Admin\Auth\ResetPasswordController;
 use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Crater\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
+use Crater\Http\Controllers\V1\Admin\Banks\BankAccountTransactionsController;
 use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Crater\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Crater\Http\Controllers\V1\Admin\Office\OfficesController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomersController;
 use Crater\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
 use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
 use Crater\Http\Controllers\V1\Admin\Dashboard\DashboardController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
 use Crater\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
+use Crater\Http\Controllers\V1\Admin\Estimate\EstimateItemsController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
 use Crater\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
@@ -36,6 +39,7 @@ use Crater\Http\Controllers\V1\Admin\General\GetAllUsedCurrenciesController;
 use Crater\Http\Controllers\V1\Admin\General\NextNumberController;
 use Crater\Http\Controllers\V1\Admin\General\NotesController;
 use Crater\Http\Controllers\V1\Admin\General\NumberPlaceholdersController;
+use Crater\Http\Controllers\V1\Admin\General\SatRegimesController;
 use Crater\Http\Controllers\V1\Admin\General\SearchController;
 use Crater\Http\Controllers\V1\Admin\General\SearchUsersController;
 use Crater\Http\Controllers\V1\Admin\General\TimezonesController;
@@ -241,6 +245,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/current-company', AdminCompanyController::class);
 
+            Route::get('/sat-regimes', SatRegimesController::class);
+
 
             // Customers
             //----------------------------------
@@ -294,19 +300,19 @@ Route::prefix('/v1')->group(function () {
             //-------------------------------------------------
 
             Route::get('/estimates/{estimate}/send/preview', SendEstimatePreviewController::class);
-
             Route::post('/estimates/{estimate}/send', SendEstimateController::class);
-
             Route::post('/estimates/{estimate}/status', ChangeEstimateStatusController::class);
-
             Route::post('/estimates/{estimate}/convert-to-invoice', ConvertEstimateController::class);
-
             Route::get('/estimates/templates', EstimateTemplatesController::class);
-
             Route::post('/estimates/delete', [EstimatesController::class, 'delete']);
-
             Route::apiResource('estimates', EstimatesController::class);
 
+
+
+            // Estimate Items
+            //-------------------------------------------------
+            Route::post('/estimate-items/{estimateItem}/files', [EstimateItemsController::class, 'attachFile']);
+            Route::delete('/estimate-items/{estimateItem}/files/{mediaFileId}', [EstimateItemsController::class, 'removeFile']);
 
             // Expenses
             //----------------------------------
@@ -334,6 +340,8 @@ Route::prefix('/v1')->group(function () {
             Route::apiResource('payments', PaymentsController::class);
 
             Route::apiResource('payment-methods', PaymentMethodsController::class);
+
+            Route::apiResource('bank-transactions', BankAccountTransactionsController::class);
 
 
             // Custom fields
@@ -456,6 +464,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('companies/delete', [CompaniesController::class, 'destroy']);
 
         Route::get('companies', [CompaniesController::class, 'getUserCompanies']);
+
+        Route::get('offices', [OfficesController::class, 'getUserOffices']);
 
 
         // Users

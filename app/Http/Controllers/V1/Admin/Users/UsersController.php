@@ -27,6 +27,9 @@ class UsersController extends Controller
 
         $users = User::applyFilters($request->all())
             ->where('id', '<>', $user->id)
+            ->when(! $user->isOwner(), function ($query) use ($user) {
+                return $query->where('creator_id', $user->id);
+            })
             ->latest()
             ->paginate($limit);
 

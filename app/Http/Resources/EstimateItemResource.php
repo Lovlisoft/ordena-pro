@@ -24,8 +24,13 @@ class EstimateItemResource extends JsonResource
             'discount' => $this->discount,
             'discount_val' => $this->discount_val,
             'price' => $this->price,
+            'precision_price' => $this->precision_price,
+            'status' => $this->currentStatus?->slug,
+            'status_name' => $this->currentStatus?->description,
+            'status_color' => $this->currentStatus?->color,
             'tax' => $this->tax,
-            'total' => $this->total,
+            'subtotal' => $this->precision_subtotal,
+            'total' => $this->base_total,
             'item_id' => $this->item_id,
             'estimate_id' => $this->estimate_id,
             'company_id' => $this->company_id,
@@ -34,12 +39,19 @@ class EstimateItemResource extends JsonResource
             'base_price' => $this->base_price,
             'base_tax' => $this->base_tax,
             'base_total' => $this->base_total,
+            'item_taxes' => $this->itemTaxes,
+            'ieps' => $this->item->taxes->first()->taxType->percent,
             'taxes' => $this->when($this->taxes()->exists(), function () {
                 return TaxResource::collection($this->taxes);
             }),
             'fields' => $this->when($this->fields()->exists(), function () {
                 return CustomFieldValueResource::collection($this->fields);
             }),
+            'files' => [
+                'estimate' => AttachedFileResource::make($this->estimate_pdf),
+                'cfdi' => AttachedFileResource::make($this->invoice_xml),
+                'invoice' => AttachedFileResource::make($this->invoice_pdf),
+            ],
         ];
     }
 }

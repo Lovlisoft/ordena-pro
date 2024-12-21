@@ -20,7 +20,7 @@
       "
     >
       <div class="w-full">
-        <MainLogo :inverted="true"/>
+        <MainLogo/>
 
         <router-view />
 

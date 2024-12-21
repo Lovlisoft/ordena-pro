@@ -3,7 +3,7 @@
     <BaseContentPlaceholdersBox
       :rounded="true"
       class="w-full"
-      style="min-height: 170px"
+      style="min-height: 75px"
     />
   </BaseContentPlaceholders>
 
@@ -18,7 +18,6 @@
         p-4
         bg-white
         border border-gray-200 border-solid
-        min-h-[170px]
         rounded-md
       "
       @click.stop
@@ -187,11 +186,10 @@
             justify-center
             px-0
             p-0
-            py-16
+            py-4
             bg-white
             border border-gray-200 border-solid
             rounded-md
-            min-h-[170px]
           "
         >
           <BaseIcon

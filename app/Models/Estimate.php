@@ -9,6 +9,7 @@ use Crater\Mail\SendEstimateMail;
 use Crater\Services\SerialNumberFormatter;
 use Crater\Traits\GeneratesPdfTrait;
 use Crater\Traits\HasCustomFieldsTrait;
+use Crater\Traits\HasEstimateStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -23,13 +24,17 @@ class Estimate extends Model implements HasMedia
     use InteractsWithMedia;
     use GeneratesPdfTrait;
     use HasCustomFieldsTrait;
+    use HasEstimateStatus;
 
     public const STATUS_DRAFT = 'DRAFT';
+    public const STATUS_REQUESTED = 'REQUESTED';
     public const STATUS_SENT = 'SENT';
     public const STATUS_VIEWED = 'VIEWED';
     public const STATUS_EXPIRED = 'EXPIRED';
     public const STATUS_ACCEPTED = 'ACCEPTED';
     public const STATUS_REJECTED = 'REJECTED';
+    public const STATUS_CHANGES = 'CHANGES';
+    public const STATUS_DONE = 'DONE';
 
     protected $dates = [
         'created_at',
@@ -53,7 +58,63 @@ class Estimate extends Model implements HasMedia
         'sub_total' => 'integer',
         'discount' => 'float',
         'discount_val' => 'integer',
-        'exchange_rate' => 'float'
+        'exchange_rate' => 'float',
+        'show_price_breakdown' => 'boolean',
+    ];
+
+    // TODO: Move this to a specific and shared class and database storage
+    protected $flowMap = [
+        'draft' => [
+            'next' => [
+                'requested' => 'Solicitar previa',
+            ],
+        ],
+        'requested' => [
+            'next' => [
+                'review' => 'Enviar a revisión',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+        'changes' => [
+            'next' => [
+                'review' => 'Enviar a revisión',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+        'review' => [
+            'previous' => [
+                'changes' => 'Solicitar ajustes',
+            ],
+            'next' => [
+                'approved' => 'Solicitar facturas',
+                'rejected' => 'Rechazar definitivamente',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+        'approved' => [
+            'previous' => [
+                'review' => 'Devolver a revisión',
+            ],
+            'next' => [
+                'done' => 'Facturas emitidas',
+                'canceled' => 'Cancelar solicitud',
+            ],
+        ],
+    ];
+
+    protected $userActions = [
+        UserRole::AGENTE => [
+            'requested',
+            'changes',
+            'approved',
+            'rejected',
+            'canceled',
+        ],
+        UserRole::ADMIN => [
+            'review',
+            'done',
+            'canceled',
+        ],
     ];
 
     public function getEstimatePdfUrlAttribute()
@@ -194,6 +255,18 @@ class Estimate extends Model implements HasMedia
     public function scopeWhereCustomer($query, $customer_id)
     {
         $query->where('estimates.customer_id', $customer_id);
+    }
+
+    public function scopeAllowedForUser($query, $user)
+    {
+        $query->whereHas('creator', function ($query) use ($user) {
+            $userOffices = $user->offices->pluck('id')->toArray();
+
+            $query->where('estimates.id', $user->id)
+                ->orWhereHas('offices', function($query) use ($userOffices) {
+                    $query->whereIn('offices.id', $userOffices);
+                });
+        });
     }
 
     public function scopePaginateData($query, $limit)

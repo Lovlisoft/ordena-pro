@@ -47,7 +47,7 @@ export const useInvoiceStore = (useWindow = false) => {
       getSubTotal() {
         return this.newInvoice.items.reduce(function (a, b) {
           return a + b['total']
-        }, 0)
+        }, 0) / 10000;
       },
 
       getTotalSimpleTax() {

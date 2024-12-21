@@ -58,6 +58,11 @@ class Company extends Model implements HasMedia
         return null;
     }
 
+    public function offices()
+    {
+        return $this->hasMany(Office::class);
+    }
+
     public function customers()
     {
         return $this->hasMany(Customer::class);
@@ -151,6 +156,11 @@ class Company extends Model implements HasMedia
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_company', 'company_id', 'user_id');
+    }
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class);
     }
 
     public function setupRoles()

@@ -19,7 +19,8 @@ class EstimateResource extends JsonResource
             'estimate_date' => $this->estimate_date,
             'expiry_date' => $this->expiry_date,
             'estimate_number' => $this->estimate_number,
-            'status' => $this->status,
+            'status' => EstimateStatusResource::make($this->currentStatus),
+            'user_flow' => $this->userFlow,
             'reference_number' => $this->reference_number,
             'tax_per_item' => $this->tax_per_item,
             'discount_per_item' => $this->discount_per_item,
@@ -46,6 +47,7 @@ class EstimateResource extends JsonResource
             'estimate_pdf_url' => $this->estimatePdfUrl,
             'sales_tax_type' => $this->sales_tax_type,
             'sales_tax_address_type' => $this->sales_tax_address_type,
+            'show_price_breakdown' => $this->show_price_breakdown,
             'items' => $this->when($this->items()->exists(), function () {
                 return EstimateItemResource::collection($this->items);
             }),

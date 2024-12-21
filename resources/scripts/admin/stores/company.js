@@ -124,6 +124,20 @@ export const useCompanyStore = (useWindow = false) => {
         })
       },
 
+      fetchUserOffices() {
+        return new Promise((resolve, reject) => {
+          axios
+            .get('/api/v1/offices')
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       fetchCompanySettings(settings) {
         return new Promise((resolve, reject) => {
           axios
